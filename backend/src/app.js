@@ -1,8 +1,14 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import connectDB from './config/database.js';
+
+dotenv.config();
+
+// Connect to database
+connectDB();
 
 const app = express();
 
@@ -36,7 +42,10 @@ app.get('/api', (req, res) => {
   res.json({
     message: 'Talent Hub API',
     version: '1.0.0',
-    status: 'Initialized successfully'
+    status: 'Initialized successfully',
+    endpoints: {
+      health: '/health'
+    }
   });
 });
 
@@ -58,4 +67,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app;
+export default app;
