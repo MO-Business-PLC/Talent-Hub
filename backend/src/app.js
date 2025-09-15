@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import connectDB from './config/database.js';
+import authRouter from './routes/auth.js';
 
 dotenv.config();
 
@@ -27,6 +28,9 @@ app.use(morgan('combined'));
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Routes
+app.use('/api/auth', authRouter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
