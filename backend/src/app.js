@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import connectDB from './config/database.js';
 import authRouter from './routes/auth.js';
+import applicationsRouter from './routes/applications.js';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Routes
 app.use('/api/auth', authRouter);
+app.use('/api/applications', applicationsRouter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
