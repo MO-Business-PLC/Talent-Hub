@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/database.js';
 import authRouter from './routes/auth.js';
 import applicationsRouter from './routes/applications.js';
+import jobsRouter from './routes/jobs.js';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Routes
 app.use('/api/auth', authRouter);
 app.use('/api/applications', applicationsRouter);
+app.use('/api/jobs', jobsRouter);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -50,7 +52,10 @@ app.get('/api', (req, res) => {
     version: '1.0.0',
     status: 'Initialized successfully',
     endpoints: {
-      health: '/health'
+      health: '/health',
+      auth: '/api/auth',
+      jobs: '/api/jobs',
+      applications: '/api/applications'
     }
   });
 });
