@@ -4,13 +4,21 @@ const connectDB = async () => {
   try {
     const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/talent_hub';
     
+    // Allow disabling autoIndex during seeding to avoid index build errors
+    const disableIndexes = process.env.DISABLE_INDEXES === 'true';
+    if (disableIndexes) {
+      mongoose.set('autoIndex', false);
+    }
+
     if (!mongoUri) {
       throw new Error('MONGODB_URI is not defined in environment variables');
     }
 
     const conn = await mongoose.connect(mongoUri, {
+      // the following options are no-ops on modern drivers but kept for compatibility
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      autoIndex: !disableIndexes,
     });
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
