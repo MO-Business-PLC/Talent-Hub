@@ -19,12 +19,41 @@ const app = express();
 app.use(helmet());
 
 // CORS configuration
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    credentials: true,
-  })
-);
+const defaultAllowedOrigins = [
+  "http://localhost:5173", // Vite default
+  "http://127.0.0.1:5173",
+  "http://localhost:3000", // Common React dev port
+  "http://127.0.0.1:3000",
+];
+
+const envOrigins = (process.env.FRONTEND_URL || "")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const allowedOrigins = Array.from(new Set([...envOrigins, ...defaultAllowedOrigins]));
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (like curl) with no origin
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS: Origin ${origin} is not allowed`));
+  },
+  credentials: true,
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+    "Origin",
+  ],
+  optionsSuccessStatus: 200, // Avoid 204 issues with some browsers/proxies
+};
+
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 
 // Logging middleware
 app.use(morgan("combined"));
