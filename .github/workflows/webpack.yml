@@ -30,9 +30,15 @@ jobs:
         working-directory: ./backend
         run: npm install
 
-      # 4️⃣ Start backend server (skip DB connection in CI)
-      - name: Start backend server
+      # 4️⃣ Run a smoke test (check that server can start without hanging)
+      - name: Smoke test backend
         working-directory: ./backend
         env:
-          CI: true         # tells your server code to skip DB connection
-        run: npm start
+          CI: true  # tells your server code to skip DB connection
+        run: |
+          node src/server.js &
+          SERVER_PID=$!
+          echo "Server started with PID $SERVER_PID"
+          sleep 5  # give it a few seconds to start
+          kill $SERVER_PID
+          echo "Server stopped after smoke test"
