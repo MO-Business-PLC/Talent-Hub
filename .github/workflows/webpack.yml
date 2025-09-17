@@ -30,7 +30,9 @@ jobs:
         working-directory: ./backend
         run: npm install
 
-      # 4️⃣ Optional: Start backend server (smoke test)
+      # 4️⃣ Start backend server (skip DB connection in CI)
       - name: Start backend server
         working-directory: ./backend
+        env:
+          CI: true         # tells your server code to skip DB connection
         run: npm start
