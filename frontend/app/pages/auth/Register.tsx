@@ -93,7 +93,6 @@ export default function Register() {
         user: any;
         accessToken: string;
         refreshToken: string;
-        redirectTo?: string;
       }>("/api/auth/register", {
         name: name.trim(),
         email: email.trim(),
@@ -104,8 +103,16 @@ export default function Register() {
       // Store tokens (localStorage or cookies depending on config)
       setTokens(data.accessToken, data.refreshToken);
 
-      const fallback = `/?role=${ROLE_MAP[roleTab]}`;
-      navigate(data.redirectTo || fallback, { replace: true });
+      // Redirect based on user role
+      const userRole = data.user?.role || ROLE_MAP[roleTab];
+      if (userRole === "employee") {
+        navigate("/employee-dashboard", { replace: true });
+      } else if (userRole === "employer") {
+        navigate("/employer-dashboard", { replace: true });
+      } else {
+        // Fallback redirect
+        navigate("/home", { replace: true });
+      }
     } catch (err: any) {
       let message = "Registration failed";
       if (err instanceof Response) {

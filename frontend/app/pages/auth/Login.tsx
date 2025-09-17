@@ -43,7 +43,6 @@ export default function Login() {
         user: any;
         accessToken: string;
         refreshToken: string;
-        redirectTo?: string;
       }>("/api/auth/login", {
         email: email.trim(),
         password,
@@ -52,8 +51,16 @@ export default function Login() {
       // Persist tokens
       setTokens(data.accessToken, data.refreshToken);
 
-      const role = data?.user?.role || "employee";
-      navigate(data.redirectTo || `/?role=${role}`, { replace: true });
+      // Redirect based on user role
+      const userRole = data.user?.role || "employee";
+      if (userRole === "employee") {
+        navigate("/employee-dashboard", { replace: true });
+      } else if (userRole === "employer") {
+        navigate("/employer-dashboard", { replace: true });
+      } else {
+        // Fallback redirect
+        navigate("/home", { replace: true });
+      }
     } catch (err: any) {
       let message = "Login failed";
       if (err instanceof Response) {
@@ -174,13 +181,13 @@ export default function Login() {
                 className="w-5 h-5"
               />
               <span className="text-black font-medium text-sm">
-                Sign Up With Google
+                Sign In With Google
               </span>
             </button>
 
             <p className="text-sm text-black text-center">
-              Don’t have an account?{" "}
-              <a href="/" className="text-[#1E73BE] hover:underline">
+              Don't have an account?{" "}
+              <a href="/register" className="text-[#1E73BE] hover:underline">
                 Sign Up
               </a>
             </p>
