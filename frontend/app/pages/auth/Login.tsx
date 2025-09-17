@@ -39,6 +39,7 @@ export default function Login() {
 
     try {
       setLoading(true);
+      console.log("Attempting login with:", { email: email.trim() });
       const data = await postJson<{
         user: any;
         accessToken: string;
@@ -47,12 +48,23 @@ export default function Login() {
         email: email.trim(),
         password,
       });
+      console.log("Login successful:", { user: data.user, role: data.user?.role });
 
       // Persist tokens
       setTokens(data.accessToken, data.refreshToken);
 
-      // Redirect based on user role
+      // Store user role in localStorage for future use
       const userRole = data.user?.role || "employee";
+      try {
+        localStorage.setItem("userRole", userRole);
+        // Also store keys expected by dashboard guards
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("user", JSON.stringify(data.user));
+      } catch (error) {
+        console.log("Could not store role in localStorage");
+      }
+
+      // Redirect based on user role
       if (userRole === "employee") {
         navigate("/employee-dashboard", { replace: true });
       } else if (userRole === "employer") {
@@ -175,14 +187,8 @@ export default function Login() {
               onClick={handleGoogleAuth}
               className="w-full flex items-center justify-center gap-2 bg-light-gray rounded-md py-3"
             >
-              <img
-                src="/icons/auth/google.png"
-                alt="Google"
-                className="w-5 h-5"
-              />
-              <span className="text-black font-medium text-sm">
-                Sign In With Google
-              </span>
+              <img src="/icons/auth/google.png" alt="Google" className="w-5 h-5" />
+              <span className="text-black font-medium text-sm">Sign In With Google</span>
             </button>
 
             <p className="text-sm text-black text-center">
