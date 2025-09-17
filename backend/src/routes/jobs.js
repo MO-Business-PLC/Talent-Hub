@@ -1,7 +1,7 @@
 import express from "express";
 import Job from "../models/Job.js";
 import User from "../models/User.js";
-import { auth,authorize } from "../middleware/auth.js";
+import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -72,7 +72,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET /jobs/:id → get single job by ID
-router.get("/:id", auth,async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -94,7 +94,7 @@ router.get("/:id", auth,async (req, res) => {
 });
 
 // POST /jobs → create new job (requires authentication)
-router.post("/", auth, authorize("employer"),async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const {
       title,
@@ -155,7 +155,7 @@ router.post("/", auth, authorize("employer"),async (req, res) => {
 });
 
 // PUT /jobs/:id → update job (requires authentication and ownership)
-router.put("/:id", auth,authorize("admin","employer"), async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
     const updateData = req.body || {};
@@ -166,10 +166,10 @@ router.put("/:id", auth,authorize("admin","employer"), async (req, res) => {
       return res.status(404).json({ error: "Job not found" });
     }
 
-    // // Check if user is the creator or admin
-    // if (job.createdBy.toString() !== req.user.id && req.user.role !== 'admin') {
-    //   return res.status(403).json({ error: "Forbidden: You can only update your own jobs" });
-    // }
+    // Check if user is the creator or admin
+    if (job.createdBy.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ error: "Forbidden: You can only update your own jobs" });
+    }
 
     // Validate deadline if provided
     if (updateData.deadline) {
@@ -202,7 +202,7 @@ router.put("/:id", auth,authorize("admin","employer"), async (req, res) => {
 });
 
 // DELETE /jobs/:id → delete job (requires authentication and ownership)
-router.delete("/:id", auth, authorize("admin","employer"),async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -230,7 +230,7 @@ router.delete("/:id", auth, authorize("admin","employer"),async (req, res) => {
 });
 
 // GET /jobs/user/:userId → get jobs created by specific user
-router.get("/user/:userId", auth,authorize("admin","employer"),async (req, res) => {
+router.get("/user/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const { page = 1, limit = 10, status } = req.query;

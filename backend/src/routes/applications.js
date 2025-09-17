@@ -2,12 +2,12 @@ import express from "express";
 import Application from "../models/Application.js";
 import Job from "../models/Job.js";
 import User from "../models/User.js";
-import { auth, authorize } from "../middleware/auth.js";
+import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
 // POST /applications → apply to a job
-router.post("/", auth, authorize("applicant"), async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const { jobId, resumeUrl, coverLetter } = req.body || {};
 
@@ -28,11 +28,6 @@ router.post("/", auth, authorize("applicant"), async (req, res) => {
     const user = await User.findById(req.user?.id);
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    // Prevent users from applying to their own job postings
-    if (String(job.createdBy) === String(user._id)) {
-      return res.status(400).json({ error: "Cannot apply to your own job posting" });
     }
 
     // Create application
@@ -87,65 +82,6 @@ router.get("/:userId", auth, async (req, res) => {
       .populate({ path: "jobId", select: "title location status" });
 
     return res.status(200).json({ applications });
-  } catch (err) {
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// GET /applications/job/:jobId → allow employers to view applicants
-router.get("/job/:jobId", auth, async (req, res) => {
-  try {
-    const { jobId } = req.params;
-
-    // Find the job and check if the requester is the employer
-    const job = await Job.findById(jobId);
-    if (!job) {
-      return res.status(404).json({ error: "Job not found" });
-    }
-    if (
-      String(job.createdBy) !== req.user?.id &&
-      req.user?.role !== "admin"
-    ) {
-      return res.status(403).json({ error: "Forbidden" });
-    }
-
-    const applications = await Application.find({ jobId })
-      .sort({ createdAt: -1 })
-      .populate({ path: "userId", select: "name email role" });
-
-    return res.status(200).json({ applications });
-  } catch (err) {
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// PATCH /applications/:id → update application status
-router.patch("/:id", auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    // Only employer who posted the job or admin can update status
-    const application = await Application.findById(id).populate("jobId");
-    if (!application) {
-      return res.status(404).json({ error: "Application not found" });
-    }
-    const job = application.jobId;
-    if (
-      String(job.createdBy) !== req.user?.id &&
-      req.user?.role !== "admin"
-    ) {
-      return res.status(403).json({ error: "Forbidden" });
-    }
-
-    if (!status) {
-      return res.status(400).json({ error: "Status is required" });
-    }
-
-    application.status = status;
-    await application.save();
-
-    return res.status(200).json({ application });
   } catch (err) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
