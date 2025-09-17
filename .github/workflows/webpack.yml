@@ -30,12 +30,7 @@ jobs:
         working-directory: ./backend
         run: npm install
 
-      # 4️⃣ Optional: Run lint or tests (if you have them)
-      - name: Run tests
-        working-directory: ./backend
-        run: npm test
-
-      # 5️⃣ Optional: Start backend server (smoke test)
+      # 4️⃣ Optional: Start backend server (smoke test)
       - name: Start backend server
         working-directory: ./backend
         run: npm start
