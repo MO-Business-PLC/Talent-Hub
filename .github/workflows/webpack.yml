@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+name: NodeJS Backend CI
 
 on:
   push:
@@ -11,18 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         node-version: [18.x, 20.x, 22.x]
 
     steps:
-    - uses: actions/checkout@v4
+      # 1️⃣ Checkout the repo
+      - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
+      # 2️⃣ Setup Node.js version from the matrix
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Build
-      run: |
-        npm install
-        npx webpack
+      # 3️⃣ Install dependencies
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm install
+
+      # 4️⃣ Optional: Start backend server (smoke test)
+      - name: Start backend server
+        working-directory: ./backend
+        run: npm start
