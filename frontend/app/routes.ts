@@ -13,6 +13,8 @@ export default [
   route("/employee-dashboard", "routes/employee-dashboard.tsx"),
   // Employer dashboard
   route("/employer-dashboard", "routes/employer-dashboard.tsx"),
+  // Admin dashboard
+  route("/admin-dashboard", "routes/admin-dashboard.tsx"),
   // Home route (optional fallback)
   route("/jobs", "routes/jobs.tsx"),
   route("/jobs/:id", "routes/job.$id.tsx"),
