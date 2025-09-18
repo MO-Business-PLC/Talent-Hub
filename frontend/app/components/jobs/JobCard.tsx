@@ -26,7 +26,7 @@ export function JobCard({
   postedAt,
   description,
   tags,
-  logo = "images/jobs/default_company_logo.png",
+  logo = "/images/jobs/default_company_logo.png",
   isFeatured = false,
   isUrgent = false,
   className = "",
