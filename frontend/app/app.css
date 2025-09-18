@@ -6,19 +6,17 @@
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   /* Add your custom theme variables here */
-  --color-primary-text: rgba(44, 62, 80, 1);
+  --color-primary-text: #2c3e50;
+  --color-secondary-text: #5d6d7e;
+  --color-disabled-text: #b0b8c1;
   --color-primary-600: #195e9a;
   --color-primary-700: #134a7a;
   --color-surface: #f6f8fc;
-  --color-base: rgba(30, 115, 190, 1);
-  --color-light-gray: rgba(245, 247, 250, 1);
+  --color-base: #1e73be;
+  --color-light-gray: #f5f7fa;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+  @apply bg-white;
 }
