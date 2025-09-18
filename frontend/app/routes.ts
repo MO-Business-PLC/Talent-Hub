@@ -9,6 +9,7 @@ export default [
   route("/login", "routes/login.tsx"),
   // Register page
   route("/register", "routes/register.tsx"),
+  
   // Employee dashboard
   route("/employee-dashboard", "routes/employee-dashboard.tsx"),
   // Employer dashboard

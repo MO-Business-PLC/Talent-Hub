@@ -23,7 +23,9 @@ export async function loader({ request }: { request: Request }) {
   // Try to get user role from cookies
   const userRole = cookies.userRole;
 
-  if (userRole === "employee") {
+  if (userRole === "admin") {
+    return redirect("/admin-dashboard");
+  } else if (userRole === "employee") {
     return redirect("/employee-dashboard");
   } else if (userRole === "employer") {
     return redirect("/employer-dashboard");
@@ -42,7 +44,9 @@ export async function loader({ request }: { request: Request }) {
       const profile = await response.json();
       const role = profile.role || profile.user?.role;
 
-      if (role === "employee") {
+      if (role === "admin") {
+        return redirect("/admin-dashboard");
+      } else if (role === "employee") {
         return redirect("/employee-dashboard");
       } else if (role === "employer") {
         return redirect("/employer-dashboard");
@@ -92,7 +96,9 @@ export default function RootRedirect() {
       }
 
       // Redirect based on role
-      if (userRole === "employee") {
+      if (userRole === "admin") {
+        setRedirectPath("/admin-dashboard");
+      } else if (userRole === "employee") {
         setRedirectPath("/employee-dashboard");
       } else if (userRole === "employer") {
         setRedirectPath("/employer-dashboard");
@@ -119,7 +125,9 @@ export default function RootRedirect() {
             console.log("Could not store role in localStorage");
           }
 
-          if (role === "employee") {
+          if (role === "admin") {
+            setRedirectPath("/admin-dashboard");
+          } else if (role === "employee") {
             setRedirectPath("/employee-dashboard");
           } else if (role === "employer") {
             setRedirectPath("/employer-dashboard");
