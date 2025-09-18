@@ -39,21 +39,40 @@ export default function Login() {
 
     try {
       setLoading(true);
+      console.log("Attempting login with:", { email: email.trim() });
       const data = await postJson<{
         user: any;
         accessToken: string;
         refreshToken: string;
-        redirectTo?: string;
       }>("/api/auth/login", {
         email: email.trim(),
         password,
       });
+      console.log("Login successful:", { user: data.user, role: data.user?.role });
 
       // Persist tokens
       setTokens(data.accessToken, data.refreshToken);
 
-      const role = data?.user?.role || "employee";
-      navigate(data.redirectTo || `/?role=${role}`, { replace: true });
+      // Store user role in localStorage for future use
+      const userRole = data.user?.role || "employee";
+      try {
+        localStorage.setItem("userRole", userRole);
+        // Also store keys expected by dashboard guards
+        localStorage.setItem("isAuthenticated", "true");
+        localStorage.setItem("user", JSON.stringify(data.user));
+      } catch (error) {
+        console.log("Could not store role in localStorage");
+      }
+
+      // Redirect based on user role
+      if (userRole === "employee") {
+        navigate("/employee-dashboard", { replace: true });
+      } else if (userRole === "employer") {
+        navigate("/employer-dashboard", { replace: true });
+      } else {
+        // Fallback redirect
+        navigate("/home", { replace: true });
+      }
     } catch (err: any) {
       let message = "Login failed";
       if (err instanceof Response) {
@@ -168,19 +187,13 @@ export default function Login() {
               onClick={handleGoogleAuth}
               className="w-full flex items-center justify-center gap-2 bg-light-gray rounded-md py-3"
             >
-              <img
-                src="/icons/auth/google.png"
-                alt="Google"
-                className="w-5 h-5"
-              />
-              <span className="text-black font-medium text-sm">
-                Sign Up With Google
-              </span>
+              <img src="/icons/auth/google.png" alt="Google" className="w-5 h-5" />
+              <span className="text-black font-medium text-sm">Sign In With Google</span>
             </button>
 
             <p className="text-sm text-black text-center">
-              Don’t have an account?{" "}
-              <a href="/" className="text-[#1E73BE] hover:underline">
+              Don't have an account?{" "}
+              <a href="/register" className="text-[#1E73BE] hover:underline">
                 Sign Up
               </a>
             </p>

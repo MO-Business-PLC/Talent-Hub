@@ -140,18 +140,26 @@ export const refresh = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body || {};
+    // Accept email and password from either body or query parameters
+    const email = req.body?.email || req.query?.email;
+    const password = req.body?.password || req.query?.password;
+
+    console.log('POST Login attempt:', { email, password: password ? '***' : 'missing' });
 
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
     }
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
+    console.log('User found:', user ? 'Yes' : 'No', user ? user.email : 'N/A');
+    
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
     const isMatch = await user.matchPassword(password);
+    console.log('Password match:', isMatch);
+    
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
@@ -163,6 +171,42 @@ export const login = async (req, res) => {
     const redirectTo = `/?role=${safeUser.role}`;
     return res.status(200).json({ user: safeUser, ...tokens, redirectTo });
   } catch (err) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// GET login endpoint for easy URL-based login
+export const loginGet = async (req, res) => {
+  try {
+    const { email, password } = req.query;
+
+    console.log('Login attempt:', { email, password: password ? '***' : 'missing' });
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required" });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    console.log('User found:', user ? 'Yes' : 'No', user ? user.email : 'N/A');
+    
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const isMatch = await user.matchPassword(password);
+    console.log('Password match:', isMatch);
+    
+    if (!isMatch) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    const tokens = generateTokens(user);
+    const safeUser = user.toJSON();
+
+    const redirectTo = `/?role=${safeUser.role}`;
+    return res.status(200).json({ user: safeUser, ...tokens, redirectTo });
+  } catch (err) {
+    console.error('Login error:', err);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
