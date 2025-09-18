@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key';
+const JWT_SECRET = process.env.JWT_SECRET || 'secret_jwt_key';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '30d';
 
@@ -11,6 +11,8 @@ const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '30d';
  * @returns {string} JWT token
  */
 export const generateToken = (payload, expiresIn = JWT_EXPIRES_IN) => {
+  console.log(JWT_SECRET)
+  console.log(expiresIn)
   return jwt.sign(payload, JWT_SECRET, { expiresIn });
 };
 
@@ -42,9 +44,22 @@ export const generateTokens = (user) => {
  */
 export const verifyToken = (token) => {
   try {
-    return jwt.verify(token, JWT_SECRET);
+
+    const decoded = jwt.verify(token, JWT_SECRET);
+
+    return decoded;
   } catch (error) {
-    throw new Error('Invalid or expired token');
+    console.error(" Token verification error:", error.message);
+    console.error("Error name:", error.name);
+    console.error("Stack trace:", error.stack);
+
+    if (error.name === "TokenExpiredError") {
+      throw new Error("jwt expired");
+    }
+    if (error.name === "JsonWebTokenError") {
+      throw new Error("Invalid token");
+    }
+    throw new Error("Token verification failed");
   }
 };
 

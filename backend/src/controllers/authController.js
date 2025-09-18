@@ -166,6 +166,7 @@ export const login = async (req, res) => {
 
     const tokens = generateTokens(user);
     const safeUser = user.toJSON();
+    console.log(safeUser)
 
     const redirectTo = `/?role=${safeUser.role}`;
     return res.status(200).json({ user: safeUser, ...tokens, redirectTo });
