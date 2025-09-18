@@ -7,6 +7,8 @@ import connectDB from "./config/database.js";
 import authRouter from "./routes/auth.js";
 import applicationsRouter from "./routes/applications.js";
 import jobsRouter from "./routes/jobs.js";
+import adminRouter from "./routes/admin.js";
+import trendsRouter from "./routes/trends.js";
 
 dotenv.config();
 
@@ -66,6 +68,8 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/auth", authRouter);
 app.use("/api/applications", applicationsRouter);
 app.use("/api/jobs", jobsRouter);
+app.use("/api/admin", adminRouter);
+app.use("/api/trends", trendsRouter);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
@@ -87,6 +91,8 @@ app.get("/api", (req, res) => {
       auth: "/api/auth",
       jobs: "/api/jobs",
       applications: "/api/applications",
+      admin: "/api/admin",
+      trends: "/api/trends",
     },
   });
 });
