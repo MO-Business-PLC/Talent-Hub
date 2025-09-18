@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { SearchBar } from "../../components/search";
-import { JobCard, JobFilters, EmailSubscription, ResumeUpload, Pagination } from "../../components/jobs";
+import {
+  JobCard,
+  JobFilters,
+  EmailSubscription,
+  ResumeUpload,
+  Pagination,
+} from "../../components/jobs";
 
 export default function Jobs() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -19,8 +25,9 @@ export default function Jobs() {
           salary: "$20,000 - $25,000",
           type: "Full-time",
           postedAt: "2 days ago",
-          description: "We're looking for a talented UI/UX designer to join our growing team...",
-          tags: ["Figma", "Sketch", "Adobe Creative Suite"]
+          description:
+            "We're looking for a talented UI/UX designer to join our growing team...",
+          tags: ["Figma", "Sketch", "Adobe Creative Suite"],
         },
         {
           id: 2,
@@ -30,8 +37,9 @@ export default function Jobs() {
           salary: "$80,000 - $100,000",
           type: "Full-time",
           postedAt: "1 day ago",
-          description: "Join our frontend team to build amazing user experiences...",
-          tags: ["React", "TypeScript", "JavaScript"]
+          description:
+            "Join our frontend team to build amazing user experiences...",
+          tags: ["React", "TypeScript", "JavaScript"],
         },
         {
           id: 3,
@@ -41,8 +49,9 @@ export default function Jobs() {
           salary: "$70,000 - $90,000",
           type: "Remote",
           postedAt: "3 days ago",
-          description: "Build scalable APIs and microservices for our platform...",
-          tags: ["Node.js", "Python", "AWS"]
+          description:
+            "Build scalable APIs and microservices for our platform...",
+          tags: ["Node.js", "Python", "AWS"],
         },
         {
           id: 4,
@@ -52,8 +61,9 @@ export default function Jobs() {
           salary: "$90,000 - $120,000",
           type: "Full-time",
           postedAt: "1 week ago",
-          description: "Lead product strategy and work with cross-functional teams...",
-          tags: ["Product Strategy", "Agile", "Analytics"]
+          description:
+            "Lead product strategy and work with cross-functional teams...",
+          tags: ["Product Strategy", "Agile", "Analytics"],
         },
         {
           id: 5,
@@ -63,8 +73,9 @@ export default function Jobs() {
           salary: "$85,000 - $110,000",
           type: "Full-time",
           postedAt: "4 days ago",
-          description: "Analyze complex datasets to drive business decisions...",
-          tags: ["Python", "R", "Machine Learning"]
+          description:
+            "Analyze complex datasets to drive business decisions...",
+          tags: ["Python", "R", "Machine Learning"],
         },
         {
           id: 6,
@@ -74,8 +85,9 @@ export default function Jobs() {
           salary: "$75,000 - $95,000",
           type: "Full-time",
           postedAt: "5 days ago",
-          description: "Manage our cloud infrastructure and deployment pipelines...",
-          tags: ["AWS", "Kubernetes", "Docker"]
+          description:
+            "Manage our cloud infrastructure and deployment pipelines...",
+          tags: ["AWS", "Kubernetes", "Docker"],
         },
         {
           id: 7,
@@ -85,8 +97,9 @@ export default function Jobs() {
           salary: "$70,000 - $90,000",
           type: "Full-time",
           postedAt: "2 days ago",
-          description: "Develop mobile applications for iOS and Android platforms...",
-          tags: ["React Native", "Swift", "Kotlin"]
+          description:
+            "Develop mobile applications for iOS and Android platforms...",
+          tags: ["React Native", "Swift", "Kotlin"],
         },
         {
           id: 8,
@@ -97,8 +110,8 @@ export default function Jobs() {
           type: "Full-time",
           postedAt: "1 week ago",
           description: "Lead marketing campaigns and drive user acquisition...",
-          tags: ["Digital Marketing", "SEO", "Analytics"]
-        }
+          tags: ["Digital Marketing", "SEO", "Analytics"],
+        },
       ]);
       setIsSearching(false);
     }, 1000);
@@ -117,11 +130,18 @@ export default function Jobs() {
       >
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'DM Sans, sans-serif' }}>
+            <h1
+              className="text-4xl md:text-5xl font-bold mb-4"
+              style={{ fontFamily: "DM Sans, sans-serif" }}
+            >
               Find your <span className="text-base">new job</span> today
             </h1>
-            <p className="text-lg font-normal text-[#000000B2]" style={{ fontFamily: 'DM Sans, sans-serif' }}>
-              Thousands of jobs in the computer, engineering and technology sectors are waiting for you.
+            <p
+              className="text-lg font-normal text-[#000000B2]"
+              style={{ fontFamily: "DM Sans, sans-serif" }}
+            >
+              Thousands of jobs in the computer, engineering and technology
+              sectors are waiting for you.
             </p>
           </div>
 
@@ -129,8 +149,11 @@ export default function Jobs() {
           <div className="w-full">
             <SearchBar onSearch={handleSearch} />
           </div>
-          <p className="text-sm mt-2 text-secondary-text"> <span className="text-disabled-text">Suggestion:</span> UI Designer, UX Researcher, Android, Admin</p>
-
+          <p className="text-sm mt-2 text-secondary-text">
+            {" "}
+            <span className="text-disabled-text">Suggestion:</span> UI Designer,
+            UX Researcher, Android, Admin
+          </p>
         </div>
       </section>
 
@@ -155,7 +178,7 @@ export default function Jobs() {
             {/* Job Cards Grid */}
             {searchResults.length > 0 && !isSearching && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                {searchResults.map((job) => (
+                {searchResults.map(job => (
                   <JobCard key={job.id} {...job} />
                 ))}
               </div>
@@ -164,12 +187,25 @@ export default function Jobs() {
             {/* Empty State */}
             {searchResults.length === 0 && !isSearching && (
               <div className="text-center py-12">
-                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6" />
+                <svg
+                  className="mx-auto h-12 w-12 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"
+                  />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No jobs found</h3>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">
+                  No jobs found
+                </h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  Try adjusting your search criteria or browse all available jobs.
+                  Try adjusting your search criteria or browse all available
+                  jobs.
                 </p>
               </div>
             )}
@@ -178,7 +214,7 @@ export default function Jobs() {
             <Pagination
               currentPage={1}
               totalPages={5}
-              onPageChange={(page) => console.log('Page changed to:', page)}
+              onPageChange={page => console.log("Page changed to:", page)}
             />
           </div>
 
