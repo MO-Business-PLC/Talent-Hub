@@ -16,8 +16,6 @@ const router = express.Router();
 // GET /jobs → get all jobs with optional filtering and pagination
 router.get("/", getAllJobs);
 
-// GET /jobs/:id → get single job by ID
-router.get("/:id", auth, getJobById);
 
 // POST /jobs → create new job 
 router.post("/", auth, authorize("employer"), createJobValidator, validate, createJob);
@@ -28,7 +26,12 @@ router.put("/:id", auth, authorize("admin", "employer"), createJobValidator, val
 // DELETE /jobs/:id → delete job 
 router.delete("/:id", auth, authorize("admin", "employer"), deleteJob);
 
+// GET /jobs/:id → get single job by ID
+router.get("/:id", auth, getJobById);
+
 // GET /jobs/user/:userId → get jobs created by specific user
 router.get("/user/:userId", auth, authorize("admin", "employer"), getJobsByUser);
+
+
 
 export default router;
