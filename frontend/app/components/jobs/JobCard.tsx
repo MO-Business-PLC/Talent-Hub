@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export interface JobCardProps {
   id: string;
@@ -31,6 +31,7 @@ export function JobCard({
   isUrgent = false,
   className = "",
 }: JobCardProps) {
+  const navigate = useNavigate();
   const getTypeColor = (jobType: string) => {
     switch (jobType) {
       case "Full-time":
@@ -49,6 +50,7 @@ export function JobCard({
   return (
     <div
       className={`bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-all duration-200 relative ${className} min-w-[300px]`}
+      onClick={() => navigate(`/jobs/${id}`)}
     >
       <div className="flex items-center justify-between">
         {/* Company Logo */}
