@@ -74,7 +74,7 @@ const jobSchema = new mongoose.Schema(
 );
 
 // Index for faster job searches
-jobSchema.index({ title: "text", description: "text", skills: 1, sector: 1 });
+jobSchema.index({ title: "text", description: "text", skills: "text", sector: "text"});
 
 const Job = mongoose.model("Job", jobSchema);
 export default Job;
