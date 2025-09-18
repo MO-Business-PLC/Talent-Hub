@@ -1,4 +1,5 @@
 import { FiBookmark } from "react-icons/fi";
+import { useNavigate } from "react-router";
 
 export interface JobHeaderProps {
   title: string;
@@ -23,6 +24,12 @@ export function JobHeader({
   isRemote = false,
   className = "",
 }: JobHeaderProps) {
+  const navigate = useNavigate();
+
+  const handleApplyClick = () => {
+    navigate("/job-application");
+  };
+
   const getTypeColor = (jobType: string) => {
     switch (jobType) {
       case "Full-time":
@@ -82,7 +89,10 @@ export function JobHeader({
           >
             <FiBookmark className="w-6 h-6" />
           </button>
-          <button className="bg-base hover:bg-primary-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-lg font-semibold transition-colors duration-200">
+          <button 
+            onClick={handleApplyClick}
+            className="bg-base hover:bg-primary-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-lg font-semibold transition-colors duration-200"
+          >
             Apply Now
           </button>
         </div>
