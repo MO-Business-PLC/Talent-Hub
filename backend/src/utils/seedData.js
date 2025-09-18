@@ -7,8 +7,14 @@ import Application from '../models/Application.js';
 const mockUsers = [
   {
     name: "John Smith",
-    email: "john.smith@example.com",
-    password: "password123",
+    email: "admin@talenhub.com",
+    password: "admin123",
+    role: "admin"
+  },
+  {
+    name: "Jane Admin",
+    email: "jane.admin@talenhub.com",
+    password: "admin123",
     role: "admin"
   },
   {
@@ -27,31 +33,31 @@ const mockUsers = [
     name: "Emily Davis",
     email: "emily.davis@example.com",
     password: "password123",
-    role: "applicant"
+    role: "employee"
   },
   {
     name: "David Brown",
     email: "david.brown@example.com",
     password: "password123",
-    role: "applicant"
+    role: "employee"
   },
   {
     name: "Lisa Anderson",
     email: "lisa.anderson@example.com",
     password: "password123",
-    role: "applicant"
+    role: "employee"
   },
   {
     name: "Tom Miller",
     email: "tom.miller@example.com",
     password: "password123",
-    role: "applicant"
+    role: "employee"
   },
   {
     name: "Jessica Taylor",
     email: "jessica.taylor@example.com",
     password: "password123",
-    role: "applicant"
+    role: "employee"
   }
 ];
 
@@ -287,7 +293,7 @@ export const seedDatabase = async () => {
 
     // Get employer IDs for job creation
     const employers = createdUsers.filter(user => user.role === 'employer');
-    const applicants = createdUsers.filter(user => user.role === 'applicant');
+    const employees = createdUsers.filter(user => user.role === 'employee');
 
     // Update job data with employer IDs
     const jobsWithemployers = mockJobs.map((job, index) => ({
@@ -303,7 +309,7 @@ export const seedDatabase = async () => {
     const applicationsWithIds = mockApplications.map((app, index) => ({
       ...app,
       jobId: createdJobs[index % createdJobs.length]._id,
-      userId: applicants[index % applicants.length]._id
+      userId: employees[index % employees.length]._id
     }));
 
     // Create applications

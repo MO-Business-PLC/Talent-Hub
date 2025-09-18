@@ -2,6 +2,7 @@ import express from "express";
 import {
   register,
   login,
+  loginGet,
   googleStart,
   googleCallback,
   profile,
@@ -14,6 +15,7 @@ const router = express.Router();
 // Public endpoints
 router.post("/register", register);
 router.post("/login", login);
+router.get("/login", loginGet); // GET login for easy URL-based login
 router.post("/refresh", refresh);
 
 // Google OAuth (redirect flow)
