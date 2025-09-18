@@ -65,7 +65,9 @@ export default function Login() {
       }
 
       // Redirect based on user role
-      if (userRole === "employee") {
+      if (userRole === "admin") {
+        navigate("/admin-dashboard", { replace: true });
+      } else if (userRole === "employee") {
         navigate("/employee-dashboard", { replace: true });
       } else if (userRole === "employer") {
         navigate("/employer-dashboard", { replace: true });
