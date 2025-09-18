@@ -14,5 +14,6 @@ export default [
   // Employer dashboard
   route("/employer-dashboard", "routes/employer-dashboard.tsx"),
   // Home route (optional fallback)
-  route("/home", "routes/home.tsx"),
+  route("/jobs", "routes/jobs.tsx"),
+  route("/jobs/:id", "routes/job.$id.tsx"),
 ] satisfies RouteConfig;
