@@ -124,7 +124,7 @@ const createJob = async (req, res) => {
       .populate("createdBy", "name email")
       .lean();
 
-    return res.status(201).json({ job: populatedJob });
+    return res.status(201).json({  message: "Job created successfully" ,job: populatedJob,});
   } catch (err) {
     return res.status(500).json({ error: "Internal Server Error" });
   }
@@ -159,7 +159,7 @@ const updateJob = async (req, res) => {
       { new: true, runValidators: true }
     ).populate('createdBy', 'name email').lean();
 
-    return res.status(200).json({ job: updatedJob });
+    return res.status(200).json({ message:"Job updated successfully",job: updatedJob });
   } catch (err) {
     if (err.name === 'CastError') {
       return res.status(400).json({ error: "Invalid job ID" });
