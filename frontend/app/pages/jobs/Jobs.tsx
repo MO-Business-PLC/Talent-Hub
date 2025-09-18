@@ -7,6 +7,7 @@ import {
   ResumeUpload,
   Pagination,
 } from "../../components/jobs";
+import { FaBoxOpen } from "react-icons/fa";
 
 export default function Jobs() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -187,19 +188,7 @@ export default function Jobs() {
             {/* Empty State */}
             {searchResults.length === 0 && !isSearching && (
               <div className="text-center py-12">
-                <svg
-                  className="mx-auto h-12 w-12 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2V6"
-                  />
-                </svg>
+                <FaBoxOpen className=" mx-auto w-20 h-20 text-base" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">
                   No jobs found
                 </h3>

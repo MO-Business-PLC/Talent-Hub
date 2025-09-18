@@ -1,4 +1,4 @@
-import Jobs from "~/pages/jobs/jobs";
+import Jobs from "~/pages/jobs/Jobs";
 
 export function meta() {
   return [
