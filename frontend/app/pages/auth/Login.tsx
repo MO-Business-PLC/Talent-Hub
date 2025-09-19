@@ -73,7 +73,7 @@ export default function Login() {
       } else if (userRole === "employee") {
         navigate("/employee-dashboard", { replace: true });
       } else if (userRole === "employer") {
-        navigate("/employer-dashboard", { replace: true });
+        navigate("/employer/dashboard", { replace: true });
       } else {
         // Fallback redirect
         navigate("/home", { replace: true });
