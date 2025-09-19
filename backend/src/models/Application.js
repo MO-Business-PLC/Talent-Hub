@@ -46,11 +46,7 @@ applicationSchema.index({ jobId: 1, userId: 1 }, { unique: true });
 
 // Error handling middleware for duplicate key (E11000)
 applicationSchema.post("save", function (error, doc, next) {
-  if (error.name === "MongoServerError" && error.code === 11000) {
-    next(new Error("This user has already applied for this job."));
-  } else {
     next(error);
-  }
 });
 
 const Application = mongoose.model("Application", applicationSchema);
