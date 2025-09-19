@@ -1,13 +1,13 @@
 // routes/root-redirect.tsx
 import { useEffect, useState } from "react";
-import { redirect, useLoaderData } from "react-router";
+import { redirect } from "react-router";
 
 // Server-side loader function
 export async function loader({ request }: { request: Request }) {
   // Check for authentication via cookies (works on server)
   const cookieHeader = request.headers.get("Cookie") || "";
   const cookies = Object.fromEntries(
-    cookieHeader.split("; ").map((cookie) => {
+    cookieHeader.split("; ").map(cookie => {
       const [key, ...value] = cookie.split("=");
       return [key, value.join("=")];
     })
@@ -17,7 +17,7 @@ export async function loader({ request }: { request: Request }) {
   const refreshToken = cookies.refreshToken;
 
   if (!accessToken && !refreshToken) {
-    return redirect("/register");
+    // return redirect("/register");
   }
 
   // Try to get user role from cookies
@@ -33,7 +33,7 @@ export async function loader({ request }: { request: Request }) {
 
   // If no role found but user is authenticated, try to fetch profile
   try {
-    const response = await fetch("http://localhost:5000/api/auth/profile", {
+    const response = await fetch("http://localhost:5300/api/auth/profile", {
       headers: {
         Cookie: cookieHeader,
       },
@@ -80,7 +80,7 @@ export default function RootRedirect() {
         console.log("localStorage not available, using cookies");
         // Fallback to cookies if localStorage isn't available
         const cookies = Object.fromEntries(
-          document.cookie.split("; ").map((cookie) => {
+          document.cookie.split("; ").map(cookie => {
             const [key, ...value] = cookie.split("=");
             return [key, value.join("=")];
           })
@@ -165,7 +165,8 @@ export default function RootRedirect() {
         <p className="text-gray-600">Redirecting to your dashboard...</p>
         <div className="mt-6 bg-blue-50 rounded-lg p-4">
           <p className="text-sm text-blue-700">
-            If you're not redirected automatically, check your browser's console for any issues.
+            If you're not redirected automatically, check your browser's console
+            for any issues.
           </p>
         </div>
       </div>

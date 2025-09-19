@@ -8,8 +8,8 @@ import { useMemo } from "react";
 import { useNavigate } from "react-router";
 
 export default function EmployerDashboard() {
-  const { jobs, isLoading, error, refetch } = useJobs();
   const navigate = useNavigate();
+  const { jobs, isLoading, error, refetch } = useJobs();
 
   // Transform API jobs to match JobsTable expected format
   const transformedJobs = useMemo(() => {
@@ -59,7 +59,7 @@ export default function EmployerDashboard() {
 
   const handleCreateJob = () => {
     // Navigate to create job page
-    console.log("Create new job");
+    navigate("/post-job");
   };
 
   return (

@@ -24,6 +24,7 @@ export default [
     route("/employer/jobs", "routes/employer-dashboard.tsx", {
       id: "/jobs",
     }),
+    route("/post-job", "routes/post-job.tsx"),
   ]),
   // Home route (optional fallback)
   route("/jobs", "routes/jobs.tsx"),
