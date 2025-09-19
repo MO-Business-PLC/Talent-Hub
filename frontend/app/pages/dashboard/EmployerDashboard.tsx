@@ -5,9 +5,11 @@ import { IoCheckmarkCircle } from "react-icons/io5";
 import { FiTrendingUp } from "react-icons/fi";
 import { useJobs } from "../../hooks/useJobs";
 import { useMemo } from "react";
+import { useNavigate } from "react-router";
 
 export default function EmployerDashboard() {
   const { jobs, isLoading, error, refetch } = useJobs();
+  const navigate = useNavigate();
 
   // Transform API jobs to match JobsTable expected format
   const transformedJobs = useMemo(() => {
@@ -42,7 +44,7 @@ export default function EmployerDashboard() {
   const numberFmt = useMemo(() => new Intl.NumberFormat("en-US"), []);
 
   const handleViewJob = (jobId: string) => {
-    window.location.href = `/jobs/${jobId}`;
+    navigate(`/jobs/${jobId}`);
   };
 
   const handleEditJob = (jobId: string) => {
