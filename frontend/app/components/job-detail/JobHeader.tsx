@@ -11,6 +11,7 @@ export interface JobHeaderProps {
   logo?: string;
   isRemote?: boolean;
   className?: string;
+  jobId?: string;
 }
 
 export function JobHeader({
@@ -23,11 +24,17 @@ export function JobHeader({
   logo,
   isRemote = false,
   className = "",
+  jobId,
 }: JobHeaderProps) {
   const navigate = useNavigate();
 
   const handleApplyClick = () => {
-    navigate("/job-application");
+    if (jobId) {
+      const encodedTitle = encodeURIComponent(title);
+      navigate(`/job-application?jobId=${jobId}&title=${encodedTitle}`);
+    } else {
+      navigate("/job-application");
+    }
   };
 
   const getTypeColor = (jobType: string) => {

@@ -1,66 +1,58 @@
 // import type { Route } from "./+types/job.$id";
 import { Link, useParams } from "react-router";
+import { useState, useEffect } from "react";
 import {
   JobHeader,
   JobDescription,
   JobOverview,
 } from "../../components/job-detail";
+import { getJobById } from "../../lib/api";
 
-// Mock data - replace with actual API calls
-const mockJobData = {
-  id: "1",
-  title: "Senior UX Designer",
-  company: "2F Capital",
-  location: "Addis Ababa, Bole",
-  type: "Full-time" as const,
-  salary: "25K - 35K",
-  postedAt: "23 Aug, 2025",
-  expiresAt: "29 Aug, 2025",
-  level: "Entry Level",
-  experience: "6 - 12 month",
-  education: "Graduation",
-  isRemote: false,
-  description:
-    "We're looking for a talented Senior UX Designer to join our dynamic team.",
-  responsibilities: [
-    "Develop and maintain high-quality web applications using React, TypeScript, and modern frontend technologies",
-    "Collaborate with designers and backend engineers to implement user-friendly interfaces",
-    "Optimize applications for maximum speed and scalability",
-    "Write clean, maintainable, and well-documented code",
-    "Participate in code reviews and mentor junior developers",
-    "Stay up-to-date with the latest frontend trends and technologies",
-    "Contribute to technical decisions and architecture discussions",
-  ],
-  requirements: [
-    "Strong troubleshooting and analytical skills",
-    "Over 3 years of back-end development experience",
-    "Proficiency in HTML, JavaScript, CSS, PHP, Symfony, and/or Laravel",
-    "Experience with APIs and Web Services (REST, GraphQL, SOAP, etc.)",
-    "Familiarity with Agile development, commercial software, middleware, servers, storage, and database management",
-    "Experience with version control and project management tools (e.g., GitHub, Jira)",
-    "Ambition and eagerness to advance in a rapidly growing agency",
-  ],
-  benefits: [
-    "Early finishes on Fridays (4:30 PM finish, plus a drink)",
-    "28 days of holiday (increasing annually), plus a birthday day off",
-    "Generous annual bonus",
-    "Comprehensive healthcare package",
-    "Paid community days for charity",
-    "£100 contribution towards personal learning and development",
-    "Free breakfast on Mondays and office snacks",
-    "Access to Perkbox for discounts and free points",
-    "Cycle to Work Scheme",
-  ],
-  companyInfo: {
-    name: "2F Capital",
-    description:
-      "2F Capital is a leading technology company that builds innovative solutions for businesses worldwide. We're passionate about creating products that solve real-world problems and make people's lives easier.",
-    website: "https://2fcapital.com",
-    size: "50-100 employees",
-    industry: "Technology",
-    founded: "2020",
-    location: "Addis Ababa, Ethiopia",
-  },
+// Transform backend job data to frontend format
+const transformJobData = (backendJob: any) => {
+  return {
+    id: backendJob._id,
+    title: backendJob.title,
+    company: backendJob.createdBy?.name || "Unknown Company",
+    location: `${backendJob.location?.city}, ${backendJob.location?.country}`,
+    type: backendJob.jobType === "FULL_TIME" ? "Full-time" : 
+          backendJob.jobType === "PART_TIME" ? "Part-time" : 
+          backendJob.jobType === "CONTRACT" ? "Contract" : "Remote",
+    salary: "Competitive", // Backend doesn't have salary field
+    postedAt: new Date(backendJob.createdAt).toLocaleDateString(),
+    expiresAt: new Date(backendJob.deadline).toLocaleDateString(),
+    level: backendJob.experienceLevel === "JUNIOR" ? "Entry Level" :
+           backendJob.experienceLevel === "MID" ? "Mid Level" : "Senior Level",
+    experience: "2-5 years", // Default since backend doesn't have specific experience range
+    education: "Bachelor's Degree", // Default since backend doesn't have education field
+    isRemote: backendJob.jobSite === "REMOTE",
+    description: backendJob.description,
+    responsibilities: [
+      "Work on exciting projects and cutting-edge technologies",
+      "Collaborate with cross-functional teams",
+      "Contribute to product development and innovation",
+      "Mentor junior team members",
+      "Participate in code reviews and technical discussions"
+    ],
+    requirements: backendJob.skills || [],
+    benefits: [
+      "Competitive salary and benefits package",
+      "Flexible working hours",
+      "Professional development opportunities",
+      "Health insurance coverage",
+      "Team building activities",
+      "Modern office environment"
+    ],
+    companyInfo: {
+      name: backendJob.createdBy?.name || "Company",
+      description: "A dynamic company focused on innovation and growth",
+      website: "#",
+      size: "50-100 employees",
+      industry: backendJob.sector || "Technology",
+      founded: "2020",
+      location: `${backendJob.location?.city}, ${backendJob.location?.country}`,
+    },
+  };
 };
 
 const mockSimilarJobs = [
@@ -92,11 +84,81 @@ const mockSimilarJobs = [
 
 export default function JobDetail() {
   const { id } = useParams();
+  const [job, setJob] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // In a real app, you would fetch job data based on the id
-  // const { data: job, loading, error } = useJobQuery(id);
+  useEffect(() => {
+    const fetchJob = async () => {
+      if (!id) {
+        setError("Job ID is required");
+        setLoading(false);
+        return;
+      }
 
-  const job = mockJobData;
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await getJobById(id);
+        const transformedJob = transformJobData(response.job);
+        setJob(transformedJob);
+      } catch (err: any) {
+        console.error("Error fetching job:", err);
+        setError(err.message || "Failed to fetch job details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJob();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-light-gray pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading job details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-light-gray pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Job</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <Link 
+            to="/jobs" 
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+          >
+            Back to Jobs
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!job) {
+    return (
+      <div className="min-h-screen bg-light-gray pt-16 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-gray-400 text-6xl mb-4">🔍</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Job Not Found</h2>
+          <p className="text-gray-600 mb-4">The job you're looking for doesn't exist or has been removed.</p>
+          <Link 
+            to="/jobs" 
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+          >
+            Back to Jobs
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-light-gray pt-16">
@@ -169,6 +231,7 @@ export default function JobDetail() {
               salary={job.salary}
               postedAt={job.postedAt}
               isRemote={job.isRemote}
+              jobId={job.id}
             />
 
             {/* Job Description */}
