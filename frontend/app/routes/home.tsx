@@ -1,7 +1,14 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
 import { useEffect, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router";
+import Hero from "~/components/Hero";
+import TopCompanies from "~/components/home/TopCompanies";
+import ExploreCategories from "~/components/home/ExploreCategories";
+import TopCompaniesSection from "~/components/home/TopCompaniesSection";
+import ActiveJobsSection from "~/components/home/ActiveJobsSection";
+import EmployerCTA from "~/components/home/EmployerCTA";
+import CandidateCTA from "~/components/home/CandidateCTA";
+import Testimonials from "~/components/home/Testimonials";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -24,7 +31,6 @@ export default function Home() {
       try {
         sessionStorage.setItem("role_hint", role);
       } catch {}
-      // Remove the query param so refresh keeps a clean URL
       const clean = new URL(window.location.href);
       clean.searchParams.delete("role");
       clean.searchParams.delete("sso");
@@ -44,7 +50,14 @@ export default function Home() {
           <strong className="font-semibold capitalize">{role}</strong>
         </div>
       )}
-      <Welcome />
+      <Hero />
+      <TopCompanies />
+      <ExploreCategories />
+      <TopCompaniesSection />
+      <ActiveJobsSection />
+      <EmployerCTA />
+      <CandidateCTA />
+      <Testimonials />
     </>
   );
 }
