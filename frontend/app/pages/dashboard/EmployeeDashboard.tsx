@@ -48,10 +48,15 @@ export default function EmployeeDashboard() {
     navigate(`/jobs/:id${jobId}`);
   };
 
+  // Function to navigate to settings page
+  const handleNavigateToSettings = () => {
+    setActivePage("settings");
+  };
+
   const renderContent = () => {
     switch (activePage) {
       case "overview":
-        return <Overview onViewDetail={handleViewJobDetail} />;
+        return <Overview onViewDetail={handleViewJobDetail} onNavigateToSettings={handleNavigateToSettings} />;
       case "applied-jobs":
         return <AppliedJobs onViewDetail={handleViewJobDetail} />;
       case "favorite-jobs":
@@ -59,19 +64,19 @@ export default function EmployeeDashboard() {
       case "settings":
         return <Settings />;
       default:
-        return <Overview onViewDetail={handleViewJobDetail} />;
+        return <Overview onViewDetail={handleViewJobDetail} onNavigateToSettings={handleNavigateToSettings} />;
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
 {/* Header */}
-<header className="bg-gray-100">
-  <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
+<header className="bg-gray-100 pt-4"> {/* Added pt-4 for top spacing */}
+  <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm"> {/* Changed max-w-7xl to max-w-6xl to reduce width */}
     {/* Left - Logo */}
-       <div className="flex items-center">
-            <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
-          </div>
+    <div className="flex items-center ml-4"> {/* Added ml-4 to move logo to the right */}
+      <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
+    </div>
 
     {/* Middle - Navigation */}
     <nav className="flex items-center space-x-8">
@@ -109,7 +114,7 @@ export default function EmployeeDashboard() {
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-极5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
           />
         </svg>
         <span className="absolute -top-1 -right-1 bg-[#0366c2] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
@@ -230,7 +235,7 @@ export default function EmployeeDashboard() {
 }
 
 // Overview Component
-function Overview({ onViewDetail }) {
+function Overview({ onViewDetail, onNavigateToSettings }) {
   return (
     <div className="h-full">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Overview</h2>
@@ -367,8 +372,11 @@ function Overview({ onViewDetail }) {
     </div>
   </div>
 
-  {/* Update Button */}
-  <button className="bg-white text-[#0073b1] font-medium px-4 py-2 rounded-md hover:bg-gray-100">
+  {/* Update Button - Now navigates to settings */}
+  <button 
+    className="bg-white text-[#0073b1] font-medium px-4 py-2 rounded-md hover:bg-gray-100"
+    onClick={onNavigateToSettings}
+  >
     Update Profile
   </button>
 </div>
@@ -450,7 +458,14 @@ function AppliedJobs({ onViewDetail }) {
 }
 
 // Favorite Jobs Component
+// Favorite Jobs Component
 function FavoriteJobs() {
+  const navigate = useNavigate();
+
+  const handleApplyNow = (jobId) => {
+    navigate(`/job-application`);
+  };
+
   return (
     <div className="h-full">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Favorite Jobs (12)</h2>
@@ -474,21 +489,21 @@ function FavoriteJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">TechCorp</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">San Francisco, CA</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$120,000 - $150,000</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">Apply Now</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer" onClick={() => handleApplyNow(1)}>Apply Now</td>
               </tr>
               <tr>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Data Scientist</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">DataWorks</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Remote</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$130,000 - $160,000</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">Apply Now</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer" onClick={() => handleApplyNow(2)}>Apply Now</td>
               </tr>
               <tr>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Product Designer</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">DesignHub</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">New York, NY</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$110,000 - $140,000</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">Apply Now</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer" onClick={() => handleApplyNow(3)}>Apply Now</td>
               </tr>
             </tbody>
           </table>
