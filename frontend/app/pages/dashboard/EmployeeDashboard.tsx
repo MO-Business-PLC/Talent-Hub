@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
   const [activePage, setActivePage] = useState("overview");
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     // Check if user is authenticated
@@ -16,9 +17,11 @@ export default function EmployeeDashboard() {
     // Check if user is actually an employee
     const userStr = localStorage.getItem("user");
     if (userStr) {
-      const user = JSON.parse(userStr);
-      if (user.role !== "employee") {
+      const userData = JSON.parse(userStr);
+      if (userData.role !== "employee") {
         navigate("/login", { replace: true });
+      } else {
+        setUser(userData);
       }
     }
   }, [navigate]);
@@ -27,6 +30,17 @@ export default function EmployeeDashboard() {
     localStorage.removeItem("user");
     localStorage.removeItem("isAuthenticated");
     navigate("/login", { replace: true });
+  };
+
+  // Function to get user initials
+  const getUserInitials = () => {
+    if (!user || !user.name) return "U";
+    return user.name
+      .split(" ")
+      .map(word => word[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   const renderContent = () => {
@@ -46,66 +60,85 @@ export default function EmployeeDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          {/* Left side - Logo */}
-          <div className="flex items-center">
-            <img src="/images/logo.png" alt="TalentHub" className="h-8 w-auto" />
+{/* Header */}
+<header className="bg-gray-100">
+  <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
+    {/* Left - Logo */}
+       <div className="flex items-center">
+            <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
           </div>
-          
-          {/* Middle - Navigation */}
-          <nav className="flex items-center space-x-8">
-            <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Find Job</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Find Employer</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 font-medium">Dashboard</a>
-          </nav>
-          
-          {/* Right side - Icons and Profile */}
-          <div className="flex items-center space-x-4">
-            {/* Notification Icon */}
-            <div className="relative cursor-pointer">
-              <svg className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-              </svg>
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-500 rounded-full">3</span>
-            </div>
-            
-            {/* Profile Section with Square Curve */}
-            <div className="flex items-center cursor-pointer">
-              <div className="h-10 w-10 rounded-lg bg-gray-300 flex items-center justify-center border-2 border-gray-400">
-                <svg className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-            </div>
-            
-            {/* Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 ml-4"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </header>
+
+    {/* Middle - Navigation */}
+    <nav className="flex items-center space-x-8">
+      <a
+        href="/home"
+        className="text-gray-700 hover:text-[#0366c2] font-medium"
+      >
+        Find Job
+      </a>
+      <a
+        href="/jobs"
+        className="text-gray-700 hover:text-[#0366c2] font-medium"
+      >
+        Find Employer
+      </a>
+      <a
+        href="employee-dashboard"
+        className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
+      >
+        Dashboard
+      </a>
+    </nav>
+
+    {/* Right - Notification + Profile */}
+    <div className="flex items-center space-x-6">
+      {/* Notification */}
+      <div className="relative cursor-pointer">
+        <svg
+          className="h-6 w-6 text-[#0366c2]"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+          />
+        </svg>
+        <span className="absolute -top-1 -right-1 bg-[#0366c2] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+          3
+        </span>
+      </div>
+
+      {/* Profile Image */}
+      <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
+        <img
+          src="./images/profile.jpg"
+          alt="User"
+          className="h-full w-full object-cover"
+        />
+      </div>
+    </div>
+  </div>
+</header>
       
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Breadcrumb */}
-     <nav className="text-sm text-gray-500 mb-6 flex justify-end">
-  <span>Home</span>
-  <span className="mx-2">/</span>
-  <span>Dashboard</span>
-  <span className="mx-2">/</span>
-  <span className="text-gray-900">
-    {activePage === "overview" && "Overview"}
-    {activePage === "applied-jobs" && "Applied Jobs"}
-    {activePage === "favorite-jobs" && "Favorite Jobs"}
-    {activePage === "settings" && "Settings"}
-  </span>
-</nav>
+        {/* Breadcrumb - Fixed alignment */}
+        <nav className="text-sm text-gray-500 mb-6 flex justify-start">
+          <span>Home</span>
+          <span className="mx-2">/</span>
+          <span>Dashboard</span>
+          <span className="mx-2">/</span>
+          <span className="text-gray-900">
+            {activePage === "overview" && "Overview"}
+            {activePage === "applied-jobs" && "Applied Jobs"}
+            {activePage === "favorite-jobs" && "Favorite Jobs"}
+            {activePage === "settings" && "Settings"}
+          </span>
+        </nav>
 
         <div className="flex flex-col md:flex-row gap-6">
           {/* Sidebar - Now on the left side */}
@@ -235,8 +268,8 @@ function Overview() {
               </svg>
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-gray-900">7,341</h3>
-              <p className="text-gray-500">Interview Scheduled</p>
+              <h3 className="text-3xl font-bold text-gray-900">7,532</h3>
+              <p className="text-gray-500">Scheduled jobs</p>
             </div>
           </div>
         </div>
@@ -244,7 +277,10 @@ function Overview() {
 
       {/* Recently Applied Jobs Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
-        <h3 className="text-lg font-medium text-gray-900 p-6 border-b border-gray-200">Recently applied job</h3>
+        <div className="flex justify-between items-center p-6 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-900">Recently applied job</h3>
+          <button className="text-blue-600 hover:text-blue-800 font-medium">Show all jobs →</button>
+        </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -262,7 +298,7 @@ function Overview() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Viewed</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Viewed</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
@@ -271,34 +307,34 @@ function Overview() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Sent</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Sent</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
               <tr>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">UX Designer</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">2F Capital</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">2025-09-15</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
               <tr>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Data Analyst</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">2F Capital</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">2025-09-15</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Interview Scheduled</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Interview Scheduled</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
               <tr>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Marketing Specialist</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">2F Capital</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">2025-09-15</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Interview Scheduled</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Interview Scheduled</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
@@ -306,6 +342,31 @@ function Overview() {
           </table>
         </div>
       </div>
+
+{/* Updated Profile Completion Alert */}
+<div className="bg-[#0073b1] rounded-md flex items-center justify-between px-6 py-4 mt-6">
+  {/* Left Stars Image */}
+  <div className="flex items-center">
+    <img
+      src="/images/auth/stars.png"
+      alt="Stars"
+      className="w-6 h-6 mr-3"
+    />
+    <div>
+      <h3 className="text-white font-semibold text-lg">
+        Your profile isn't finished!
+      </h3>
+      <p className="text-white text-sm">
+        Complete your profile and add resumes to boost hiring chances!
+      </p>
+    </div>
+  </div>
+
+  {/* Update Button */}
+  <button className="bg-white text-[#0073b1] font-medium px-4 py-2 rounded-md hover:bg-gray-100">
+    Update Profile
+  </button>
+</div>
     </div>
   );
 }
@@ -335,7 +396,7 @@ function AppliedJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Viewed</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Viewed</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
@@ -344,7 +405,7 @@ function AppliedJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Sent</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Sent</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
@@ -353,7 +414,7 @@ function AppliedJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
@@ -362,7 +423,7 @@ function AppliedJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Interview Scheduled</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Interview Scheduled</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
@@ -371,7 +432,7 @@ function AppliedJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2F Capital</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2025-09-15</td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Interview Scheduled</span>
+                  <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Interview Scheduled</span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">View Detail</td>
               </tr>
@@ -418,11 +479,11 @@ function FavoriteJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">Apply Now</td>
               </tr>
               <tr>
-                <td className="px-6极 py-4 whitespace-nowrap text-sm text-gray-900">Product Designer</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Product Designer</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">DesignHub</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">New York, NY</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$110,000 - $140,000</td>
-               极 <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">Apply Now</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:text-blue-800 cursor-pointer">Apply Now</td>
               </tr>
             </tbody>
           </table>
@@ -431,27 +492,13 @@ function FavoriteJobs() {
     </div>
   );
 }
+
 // Settings Component
 function Settings() {
   return (
     <div className="h-full">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">Settings</h2>
-      
-      {/* Profile Completion Alert */}
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div className="ml-3">
-            <p className="text-sm text-yellow-700">
-              <strong>Your profile isn't finished!</strong> Complete your profile and add resumes to boost hiring chances!
-            </p>
-          </div>
-        </div>
-      </div>
+    
       
       {/* Settings Form */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -468,13 +515,13 @@ function Settings() {
               
               <div>
                 <label htmlFor="last-name" className="block text-sm font-medium text-gray-700">Last name</label>
-                <input type="text" name="last-name" id="last-name" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+                <input type="text" name="last-name" id="last-name" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm-text-sm" />
               </div>
             </div>
             
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email address</label>
-              <input type="email" name="email" id="email" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+              <input type="email" name="email" id="email" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm  py-2px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
             </div>
             
             <div>

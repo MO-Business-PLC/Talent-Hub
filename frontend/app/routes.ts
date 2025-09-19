@@ -9,13 +9,15 @@ export default [
   route("/login", "routes/login.tsx"),
   // Register page
   route("/register", "routes/register.tsx"),
+  
   // Employee dashboard
   route("/employee-dashboard", "routes/employee-dashboard.tsx"),
   // Employer dashboard
   route("/employer-dashboard", "routes/employer-dashboard.tsx"),
-  // Admin dashboard
-  route("/admin-dashboard", "routes/admin-dashboard.tsx"),
-  // Home route (optional fallback)
+  // Jobs routes
   route("/jobs", "routes/jobs.tsx"),
   route("/jobs/:id", "routes/job.$id.tsx"),
+   route("/job-application", "routes/job-application.tsx"),
+  // Home route (optional fallback)
+  route("/home", "routes/home.tsx"),
 ] satisfies RouteConfig;
