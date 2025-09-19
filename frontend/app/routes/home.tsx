@@ -44,6 +44,7 @@ export default function Home() {
 
   return (
     <>
+      {/* <Navbar /> */}
       {role && (
         <div className="w-full bg-blue-50 text-blue-700 text-sm py-2 text-center">
           Signed in as{" "}
