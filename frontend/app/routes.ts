@@ -21,6 +21,7 @@ export default [
   // Dashboard layout with nested routes
   layout("routes/dashboard-layout.tsx", [
     route("/employer-dashboard", "routes/employer-dashboard.tsx"),
+    route("/post-job", "routes/post-job.tsx"),
   ]),
   // Home route (optional fallback)
   route("/jobs", "routes/jobs.tsx"),
