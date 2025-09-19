@@ -1,4 +1,9 @@
-import { type RouteConfig, index, route } from "@react-router/dev/routes";
+import {
+  type RouteConfig,
+  index,
+  route,
+  layout,
+} from "@react-router/dev/routes";
 
 export default [
   // Root route redirects based on authentication and user role
@@ -9,15 +14,18 @@ export default [
   route("/login", "routes/login.tsx"),
   // Register page
   route("/register", "routes/register.tsx"),
-  
-  // Employee dashboard
-  route("/employee-dashboard", "routes/employee-dashboard.tsx"),
-  // Employer dashboard
-  route("/employer-dashboard", "routes/employer-dashboard.tsx"),
+
   // Jobs routes
+
+  // Dashboard layout with nested routes
+  layout("routes/dashboard-layout.tsx", [
+    route("/employee-dashboard", "routes/employee-dashboard.tsx"),
+    route("/employer-dashboard", "routes/employer-dashboard.tsx"),
+  ]),
+  // Home route (optional fallback)
   route("/jobs", "routes/jobs.tsx"),
   route("/jobs/:id", "routes/job.$id.tsx"),
-   route("/job-application", "routes/job-application.tsx"),
+  route("/job-application", "routes/job-application.tsx"),
   // Home route (optional fallback)
   route("/home", "routes/home.tsx"),
 ] satisfies RouteConfig;

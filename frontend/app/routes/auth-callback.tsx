@@ -39,10 +39,11 @@ export default function AuthCallbackRoute() {
 
         // Get user profile to determine role
         const profile = await getJson<ProfileResponse>(`/api/auth/profile`);
-        
+
         // Extract role from different possible response structures
-        const userRole = profile?.role || profile?.user?.role || profile?.data?.role;
-        
+        const userRole =
+          profile?.role || profile?.user?.role || profile?.data?.role;
+
         // Redirect based on user role
         if (userRole === "employee") {
           navigate("/employee-dashboard", { replace: true });
@@ -84,7 +85,9 @@ export default function AuthCallbackRoute() {
       <div className="w-full max-w-md text-center">
         {!error ? (
           <>
-            <div className="text-sm text-gray-600">Authentication successful!</div>
+            <div className="text-sm text-gray-600">
+              Authentication successful!
+            </div>
             <div className="mt-2 text-xs text-gray-500">
               Redirecting you to your dashboard...
             </div>

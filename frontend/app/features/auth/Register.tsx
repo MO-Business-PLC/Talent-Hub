@@ -122,7 +122,7 @@ export default function Register() {
                 CREATE ACCOUNT AS
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {(["Employee", "Employer"] as const).map((tab) => {
+                {(["Employee", "Employer"] as const).map(tab => {
                   const active = roleTab === tab;
                   return (
                     <button
@@ -172,7 +172,7 @@ export default function Register() {
                 type="text"
                 placeholder="Enter your Name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-6 py-3 outline-none bg-white focus:bg-light-gray focus:border-base focus:border-[2px] focus:ring-0"
               />
             </div>
@@ -182,7 +182,7 @@ export default function Register() {
                 type="email"
                 placeholder="Enter your Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-6 py-3 outline-none bg-white focus:bg-light-gray focus:border-base focus:border-[2px] focus:ring-0"
               />
             </div>
@@ -192,7 +192,7 @@ export default function Register() {
                 type="password"
                 placeholder="Enter your Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-6 py-3 outline-none bg-white focus:bg-light-gray focus:border-base focus:border-[2px] focus:ring-0"
               />
             </div>
@@ -201,7 +201,7 @@ export default function Register() {
               <input
                 type="checkbox"
                 checked={agree}
-                onChange={(e) => setAgree(e.target.checked)}
+                onChange={e => setAgree(e.target.checked)}
                 className="mt-0.5 h-4 w-4 rounded border border-gray-300 bg-light-gray accent-base [color-scheme:light] focus:ring-0"
               />
               <span>

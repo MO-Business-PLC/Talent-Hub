@@ -1,61 +1,173 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { JobsTable } from "../../components";
+import { MdWork } from "react-icons/md";
+import { HiUsers } from "react-icons/hi";
+import { IoCheckmarkCircle } from "react-icons/io5";
+import { FiTrendingUp } from "react-icons/fi";
+import { useJobs } from "../../hooks/useJobs";
+import { useMemo } from "react";
 
 export default function EmployerDashboard() {
-  const navigate = useNavigate();
+  const { jobs, isLoading, error, refetch } = useJobs();
 
-  useEffect(() => {
-    // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    if (!isAuthenticated) {
-      navigate("/login", { replace: true });
-      return;
-    }
+  // Transform API jobs to match JobsTable expected format
+  const transformedJobs = useMemo(() => {
+    return jobs.map(job => ({
+      id: job._id,
+      title: job.title,
+      company: job.createdBy.name,
+      location: `${job.location.city}, ${job.location.country}`,
+      applicants: 0, // TODO: Get actual applicant count from API
+      status:
+        job.status.toLowerCase() === "open"
+          ? ("Active" as const)
+          : job.status.toLowerCase() === "closed"
+            ? ("Closed" as const)
+            : ("Paused" as const),
+      postedDate: new Date(job.createdAt).toISOString().split("T")[0],
+    }));
+  }, [jobs]);
 
-    // Check if user is actually an employer
-    const userStr = localStorage.getItem("user");
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      if (user.role !== "employer") {
-        navigate("/login", { replace: true });
-      }
-    }
-  }, [navigate]);
+  // Calculate stats from real data
+  const stats = useMemo(() => {
+    const totalJobs = jobs.length;
+    const activeJobs = jobs.filter(
+      job => job.status.toLowerCase() === "open"
+    ).length;
+    const totalApplicants = jobs.reduce((sum, job) => sum + 0, 0); // TODO: Add real applicant count
+    const viewsThisMonth = 1234; // TODO: Get real views data
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("isAuthenticated");
-    navigate("/login", { replace: true });
+    return { totalJobs, activeJobs, totalApplicants, viewsThisMonth };
+  }, [jobs]);
+
+  const handleViewJob = (jobId: string) => {
+    window.location.href = `/jobs/${jobId}`;
+  };
+
+  const handleEditJob = (jobId: string) => {
+    // Navigate to edit job page
+    console.log("Edit job:", jobId);
+  };
+
+  const handleDeleteJob = (jobId: string) => {
+    // Handle job deletion
+    console.log("Delete job:", jobId);
+  };
+
+  const handleCreateJob = () => {
+    // Navigate to create job page
+    console.log("Create new job");
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">Employer Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
-      </header>
-      
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="border-4 border-dashed border-gray-200 rounded-lg h-96 p-4">
-            <h2 className="text-xl font-semibold mb-4">Welcome to your Employer Dashboard</h2>
-            <p>This is a mock employer dashboard. In a real application, you would see:</p>
-            <ul className="list-disc list-inside mt-2 ml-4">
-              <li>Employee management</li>
-              <li>Payroll processing</li>
-              <li>Company analytics</li>
-              <li>Job postings</li>
-            </ul>
+    <div className="space-y-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="flex items-center">
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <MdWork className="w-6 h-6 text-blue-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Total Jobs</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {isLoading ? "..." : stats.totalJobs}
+              </p>
+            </div>
           </div>
         </div>
-      </main>
+
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="flex items-center">
+            <div className="p-2 bg-green-100 rounded-lg">
+              <HiUsers className="w-6 h-6 text-green-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">
+                Total Applicants
+              </p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {isLoading ? "..." : stats.totalApplicants}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="flex items-center">
+            <div className="p-2 bg-yellow-100 rounded-lg">
+              <IoCheckmarkCircle className="w-6 h-6 text-yellow-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Active Jobs</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {isLoading ? "..." : stats.activeJobs}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="flex items-center">
+            <div className="p-2 bg-purple-100 rounded-lg">
+              <FiTrendingUp className="w-6 h-6 text-purple-600" />
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">
+                Views This Month
+              </p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {isLoading ? "..." : stats.viewsThisMonth.toLocaleString()}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <svg
+                className="w-5 h-5 text-red-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">
+                Error loading jobs
+              </h3>
+              <div className="mt-2 text-sm text-red-700">
+                <p>{error}</p>
+              </div>
+              <div className="mt-4">
+                <button
+                  onClick={refetch}
+                  className="bg-red-100 px-3 py-2 rounded-md text-sm font-medium text-red-800 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Try again
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Jobs Table */}
+      <JobsTable
+        jobs={transformedJobs}
+        onView={handleViewJob}
+        onEdit={handleEditJob}
+        onDelete={handleDeleteJob}
+        onCreate={handleCreateJob}
+      />
     </div>
   );
 }
