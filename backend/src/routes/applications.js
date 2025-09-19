@@ -6,6 +6,65 @@ import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
+// GET /applications/employer → retrieve all applications for all jobs created by logged-in employer
+router.get("/employer", auth, async (req, res) => {
+  try {
+    const userId = req.user?.id;
+
+    // Validate user exists and is employer/admin
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    if (!["employer", "admin"].includes(user.role)) {
+      return res.status(400).json({ error: "User is not an employer" });
+    }
+
+    // Get all jobs created by this employer
+    const jobs = await Job.find({ createdBy: userId }).select("_id");
+    const jobIds = jobs.map(job => job._id);
+
+    // Get all applications for these jobs
+    const applications = await Application.find({ jobId: { $in: jobIds } })
+      .sort({ createdAt: -1 })
+      .populate({ path: "userId", select: "name email role" })
+      .populate({ path: "jobId", select: "title location status" });
+
+    return res.status(200).json({ applications });
+  } catch (err) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// GET /applications/job/:jobId → retrieve applications for a specific job (employer owner or admin)
+router.get("/job/:jobId", auth, async (req, res) => {
+  try {
+    const { jobId } = req.params;
+
+    // Ensure job exists
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // Only the job owner (employer) or admins can view applications for this job
+    const isAdmin = req.user?.role === "admin";
+    const isOwner = String(job.createdBy) === String(req.user?.id);
+    if (!isAdmin && !isOwner) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const applications = await Application.find({ jobId: job._id })
+      .sort({ createdAt: -1 })
+      .populate({ path: "userId", select: "name email role" })
+      .populate({ path: "jobId", select: "title location status" });
+
+    return res.status(200).json({ applications });
+  } catch (err) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 // POST /applications → apply to a job
 router.post("/", auth, async (req, res) => {
   try {
