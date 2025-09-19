@@ -10,7 +10,6 @@ import { useNavigate } from "react-router";
 export default function EmployerDashboard() {
   const navigate = useNavigate();
   const { jobs, isLoading, error, refetch } = useJobs();
-  const navigate = useNavigate();
 
   // Transform API jobs to match JobsTable expected format
   const transformedJobs = useMemo(() => {

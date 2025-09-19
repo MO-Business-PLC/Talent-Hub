@@ -42,6 +42,11 @@ export function DashboardLayout({
       href: "/employer/jobs",
     },
     {
+      icon: FiBriefcase,
+      label: "Post Job",
+      href: "/post-job",
+    },
+    {
       icon: FiUsers,
       label: userRole === "employer" ? "Candidates" : "Applications",
       href: userRole === "employer" ? "/employer/candidates" : "/applications",
