@@ -61,6 +61,10 @@ export const getApplicationsByJob = async (req, res) => {
 // POST /applications
 export const applyToJob = async (req, res) => {
   try {
+    console.log("Application request body:", req.body);
+    console.log("Application request file:", req.file);
+    console.log("Application request user:", req.user);
+    
     const { jobId, resumeUrl, coverLetter } = req.body;
 
     // Ensure job exists and is open
@@ -101,18 +105,36 @@ export const applyToJob = async (req, res) => {
     return res.status(201).json({  message: "Application submitted successfully",
                                     application: result });
   } catch (err) {
+    console.error("Application submission error:", err);
+    
     if (err?.code === 11000) {
       return res.status(409).json({ error: "You have already applied to this job" });
     }
-    return res.status(500).json({ error: err });
+    
+    // More specific error handling
+    if (err.name === 'ValidationError') {
+      const messages = Object.values(err.errors).map(e => e.message);
+      return res.status(400).json({ error: messages.join(', ') });
+    }
+    
+    if (err.name === 'CastError') {
+      return res.status(400).json({ error: "Invalid job ID format" });
+    }
+    
+    return res.status(500).json({ 
+      error: "Internal Server Error",
+      message: err.message || "An unexpected error occurred"
+    });
   }
 };
 
 
 // GET /applications/:userId
 export const getUserApplications = async (req, res) => {
-  const validationErr = handleValidation(req, res);
-  if (validationErr) return validationErr;
+  const validationErr = validationResult(req);
+  if (!validationErr.isEmpty()) {
+    return res.status(400).json({ errors: validationErr.array() });
+  }
 
   try {
     const { userId } = req.params;
