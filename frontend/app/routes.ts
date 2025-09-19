@@ -20,7 +20,10 @@ export default [
   route("/employee-dashboard", "routes/employee-dashboard.tsx"),
   // Dashboard layout with nested routes
   layout("routes/dashboard-layout.tsx", [
-    route("/employer-dashboard", "routes/employer-dashboard.tsx"),
+    route("/employer/dashboard", "routes/employer-dashboard.tsx"),
+    route("/employer/jobs", "routes/employer-dashboard.tsx", {
+      id: "/jobs",
+    }),
   ]),
   // Home route (optional fallback)
   route("/jobs", "routes/jobs.tsx"),
