@@ -11,8 +11,7 @@ const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '30d';
  * @returns {string} JWT token
  */
 export const generateToken = (payload, expiresIn = JWT_EXPIRES_IN) => {
-  console.log(JWT_SECRET)
-  console.log(expiresIn)
+
   return jwt.sign(payload, JWT_SECRET, { expiresIn });
 };
 
