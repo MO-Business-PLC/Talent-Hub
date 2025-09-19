@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type JSX } from "react";
 import { getJson } from "../../lib/api";
 import {
   ResponsiveContainer,
@@ -12,7 +12,13 @@ import {
   Bar,
   Legend,
 } from "recharts";
-import { FiBriefcase, FiUsers, FiFileText, FiTrendingUp, FiRefreshCw } from "react-icons/fi";
+import {
+  FiBriefcase,
+  FiUsers,
+  FiFileText,
+  FiTrendingUp,
+  FiRefreshCw,
+} from "react-icons/fi";
 
 type TrendPoint = {
   _id: string;
@@ -50,7 +56,9 @@ function StatCard({
   return (
     <div className="rounded-xl border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
       <div className="flex items-center justify-between">
-        <div className="text-xs uppercase tracking-wide text-gray-500">{label}</div>
+        <div className="text-xs uppercase tracking-wide text-gray-500">
+          {label}
+        </div>
         <div className={`rounded-lg ${accent} p-2 text-white`}>{icon}</div>
       </div>
       <div className="mt-2 text-2xl font-semibold text-gray-900">{value}</div>
@@ -75,8 +83,11 @@ function formatDateKey(key: string) {
   }
 }
 
-function toChartData(points: TrendPoint[] | undefined, valueKey: keyof TrendPoint) {
-  return (points || []).map((p) => ({
+function toChartData(
+  points: TrendPoint[] | undefined,
+  valueKey: keyof TrendPoint
+) {
+  return (points || []).map(p => ({
     date: formatDateKey(p._id),
     value: (p[valueKey] as number) || 0,
   }));
@@ -85,7 +96,9 @@ function toChartData(points: TrendPoint[] | undefined, valueKey: keyof TrendPoin
 export default function AdminDashboard() {
   const [period, setPeriod] = useState("30d");
   const [groupBy, setGroupBy] = useState("day");
-  const [tab, setTab] = useState<"overview" | "jobs" | "applications" | "users">("overview");
+  const [tab, setTab] = useState<
+    "overview" | "jobs" | "applications" | "users"
+  >("overview");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [users, setUsers] = useState<TrendsResponse | null>(null);
@@ -131,9 +144,12 @@ export default function AdminDashboard() {
     async function loadJobs() {
       try {
         setJobListLoading(true);
-        const res = await getJson<{ jobs: any[] }>(`/api/admin/jobs?page=1&limit=8`, {
-          signal: controller.signal,
-        } as any);
+        const res = await getJson<{ jobs: any[] }>(
+          `/api/admin/jobs?page=1&limit=8`,
+          {
+            signal: controller.signal,
+          } as any
+        );
         setJobList(res?.jobs || []);
       } catch (e) {
         // ignore per-tab error
@@ -167,7 +183,11 @@ export default function AdminDashboard() {
     return pts.length ? pts[pts.length - 1].total || 0 : 0;
   }, [users]);
   const jobTotal = useMemo(
-    () => (jobs?.trends?.jobCounts || []).reduce((acc, p) => acc + (p.count || p.total || 0), 0),
+    () =>
+      (jobs?.trends?.jobCounts || []).reduce(
+        (acc, p) => acc + (p.count || p.total || 0),
+        0
+      ),
     [jobs]
   );
   const appTotal = useMemo(
@@ -179,8 +199,14 @@ export default function AdminDashboard() {
     [applications]
   );
 
-  const userSeries = useMemo(() => toChartData(users?.trends?.userCounts, "total"), [users]);
-  const jobSeries = useMemo(() => toChartData(jobs?.trends?.jobCounts, "total"), [jobs]);
+  const userSeries = useMemo(
+    () => toChartData(users?.trends?.userCounts, "total"),
+    [users]
+  );
+  const jobSeries = useMemo(
+    () => toChartData(jobs?.trends?.jobCounts, "total"),
+    [jobs]
+  );
   const appSeries = useMemo(
     () => toChartData(applications?.trends?.applicationCounts, "total"),
     [applications]
@@ -190,11 +216,13 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-gray-50">
       <header className="sticky top-0 z-10 bg-white border-b border-gray-200">
         <div className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-          <h1 className="text-xl md:text-2xl font-semibold text-gray-900">Admin Dashboard</h1>
+          <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
+            Admin Dashboard
+          </h1>
           <div className="flex items-center gap-2">
             <select
               value={period}
-              onChange={(e) => setPeriod(e.target.value)}
+              onChange={e => setPeriod(e.target.value)}
               className="rounded-md border-gray-300 text-sm"
             >
               <option value="7d">Last 7 days</option>
@@ -204,7 +232,7 @@ export default function AdminDashboard() {
             </select>
             <select
               value={groupBy}
-              onChange={(e) => setGroupBy(e.target.value)}
+              onChange={e => setGroupBy(e.target.value)}
               className="rounded-md border-gray-300 text-sm"
             >
               <option value="day">By day</option>
@@ -215,7 +243,7 @@ export default function AdminDashboard() {
               className="ml-1 inline-flex items-center gap-2 rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50"
               onClick={() => {
                 setLoading(true);
-                setGroupBy((g) => g);
+                setGroupBy(g => g);
               }}
               title="Refresh"
             >
@@ -242,7 +270,11 @@ export default function AdminDashboard() {
           <StatCard
             label="Total Applications"
             value={appTotal}
-            sub={applications ? `${applications.period} • ${applications.groupBy}` : undefined}
+            sub={
+              applications
+                ? `${applications.period} • ${applications.groupBy}`
+                : undefined
+            }
             icon={<FiFileText />}
             accent="bg-blue-500"
           />
@@ -274,7 +306,9 @@ export default function AdminDashboard() {
                 key={t.id}
                 onClick={() => setTab(t.id)}
                 className={`px-3 py-2 text-sm rounded-md ${
-                  tab === t.id ? "bg-gray-100 text-gray-900" : "text-gray-600 hover:bg-gray-50"
+                  tab === t.id
+                    ? "bg-gray-100 text-gray-900"
+                    : "text-gray-600 hover:bg-gray-50"
                 }`}
               >
                 {t.label}
@@ -287,28 +321,59 @@ export default function AdminDashboard() {
           <section className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="rounded-xl border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-900">Job Posting Trends</h2>
+                <h2 className="font-semibold text-gray-900">
+                  Job Posting Trends
+                </h2>
                 <span className="text-xs text-gray-500">
                   {jobs?.dateRange?.start
-                    ? dateFmt.format(new Date(jobs.dateRange.start + "T00:00:00Z"))
+                    ? dateFmt.format(
+                        new Date(jobs.dateRange.start + "T00:00:00Z")
+                      )
                     : ""}{" "}
-                  – {jobs?.dateRange?.end ? dateFmt.format(new Date(jobs.dateRange.end + "T00:00:00Z")) : ""}
+                  –{" "}
+                  {jobs?.dateRange?.end
+                    ? dateFmt.format(
+                        new Date(jobs.dateRange.end + "T00:00:00Z")
+                      )
+                    : ""}
                 </span>
               </div>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={jobSeries} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
+                  <AreaChart
+                    data={jobSeries}
+                    margin={{ left: 8, right: 8, top: 8, bottom: 8 }}
+                  >
                     <defs>
-                      <linearGradient id="colorJobs" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
+                      <linearGradient
+                        id="colorJobs"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor="#4f46e5"
+                          stopOpacity={0.3}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="#4f46e5"
+                          stopOpacity={0}
+                        />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="date" tick={{ fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
                     <Tooltip />
-                    <Area type="monotone" dataKey="value" stroke="#4f46e5" fill="url(#colorJobs)" />
+                    <Area
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#4f46e5"
+                      fill="url(#colorJobs)"
+                    />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -316,26 +381,40 @@ export default function AdminDashboard() {
 
             <div className="rounded-xl border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-900">Application Trends</h2>
+                <h2 className="font-semibold text-gray-900">
+                  Application Trends
+                </h2>
                 <span className="text-xs text-gray-500">
                   {applications?.dateRange?.start
-                    ? dateFmt.format(new Date(applications.dateRange.start + "T00:00:00Z"))
+                    ? dateFmt.format(
+                        new Date(applications.dateRange.start + "T00:00:00Z")
+                      )
                     : ""}{" "}
                   –{" "}
                   {applications?.dateRange?.end
-                    ? dateFmt.format(new Date(applications.dateRange.end + "T00:00:00Z"))
+                    ? dateFmt.format(
+                        new Date(applications.dateRange.end + "T00:00:00Z")
+                      )
                     : ""}
                 </span>
               </div>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={appSeries} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
+                  <BarChart
+                    data={appSeries}
+                    margin={{ left: 8, right: 8, top: 8, bottom: 8 }}
+                  >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="date" tick={{ fontSize: 12 }} />
                     <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="value" name="Applications" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                    <Bar
+                      dataKey="value"
+                      name="Applications"
+                      fill="#3b82f6"
+                      radius={[4, 4, 0, 0]}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -350,19 +429,42 @@ export default function AdminDashboard() {
                 <h2 className="font-semibold text-gray-900">User Signups</h2>
                 <span className="text-xs text-gray-500">
                   {users?.dateRange?.start
-                    ? dateFmt.format(new Date(users.dateRange.start + "T00:00:00Z"))
+                    ? dateFmt.format(
+                        new Date(users.dateRange.start + "T00:00:00Z")
+                      )
                     : ""}{" "}
                   –{" "}
-                  {users?.dateRange?.end ? dateFmt.format(new Date(users.dateRange.end + "T00:00:00Z")) : ""}
+                  {users?.dateRange?.end
+                    ? dateFmt.format(
+                        new Date(users.dateRange.end + "T00:00:00Z")
+                      )
+                    : ""}
                 </span>
               </div>
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={userSeries} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
+                  <AreaChart
+                    data={userSeries}
+                    margin={{ left: 8, right: 8, top: 8, bottom: 8 }}
+                  >
                     <defs>
-                      <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                        <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
+                      <linearGradient
+                        id="colorUsers"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor="#10b981"
+                          stopOpacity={0.3}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="#10b981"
+                          stopOpacity={0}
+                        />
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -394,13 +496,18 @@ export default function AdminDashboard() {
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {jobList.map((j: any) => (
-                    <div key={j._id} className="rounded-lg border border-gray-200 p-4">
+                    <div
+                      key={j._id}
+                      className="rounded-lg border border-gray-200 p-4"
+                    >
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="text-sm text-gray-500">
                             {dateFmt.format(new Date(j.createdAt))}
                           </div>
-                          <div className="mt-1 font-semibold text-gray-900">{j.title}</div>
+                          <div className="mt-1 font-semibold text-gray-900">
+                            {j.title}
+                          </div>
                           <div className="text-xs text-gray-600">
                             {j?.createdBy?.name || "Unknown"}
                           </div>
@@ -414,7 +521,9 @@ export default function AdminDashboard() {
                       {j?.location?.city && (
                         <div className="mt-3 text-xs text-gray-600">
                           {j.location.city}
-                          {j?.location?.country ? `, ${j.location.country}` : ""}
+                          {j?.location?.country
+                            ? `, ${j.location.country}`
+                            : ""}
                         </div>
                       )}
                     </div>
@@ -432,15 +541,24 @@ export default function AdminDashboard() {
           <section className="mt-6">
             <div className="rounded-xl border border-gray-200 bg-white p-4 md:p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-900">Recent Applications</h2>
-                <span className="text-xs text-gray-500">Latest 8 applications</span>
+                <h2 className="font-semibold text-gray-900">
+                  Recent Applications
+                </h2>
+                <span className="text-xs text-gray-500">
+                  Latest 8 applications
+                </span>
               </div>
               {applicationListLoading ? (
-                <div className="text-sm text-gray-600">Loading applications…</div>
+                <div className="text-sm text-gray-600">
+                  Loading applications…
+                </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {applicationList.map((a: any) => (
-                    <div key={a._id} className="rounded-lg border border-gray-200 p-4">
+                    <div
+                      key={a._id}
+                      className="rounded-lg border border-gray-200 p-4"
+                    >
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="text-sm text-gray-500">
@@ -462,7 +580,9 @@ export default function AdminDashboard() {
                     </div>
                   ))}
                   {applicationList.length === 0 && (
-                    <div className="text-sm text-gray-600">No applications found.</div>
+                    <div className="text-sm text-gray-600">
+                      No applications found.
+                    </div>
                   )}
                 </div>
               )}
@@ -470,7 +590,9 @@ export default function AdminDashboard() {
           </section>
         )}
 
-        {loading && <div className="mt-8 text-sm text-gray-600">Loading data…</div>}
+        {loading && (
+          <div className="mt-8 text-sm text-gray-600">Loading data…</div>
+        )}
       </main>
     </div>
   );

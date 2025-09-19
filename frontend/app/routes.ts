@@ -27,9 +27,10 @@ export default [
     route("/post-job", "routes/post-job.tsx"),
   ]),
   // Home route (optional fallback)
-  route("/jobs", "routes/jobs.tsx"),
-  route("/jobs/:id", "routes/job.$id.tsx"),
-  route("/job-application", "routes/job-application.tsx"),
-  // Home route (optional fallback)
-  route("/home", "routes/home.tsx"),
+  layout("routes/home-layout.tsx", [
+    route("/jobs", "routes/jobs.tsx"),
+    route("/jobs/:id", "routes/job.$id.tsx"),
+    route("/job-application", "routes/job-application.tsx"),
+    route("/home", "routes/home.tsx"),
+  ]),
 ] satisfies RouteConfig;

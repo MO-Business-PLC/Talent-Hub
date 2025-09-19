@@ -138,8 +138,8 @@ export default function Jobs() {
               Find your <span className="text-blue-600">new job</span> today
             </h1>
             <p
-              className="text-lg sm:text-xl md:text-2xl font-normal text-gray-600 max-w-2xl"
-              style={{ fontFamily: "DM Sans, sans-serif" }}
+              className="text-lg sm:text-xl md:text-2xl font-normal text-gray-600"
+              // style={{ fontFamily: "DM Sans, sans-serif" }}
             >
               Thousands of jobs in the computer, engineering and technology
               sectors are waiting for you.
