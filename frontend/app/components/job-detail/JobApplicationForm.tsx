@@ -57,7 +57,7 @@ export default function JobApplicationForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-100">
       {/* Header */}
  <header className="bg-gray-100">
   <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
@@ -143,7 +143,8 @@ export default function JobApplicationForm() {
                 name="fullName"
                 value={formData.fullName}
                 onChange={handleInputChange}
-                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100"
                 placeholder="Enter your full name"
                 required
               />
@@ -160,7 +161,8 @@ export default function JobApplicationForm() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100"
                 placeholder="Enter your Email"
                 required
               />
@@ -177,27 +179,33 @@ export default function JobApplicationForm() {
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
-                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100"
                 placeholder="Enter your Phone Number"
                 required
               />
             </div>
 
             {/* LinkedIn Profile URL */}
-            <div>
-              <label htmlFor="linkedInUrl" className="block text-lg font-medium text-gray-700 mb-2">
-                LinkedIn profile URL
-              </label>
-              <input
-                type="url"
-                id="linkedInUrl"
-                name="linkedInUrl"
-                value={formData.linkedInUrl}
-                onChange={handleInputChange}
-                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Enter your LinkedIn profile URL"
-              />
-            </div>
+      <div>
+        <label
+          htmlFor="linkedInUrl"
+          className="block text-lg font-medium text-gray-700 mb-2"
+        >
+          LinkedIn profile URL
+        </label>
+        <input
+          type="url"
+          id="linkedInUrl"
+          name="linkedInUrl"
+          value={formData.linkedInUrl}
+          onChange={handleInputChange}
+          className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100"
+          placeholder="Enter your LinkedIn profile URL"
+        />
+      </div>
+
 
             {/* Portfolio URL */}
             <div>
@@ -210,7 +218,8 @@ export default function JobApplicationForm() {
                 name="portfolioUrl"
                 value={formData.portfolioUrl}
                 onChange={handleInputChange}
-                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100"
                 placeholder="Enter your Portfolio URL"
               />
             </div>
@@ -226,7 +235,8 @@ export default function JobApplicationForm() {
                 value={formData.coverLetter}
                 onChange={handleInputChange}
                 rows={6}
-                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100"
                 placeholder="Write why you are fit for this position..."
                 required
               />
