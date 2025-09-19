@@ -47,9 +47,9 @@ const Dashboard: React.FC = () => {
               <div className="relative">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
                     {/* Black Circle Background */}
-                    <circle cx="50" cy="50" r="40" fill="black" />
+                    <circle cx="50" cy="50" r="45" fill="black" />
                     {/* Diagonal "2F" */}
-                    <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="36" fontFamily="Arial, sans-serif" fill="yellow" fontWeight="bold" transform="rotate(-45 50 50)"
+                    <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="40" fontFamily="Arial, sans-serif" fill="yellow" fontWeight="bold" transform="rotate(-45 50 50)"
                     >
                       2F
                     </text>
@@ -138,8 +138,22 @@ const Dashboard: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="bg-gray-50 p-4 rounded-lg flex items-center">
                   <div className="mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="w-10 h-10"
+                    >
+                      {/* Bottom half background fill */}
+                      <rect x="3" y="12" width="18" height="9" fill="#DBEAFE" /> 
+                      {/* outline */}
+                      <path
+                        d="M3 7h18v14H3V7zm6-3h6v3H9V4zm-6 6h18"
+                        stroke="#60A5FA"
+                        strokeWidth="1.5"
+                        fill="none"
+                      />
+                      {/* buckle in middle */}
+                      <rect x="10" y="11" width="4" height="3" stroke="#60A5FA" strokeWidth="1.5" fill="none" />
                     </svg>
                   </div>
                   <div>
@@ -150,8 +164,22 @@ const Dashboard: React.FC = () => {
                 
                 <div className="bg-gray-50 p-4 rounded-lg flex items-center">
                   <div className="mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      className="w-10 h-10"
+                    >
+                      {/* Bottom half background fill */}
+                      <rect x="3" y="12" width="18" height="9" fill="#DBEAFE" /> 
+                      {/* outline */}
+                      <path
+                        d="M3 7h18v14H3V7zm6-3h6v3H9V4zm-6 6h18"
+                        stroke="#60A5FA"
+                        strokeWidth="1.5"
+                        fill="none"
+                      />
+                      {/* buckle in middle */}
+                      <rect x="10" y="11" width="4" height="3" stroke="#60A5FA" strokeWidth="1.5" fill="none" />
                     </svg>
                   </div>
                   <div>
@@ -162,10 +190,12 @@ const Dashboard: React.FC = () => {
                 
                 <div className="bg-gray-50 p-4 rounded-lg flex items-center">
                   <div className="mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7S3.732 16.057 2.458 12z" />
-                    </svg>
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-gray-800">20</p>

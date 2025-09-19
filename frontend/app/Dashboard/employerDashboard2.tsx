@@ -114,9 +114,9 @@ const App: React.FC = () => {
             </button>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
                     {/* Black Circle Background */}
-                    <circle cx="50" cy="50" r="40" fill="black" />
+                    <circle cx="50" cy="50" r="45" fill="black" />
                     {/* Diagonal "2F" */}
-                    <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="36" fontFamily="Arial, sans-serif" fill="yellow" fontWeight="bold" transform="rotate(-45 50 50)"
+                    <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="40" fontFamily="Arial, sans-serif" fill="yellow" fontWeight="bold" transform="rotate(-45 50 50)"
                     >
                       2F
                     </text>
