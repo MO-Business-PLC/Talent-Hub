@@ -47,12 +47,18 @@ function Navbar() {
 
       {/* Desktop Auth Buttons */}
       <div className="hidden md:flex items-center">
-        <button className="text-[#5D6D7E] px-4 py-1 rounded-lg hover:bg-gray-100 transition-colors">
+        <Link 
+          to="/register" 
+          className="text-[#5D6D7E] px-4 py-1 rounded-lg hover:bg-gray-100 transition-colors"
+        >
           Sign Up
-        </button>
-        <button className="bg-[#1E73BE] text-white px-4 py-1 rounded-lg hover:bg-[#155d97] transition-colors ml-2">
+        </Link>
+        <Link 
+          to="/login" 
+          className="bg-[#1E73BE] text-white px-4 py-1 rounded-lg hover:bg-[#155d97] transition-colors ml-2"
+        >
           Login
-        </button>
+        </Link>
       </div>
 
       {/* Mobile Hamburger */}
@@ -102,18 +108,20 @@ function Navbar() {
             ))}
           </div>
           <div className="border-t border-gray-100 flex flex-col p-3 gap-2">
-            <button
+            <Link
+              to="/register"
               onClick={closeMenu}
               className="w-full text-left text-[#5D6D7E] px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
             >
               Sign Up
-            </button>
-            <button
+            </Link>
+            <Link
+              to="/login"
               onClick={closeMenu}
               className="w-full text-left bg-[#1E73BE] text-white px-3 py-2 rounded-lg hover:bg-[#155d97] transition-colors"
             >
               Login
-            </button>
+            </Link>
           </div>
         </div>
       </div>
