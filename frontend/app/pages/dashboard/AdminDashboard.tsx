@@ -59,9 +59,16 @@ function StatCard({
   );
 }
 
+const dateFmt = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: "UTC",
+});
+
 function formatDateKey(key: string) {
   try {
-    if (key.length === 10) return new Date(key).toLocaleDateString();
+    if (key.length === 10) return dateFmt.format(new Date(key + "T00:00:00Z"));
     return key;
   } catch {
     return key;
@@ -283,9 +290,9 @@ export default function AdminDashboard() {
                 <h2 className="font-semibold text-gray-900">Job Posting Trends</h2>
                 <span className="text-xs text-gray-500">
                   {jobs?.dateRange?.start
-                    ? new Date(jobs.dateRange.start).toLocaleDateString()
+                    ? dateFmt.format(new Date(jobs.dateRange.start + "T00:00:00Z"))
                     : ""}{" "}
-                  – {jobs?.dateRange?.end ? new Date(jobs.dateRange.end).toLocaleDateString() : ""}
+                  – {jobs?.dateRange?.end ? dateFmt.format(new Date(jobs.dateRange.end + "T00:00:00Z")) : ""}
                 </span>
               </div>
               <div className="h-64">
@@ -312,11 +319,11 @@ export default function AdminDashboard() {
                 <h2 className="font-semibold text-gray-900">Application Trends</h2>
                 <span className="text-xs text-gray-500">
                   {applications?.dateRange?.start
-                    ? new Date(applications.dateRange.start).toLocaleDateString()
+                    ? dateFmt.format(new Date(applications.dateRange.start + "T00:00:00Z"))
                     : ""}{" "}
                   –{" "}
                   {applications?.dateRange?.end
-                    ? new Date(applications.dateRange.end).toLocaleDateString()
+                    ? dateFmt.format(new Date(applications.dateRange.end + "T00:00:00Z"))
                     : ""}
                 </span>
               </div>
@@ -343,10 +350,10 @@ export default function AdminDashboard() {
                 <h2 className="font-semibold text-gray-900">User Signups</h2>
                 <span className="text-xs text-gray-500">
                   {users?.dateRange?.start
-                    ? new Date(users.dateRange.start).toLocaleDateString()
+                    ? dateFmt.format(new Date(users.dateRange.start + "T00:00:00Z"))
                     : ""}{" "}
                   –{" "}
-                  {users?.dateRange?.end ? new Date(users.dateRange.end).toLocaleDateString() : ""}
+                  {users?.dateRange?.end ? dateFmt.format(new Date(users.dateRange.end + "T00:00:00Z")) : ""}
                 </span>
               </div>
               <div className="h-72">
@@ -391,7 +398,7 @@ export default function AdminDashboard() {
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="text-sm text-gray-500">
-                            {new Date(j.createdAt).toLocaleDateString()}
+                            {dateFmt.format(new Date(j.createdAt))}
                           </div>
                           <div className="mt-1 font-semibold text-gray-900">{j.title}</div>
                           <div className="text-xs text-gray-600">
@@ -437,7 +444,7 @@ export default function AdminDashboard() {
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="text-sm text-gray-500">
-                            {new Date(a.createdAt).toLocaleDateString()}
+                            {dateFmt.format(new Date(a.createdAt))}
                           </div>
                           <div className="mt-1 font-semibold text-gray-900">
                             {a?.jobId?.title || "Job"}

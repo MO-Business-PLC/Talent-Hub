@@ -39,6 +39,8 @@ export default function EmployerDashboard() {
     return { totalJobs, activeJobs, totalApplicants, viewsThisMonth };
   }, [jobs]);
 
+  const numberFmt = useMemo(() => new Intl.NumberFormat("en-US"), []);
+
   const handleViewJob = (jobId: string) => {
     window.location.href = `/jobs/${jobId}`;
   };
@@ -116,7 +118,7 @@ export default function EmployerDashboard() {
                 Views This Month
               </p>
               <p className="text-2xl font-semibold text-gray-900">
-                {isLoading ? "..." : stats.viewsThisMonth.toLocaleString()}
+                {isLoading ? "..." : numberFmt.format(stats.viewsThisMonth)}
               </p>
             </div>
           </div>
