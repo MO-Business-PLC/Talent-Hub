@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
-@theme
-{
+@theme {
   --font-sans:
     "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -15,10 +14,15 @@
   --color-surface: #f6f8fc;
   --color-base: #1e73be;
   --color-light-gray: #f5f7fa;
+  --color-primary: #1e73be;
+  --color-background-dark: #2c3e50;
+  --color-text-secondary: #5d6d7e;
+  --color-gray: #9199a3;
+  --color-social: #b0b8c1;
+  --color-background-light: #f5f7fa;
 }
 
 html,
-body
-{
+body {
   @apply bg-white;
 }

@@ -1,7 +1,8 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
 import { useEffect, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router";
+import Hero from "~/components/Hero";
+import TopCompanies from "~/components/home/TopCompanies";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -44,7 +45,8 @@ export default function Home() {
           <strong className="font-semibold capitalize">{role}</strong>
         </div>
       )}
-      <Welcome />
+      <Hero />
+      <TopCompanies />
     </>
   );
 }
