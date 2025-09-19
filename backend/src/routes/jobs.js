@@ -13,7 +13,7 @@ import {
 
 const router = express.Router();
 
-// GET /jobs → get all jobs with optional filtering and pagination
+// GET /jobs → get all jobs with optional filtering and pagination (public endpoint)
 router.get("/", getAllJobs);
 
 
@@ -26,8 +26,8 @@ router.put("/:id", auth, authorize("admin", "employer"), createJobValidator, val
 // DELETE /jobs/:id → delete job 
 router.delete("/:id", auth, authorize("admin", "employer"), deleteJob);
 
-// GET /jobs/:id → get single job by ID
-router.get("/:id", auth, getJobById);
+// GET /jobs/:id → get single job by ID (public endpoint)
+router.get("/:id", getJobById);
 
 // GET /jobs/user/:userId → get jobs created by specific user
 router.get("/user/:userId", auth, authorize("admin", "employer"), getJobsByUser);

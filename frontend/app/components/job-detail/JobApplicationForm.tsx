@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router";
-import { postFormData } from "../../lib/api";
+import { useState } from "react";
+import { useApplication } from "../../hooks/useApplication";
+import { useFileUpload } from "../../hooks/useFileUpload";
 
 interface FormData {
   fullName: string;
@@ -12,12 +12,12 @@ interface FormData {
   cvFile: File | null;
 }
 
-export default function JobApplicationForm() {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const jobId = searchParams.get("jobId");
-  const jobTitle = searchParams.get("title") || "this position";
+interface JobApplicationFormProps {
+  jobId: string;
+}
 
+export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
+  const jobTitle = "this position";
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
@@ -29,9 +29,11 @@ export default function JobApplicationForm() {
   });
 
   const [characterCount, setCharacterCount] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const { submitApplication, isLoading: isSubmittingApplication, error: applicationError } = useApplication();
+  const { uploadFile, isLoading: isUploadingFile, error: uploadError } = useFileUpload();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -50,47 +52,45 @@ export default function JobApplicationForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-    
-    if (!jobId) {
-      setError("Job ID is required");
-      setIsSubmitting(false);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+
+    // Validate required fields
+    if (!formData.fullName || !formData.email || !formData.phoneNumber) {
+      setSubmitError("Please fill in all required fields");
       return;
     }
 
     if (!formData.cvFile) {
-      setError("CV file is required");
-      setIsSubmitting(false);
+      setSubmitError("Please upload your CV");
       return;
     }
 
     try {
-      // Create FormData for multipart upload
-      const formDataToSend = new FormData();
-      formDataToSend.append("jobId", jobId);
-      formDataToSend.append("coverLetter", formData.coverLetter);
-      formDataToSend.append("resume", formData.cvFile);
-
-      console.log("Sending application data:", {
+      // Upload the CV file first
+      const uploadResult = await uploadFile(formData.cvFile);
+      
+      // Submit the application
+      await submitApplication({
         jobId,
-        coverLetter: formData.coverLetter,
-        fileName: formData.cvFile?.name,
-        fileSize: formData.cvFile?.size
+        resumeUrl: uploadResult.data?.url||"undefined",
+        coverLetter: formData.coverLetter || undefined,
       });
 
-      // Submit application
-      const response = await postFormData("/api/applications", formDataToSend);
-      
-      setSuccess(true);
-      setTimeout(() => {
-        navigate("/employee-dashboard");
-      }, 2000);
-    } catch (err: any) {
-      console.error("Application submission error:", err);
-      setError(err.message || "Failed to submit application. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+      setSubmitSuccess(true);
+      // Reset form
+      setFormData({
+        fullName: "",
+        email: "",
+        phoneNumber: "",
+        linkedInUrl: "",
+        portfolioUrl: "",
+        coverLetter: "",
+        cvFile: null,
+      });
+      setCharacterCount(0);
+    } catch (error: any) {
+      setSubmitError(error.message || "Failed to submit application. Please try again.");
     }
   };
 
@@ -169,20 +169,20 @@ export default function JobApplicationForm() {
         <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
           {/* Form Header - Centered with Big Font */}
           <div className="p-8 border-b border-gray-200 text-center">
-            <h2 className="text-5xl mt-4 text-gray-800 font-semibold">Apply for {jobTitle}</h2>
+            <h2 className="text-5xl mt-4 text-gray-800 font-semibold">Apply for this position</h2>
             <p className="mt-3 text-gray-600 text-xl">Hey, could you fill out these forms carefully?</p>
             
             {/* Error Message */}
-            {error && (
+            {(submitError || applicationError || uploadError) && (
               <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-                {error}
+                {submitError || applicationError || uploadError}
               </div>
             )}
             
             {/* Success Message */}
-            {success && (
+            {submitSuccess && (
               <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-                Application submitted successfully! Redirecting to dashboard...
+                Application submitted successfully!
               </div>
             )}
           </div>
@@ -204,7 +204,7 @@ export default function JobApplicationForm() {
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Enter your full name"
                 required
-                disabled={isSubmitting || success}
+                disabled={isSubmittingApplication || isUploadingFile}
               />
             </div>
 
@@ -223,7 +223,7 @@ export default function JobApplicationForm() {
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Enter your Email"
                 required
-                disabled={isSubmitting || success}
+                disabled={isSubmittingApplication || isUploadingFile}
               />
             </div>
 
@@ -242,7 +242,7 @@ export default function JobApplicationForm() {
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Enter your Phone Number"
                 required
-                disabled={isSubmitting || success}
+                disabled={isSubmittingApplication || isUploadingFile}
               />
             </div>
 
@@ -263,7 +263,7 @@ export default function JobApplicationForm() {
           className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
           placeholder="Enter your LinkedIn profile URL"
-          disabled={isSubmitting || success}
+          disabled={isSubmittingApplication || isUploadingFile}
         />
       </div>
 
@@ -282,7 +282,7 @@ export default function JobApplicationForm() {
                 className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Enter your Portfolio URL"
-                disabled={isSubmitting || success}
+                disabled={isSubmittingApplication || isUploadingFile}
               />
             </div>
 
@@ -301,7 +301,7 @@ export default function JobApplicationForm() {
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Write why you are fit for this position..."
                 required
-                disabled={isSubmitting || success}
+                disabled={isSubmittingApplication || isUploadingFile}
               />
               <p className="text-sm text-gray-500 mt-2">
                 Make it less than 1000 Characters • {characterCount}/1000
@@ -343,7 +343,7 @@ export default function JobApplicationForm() {
                         onChange={handleFileChange}
                         accept=".pdf"
                         required
-                        disabled={isSubmitting || success}
+                        disabled={isSubmittingApplication || isUploadingFile}
                       />
                     </label>
                     <p className="pl-2">or drag it here</p>
@@ -360,20 +360,61 @@ export default function JobApplicationForm() {
               </div>
             </div>
 
+            {/* Success/Error Messages */}
+            {submitSuccess && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-green-800">
+                      Application submitted successfully!
+                    </h3>
+                    <div className="mt-2 text-sm text-green-700">
+                      <p>Your application has been sent to the employer. You will be notified about the status.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {(submitError || applicationError || uploadError) && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-2.414 2.414L7.586 10l-1.293 1.293a1 1 0 102.414 2.414L10 12.414l1.293 1.293a1 1 0 002.414-2.414L12.414 10l1.293-1.293a1 1 0 00-2.414-2.414L10 7.586 8.707 6.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">
+                      Error submitting application
+                    </h3>
+                    <div className="mt-2 text-sm text-red-700">
+                      <p>{submitError || applicationError || uploadError}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Buttons */}
             <div className="flex space-x-6 pt-6">
               <button
                 type="submit"
-                disabled={isSubmitting || success}
+                disabled={isSubmittingApplication || isUploadingFile}
                 className="flex-1 bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 text-lg font-medium"
               >
-                {success ? "Application Submitted!" : isSubmitting ? "Submitting..." : "Submit Application"}
+                {isSubmittingApplication || isUploadingFile ? "Submitting..." : "Submit Application"}
               </button>
               <button
                 type="button"
                 onClick={handleSaveDraft}
-                disabled={isSubmitting || success}
-                className="flex-1 bg-gray-200 text-gray-800 py-4 px-6 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 disabled:opacity-50 text-lg font-medium"
+                disabled={isSubmittingApplication || isUploadingFile}
+                className="flex-1 bg-gray-200 text-gray-800 py-4 px-6 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-lg font-medium disabled:opacity-50"
               >
                 Save It As A Draft
               </button>
