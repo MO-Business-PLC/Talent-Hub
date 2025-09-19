@@ -120,9 +120,9 @@ export default function Jobs() {
 
   return (
     <div className="min-h-screen bg-light-gray">
-      {/* Hero Section */}
+      {/* Hero Section - Responsive */}
       <section
-        className="py-20 relative"
+        className="py-12 sm:py-16 md:py-20 lg:py-24 relative"
         style={{
           backgroundImage: "url('/images/jobs/jobs_background.png')",
           backgroundSize: "cover",
@@ -130,15 +130,15 @@ export default function Jobs() {
         }}
       >
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-12">
+          <div className="mb-8 sm:mb-12 text-center sm:text-left">
             <h1
-              className="text-4xl md:text-5xl font-bold mb-4"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight"
               style={{ fontFamily: "DM Sans, sans-serif" }}
             >
-              Find your <span className="text-base">new job</span> today
+              Find your <span className="text-blue-600">new job</span> today
             </h1>
             <p
-              className="text-lg font-normal text-[#000000B2]"
+              className="text-lg sm:text-xl md:text-2xl font-normal text-gray-600 max-w-2xl"
               style={{ fontFamily: "DM Sans, sans-serif" }}
             >
               Thousands of jobs in the computer, engineering and technology
@@ -146,12 +146,11 @@ export default function Jobs() {
             </p>
           </div>
 
-          {/* Search Bar */}
-          <div className="w-full">
+          {/* Search Bar - Responsive */}
+          <div className="w-full max-w-4xl mx-auto sm:mx-0">
             <SearchBar onSearch={handleSearch} />
           </div>
-          <p className="text-sm mt-2 text-secondary-text">
-            {" "}
+          <p className="text-xs sm:text-sm mt-2 text-secondary-text text-center sm:text-left">
             <span className="text-disabled-text">Suggestion:</span> UI Designer,
             UX Researcher, Android, Admin
           </p>
@@ -159,15 +158,27 @@ export default function Jobs() {
       </section>
 
       {/* Main Content */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Left Sidebar - Filters */}
-          <div className="lg:col-span-1">
+          {/* Left Sidebar - Filters (Hidden on mobile) */}
+          <div className="hidden lg:block lg:col-span-1">
             <JobFilters onFiltersChange={() => {}} />
           </div>
 
           {/* Main Content - Job Listings */}
-          <div className="lg:col-span-2">
+          <div className="col-span-full lg:col-span-2">
+            {/* Job Results Header */}
+            {searchResults.length > 0 && !isSearching && (
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-gray-900">
+                  {searchResults.length} jobs found
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  Showing the best matches for your search
+                </p>
+              </div>
+            )}
+
             {/* Loading State */}
             {isSearching && (
               <div className="text-center py-12">
@@ -176,9 +187,9 @@ export default function Jobs() {
               </div>
             )}
 
-            {/* Job Cards Grid */}
+            {/* Job Cards Grid - Responsive */}
             {searchResults.length > 0 && !isSearching && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-8">
                 {searchResults.map(job => (
                   <JobCard key={job.id} {...job} />
                 ))}
@@ -187,28 +198,38 @@ export default function Jobs() {
 
             {/* Empty State */}
             {searchResults.length === 0 && !isSearching && (
-              <div className="text-center py-12">
-                <FaBoxOpen className=" mx-auto w-20 h-20 text-base" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900">
+              <div className="text-center py-16">
+                <FaBoxOpen className="mx-auto w-16 h-16 sm:w-20 sm:h-20 text-base mb-4" />
+                <h3 className="text-lg sm:text-xl font-medium text-gray-900 mb-2">
                   No jobs found
                 </h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="text-sm sm:text-base text-gray-500 max-w-md mx-auto">
                   Try adjusting your search criteria or browse all available
                   jobs.
                 </p>
+                <button
+                  onClick={() => handleSearch("", "")}
+                  className="mt-6 px-6 py-2 bg-base text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                >
+                  Browse All Jobs
+                </button>
               </div>
             )}
 
-            {/* Pagination */}
-            <Pagination
-              currentPage={1}
-              totalPages={5}
-              onPageChange={page => console.log("Page changed to:", page)}
-            />
+            {/* Pagination - Responsive */}
+            {searchResults.length > 0 && !isSearching && (
+              <div className="mt-8">
+                <Pagination
+                  currentPage={1}
+                  totalPages={5}
+                  onPageChange={page => console.log("Page changed to:", page)}
+                />
+              </div>
+            )}
           </div>
 
-          {/* Right Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
+          {/* Right Sidebar (Hidden on mobile) */}
+          <div className="hidden lg:block lg:col-span-1 space-y-6">
             <EmailSubscription />
             <ResumeUpload />
           </div>
