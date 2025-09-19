@@ -2,19 +2,15 @@ import { validationResult } from "express-validator";
 import Application from "../models/Application.js";
 import Job from "../models/Job.js";
 import User from "../models/User.js";
+import { uploadToCloudinary } from "../utils/cloudinaryUpload.js";
 
-// Utility for handling validation errors
-const handleValidation = (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ error: errors.array().map(e => e.msg).join(", ") });
-  }
-};
+
 
 // GET /applications/employer
 export const getEmployerApplications = async (req, res) => {
   try {
     const userId = req.user?.id;
+    
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -38,8 +34,6 @@ export const getEmployerApplications = async (req, res) => {
 
 // GET /applications/job/:jobId
 export const getApplicationsByJob = async (req, res) => {
-  const validationErr = handleValidation(req, res);
-  if (validationErr) return validationErr;
 
   try {
     const { jobId } = req.params;
@@ -78,6 +72,13 @@ export const applyToJob = async (req, res) => {
       return res.status(400).json({ error: "Job is not open for applications" });
     }
 
+     if (!req.file) {
+      return res.status(400).json({ message: "Resume file is required" });
+    }
+
+    // Upload resume PDF/DOC to Cloudinary
+    const cloudinaryUrl = await uploadToCloudinary(req.file.buffer);
+
     // Ensure user exists (from token)
     const user = await User.findById(req.user?.id);
     if (!user) {
@@ -88,7 +89,7 @@ export const applyToJob = async (req, res) => {
     const application = await Application.create({
       jobId,
       userId: user._id,
-      resumeUrl,
+      resumeUrl:cloudinaryUrl,
       ...(coverLetter ? { coverLetter } : {}),
     });
 
@@ -97,12 +98,13 @@ export const applyToJob = async (req, res) => {
       .populate({ path: "jobId", select: "title location status" })
       .populate({ path: "userId", select: "name email role" });
 
-    return res.status(201).json({ application: result });
+    return res.status(201).json({  message: "Application submitted successfully",
+                                    application: result });
   } catch (err) {
     if (err?.code === 11000) {
       return res.status(409).json({ error: "You have already applied to this job" });
     }
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: err });
   }
 };
 
