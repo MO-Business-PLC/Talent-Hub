@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import {
   FiHome,
   FiUsers,
@@ -21,6 +21,7 @@ export function DashboardLayout({
   userRole,
 }: DashboardLayoutProps) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -34,27 +35,28 @@ export function DashboardLayout({
       label: "Overview",
       href:
         userRole === "employer" ? "/employer-dashboard" : "/employee-dashboard",
-      active: true,
     },
     {
       icon: FiBriefcase,
       label: "Jobs",
       href: "/jobs",
-      active: false,
     },
     {
       icon: FiUsers,
       label: userRole === "employer" ? "Candidates" : "Applications",
       href: userRole === "employer" ? "/candidates" : "/applications",
-      active: false,
     },
     {
       icon: FiSettings,
       label: "Settings",
       href: "/settings",
-      active: false,
     },
   ];
+
+  // Determine active item based on current location
+  const getIsActive = (href: string) => {
+    return location.pathname === href;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -63,32 +65,38 @@ export function DashboardLayout({
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center px-6 py-4 border-b border-gray-200">
-            <div className="w-8 h-8 bg-base rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm">TH</span>
-            </div>
-            <span className="ml-3 text-xl font-bold text-gray-900">
-              TalentHub
-            </span>
+            <img src="/images/auth/logo.png" alt="logo" className="w-32 h-10" />
           </div>
 
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6">
             <ul className="space-y-2">
-              {sidebarItems.map(item => (
-                <li key={item.label}>
-                  <Link
-                    to={item.href}
-                    className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
-                      item.active
-                        ? "bg-[#1E73BE33] text-base"
-                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                    }`}
-                  >
-                    <item.icon className="w-5 h-5 mr-3" />
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {sidebarItems.map(item => {
+                const isActive = getIsActive(item.href);
+                return (
+                  <li key={item.label}>
+                    <div className="relative">
+                      {/* Active indicator - blue bar on the left */}
+                      {isActive && (
+                        <div className="absolute left-0 top-0 bottom-0 w-2 bg-[#1E73BE] rounded-r-full"></div>
+                      )}
+                      <Link
+                        to={item.href}
+                        className={`flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                          isActive
+                            ? "bg-[#1E73BE1A] text-[#1E73BE] border-l-4 border-transparent ml-1"
+                            : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                        }`}
+                      >
+                        <item.icon
+                          className={`w-5 h-5 mr-3 ${isActive ? "text-[#1E73BE]" : ""}`}
+                        />
+                        {item.label}
+                      </Link>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 
