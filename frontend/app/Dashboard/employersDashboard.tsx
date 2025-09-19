@@ -23,9 +23,6 @@ const Dashboard: React.FC = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <img src="https://via.placeholder.com/40x40?text=UH" alt="TalentHub" className="h-10 w-10 rounded-full" />
-              </div>
               <span className="ml-2 text-xl font-bold text-blue-600">TalentHub</span>
             </div>
 
@@ -39,12 +36,24 @@ const Dashboard: React.FC = () => {
             {/* User profile and notifications */}
             <div className="flex items-center space-x-4">
               <button className="p-2 text-gray-600 hover:text-blue-600 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h4V8h-4V17zM6 17H1V8h5v9z" />
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14V11a6.002 
+                          6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 
+                          6.165 6 8.388 6 11v3c0 .386-.149.735-.405 
+                          1.001L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                 </svg>
               </button>
               <div className="relative">
-                <img src="https://via.placeholder.com/32x32?text=J" alt="User" className="h-8 w-8 rounded-full" />
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
+                    {/* Black Circle Background */}
+                    <circle cx="50" cy="50" r="40" fill="black" />
+                    {/* Diagonal "2F" */}
+                    <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="36" fontFamily="Arial, sans-serif" fill="yellow" fontWeight="bold" transform="rotate(-45 50 50)"
+                    >
+                      2F
+                    </text>
+                  </svg>
               </div>
             </div>
           </div>
@@ -54,7 +63,7 @@ const Dashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Breadcrumb */}
         <div className='flex justify-between'>
-          <h2 className="text-lg font-semibold text-gray-800 text-bold mr-2 mb-6">My Jobs (50)</h2>
+          <h2 className="text-lg font-semibold text-gray-800 text-bold ml-2 mb-6">My Jobs (50)</h2>
           <div className="flex items-center text-sm text-gray-500 mb-6">
             <a href="#" className="hover:text-gray-700">Home</a>
             <span className="mx-1">/</span>

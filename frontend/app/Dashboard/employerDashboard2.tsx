@@ -104,13 +104,23 @@ const App: React.FC = () => {
           </nav>
           <div className="flex items-center space-x-4">
             <button className="p-2 text-gray-600 hover:text-gray-800">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z" />
-                <path d="M10 4a6 6 0 00-6 6v2a6 6 0 0012 0V10a6 6 0 00-6-6z" />
-                <path d="M10 10a2 2 0 110-4 2 2 0 010 4z" />
-              </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14V11a6.002 
+                          6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 
+                          6.165 6 8.388 6 11v3c0 .386-.149.735-.405 
+                          1.001L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
             </button>
-            <img src="https://via.placeholder.com/32" alt="Profile" className="h-8 w-8 rounded-full" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32">
+                    {/* Black Circle Background */}
+                    <circle cx="50" cy="50" r="40" fill="black" />
+                    {/* Diagonal "2F" */}
+                    <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle" fontSize="36" fontFamily="Arial, sans-serif" fill="yellow" fontWeight="bold" transform="rotate(-45 50 50)"
+                    >
+                      2F
+                    </text>
+            </svg>
           </div>
         </div>
       </header>
