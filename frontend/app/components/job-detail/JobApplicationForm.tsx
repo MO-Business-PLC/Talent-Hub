@@ -59,71 +59,71 @@ export default function JobApplicationForm() {
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
- <header className="bg-gray-100">
-  <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
-    {/* Left - Logo */}
-       <div className="flex items-center">
+      <header className="bg-gray-100 pt-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
+          {/* Left - Logo */}
+          <div className="flex items-center ml-4">
             <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
           </div>
 
-    {/* Middle - Navigation */}
-    <nav className="flex items-center space-x-8">
-      <a
-        href="/home"
-        className="text-gray-700 hover:text-[#0366c2] font-medium"
-      >
-        Find Job
-      </a>
-      <a
-        href="/jobs"
-        className="text-gray-700 hover:text-[#0366c2] font-medium"
-      >
-        Find Employer
-      </a>
-      <a
-        href="employee-dashboard"
-        className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
-      >
-        Dashboard
-      </a>
-    </nav>
+          {/* Middle - Navigation */}
+          <nav className="flex items-center space-x-8">
+            <a
+              href="/home"
+              className="text-gray-700 hover:text-[#0366c2] font-medium"
+            >
+              Find Job
+            </a>
+            <a
+              href="/job"
+              className="text-gray-700 hover:text-[#0366c2] font-medium"
+            >
+              Find Employer
+            </a>
+            <a
+              href="employee-dashboard"
+              className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
+            >
+              Dashboard
+            </a>
+          </nav>
 
-    {/* Right - Notification + Profile */}
-    <div className="flex items-center space-x-6">
-      {/* Notification */}
-      <div className="relative cursor-pointer">
-        <svg
-          className="h-6 w-6 text-[#0366c2]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
-        <span className="absolute -top-1 -right-1 bg-[#0366c2] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-          3
-        </span>
-      </div>
+          {/* Right - Notification + Profile */}
+          <div className="flex items-center space-x-6">
+            {/* Notification */}
+            <div className="relative cursor-pointer">
+              <svg
+                className="h-6 w-6 text-[#0366c2]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-极5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
+              </svg>
+              <span className="absolute -top-1 -right-1 bg-[#0366c2] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                3
+              </span>
+            </div>
 
-      {/* Profile Image */}
-      <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
-        <img
-          src="./images/profile.jpg"
-          alt="User"
-          className="h-full w-full object-cover"
-        />
-      </div>
-    </div>
-  </div>
-</header>
+            {/* Profile Image */}
+            <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
+              <img
+                src="./images/profile.jpg"
+                alt="User"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </header>
 
       <div className="py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
           {/* Form Header - Centered with Big Font */}
           <div className="p-8 border-b border-gray-200 text-center">
             <h2 className="text-5xl mt-4 text-gray-800 font-semibold">Apply for Senior UI/UX Designer</h2>
