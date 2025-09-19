@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SearchBar } from "../../components/search";
 import {
   JobCard,
@@ -8,115 +7,69 @@ import {
   Pagination,
 } from "../../components/jobs";
 import { FaBoxOpen } from "react-icons/fa";
+import { useJobSearch, formatJobForDisplay } from "../../hooks/useJobSearch";
 
 export default function Jobs() {
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
+  const {
+    jobs,
+    pagination,
+    isLoading,
+    error,
+    searchJobs,
+    applyFilters,
+    changePage,
+    clearError,
+    hasSearched,
+  } = useJobSearch();
 
   const handleSearch = (query: string, location: string) => {
-    setIsSearching(true);
-    // Simulate API call
-    setTimeout(() => {
-      setSearchResults([
-        {
-          id: 1,
-          title: "UI/UX Designer",
-          company: "2F Capital",
-          location: "Addis Ababa, Ethiopia",
-          salary: "$20,000 - $25,000",
-          type: "Full-time",
-          postedAt: "2 days ago",
-          description:
-            "We're looking for a talented UI/UX designer to join our growing team...",
-          tags: ["Figma", "Sketch", "Adobe Creative Suite"],
-        },
-        {
-          id: 2,
-          title: "Frontend Developer",
-          company: "TechCorp",
-          location: "San Francisco, CA",
-          salary: "$80,000 - $100,000",
-          type: "Full-time",
-          postedAt: "1 day ago",
-          description:
-            "Join our frontend team to build amazing user experiences...",
-          tags: ["React", "TypeScript", "JavaScript"],
-        },
-        {
-          id: 3,
-          title: "Backend Engineer",
-          company: "StartupXYZ",
-          location: "Remote",
-          salary: "$70,000 - $90,000",
-          type: "Remote",
-          postedAt: "3 days ago",
-          description:
-            "Build scalable APIs and microservices for our platform...",
-          tags: ["Node.js", "Python", "AWS"],
-        },
-        {
-          id: 4,
-          title: "Product Manager",
-          company: "ProductCo",
-          location: "New York, NY",
-          salary: "$90,000 - $120,000",
-          type: "Full-time",
-          postedAt: "1 week ago",
-          description:
-            "Lead product strategy and work with cross-functional teams...",
-          tags: ["Product Strategy", "Agile", "Analytics"],
-        },
-        {
-          id: 5,
-          title: "Data Scientist",
-          company: "DataCorp",
-          location: "Boston, MA",
-          salary: "$85,000 - $110,000",
-          type: "Full-time",
-          postedAt: "4 days ago",
-          description:
-            "Analyze complex datasets to drive business decisions...",
-          tags: ["Python", "R", "Machine Learning"],
-        },
-        {
-          id: 6,
-          title: "DevOps Engineer",
-          company: "CloudTech",
-          location: "Austin, TX",
-          salary: "$75,000 - $95,000",
-          type: "Full-time",
-          postedAt: "5 days ago",
-          description:
-            "Manage our cloud infrastructure and deployment pipelines...",
-          tags: ["AWS", "Kubernetes", "Docker"],
-        },
-        {
-          id: 7,
-          title: "Mobile Developer",
-          company: "AppStudio",
-          location: "Seattle, WA",
-          salary: "$70,000 - $90,000",
-          type: "Full-time",
-          postedAt: "2 days ago",
-          description:
-            "Develop mobile applications for iOS and Android platforms...",
-          tags: ["React Native", "Swift", "Kotlin"],
-        },
-        {
-          id: 8,
-          title: "Marketing Manager",
-          company: "GrowthCo",
-          location: "Chicago, IL",
-          salary: "$60,000 - $80,000",
-          type: "Full-time",
-          postedAt: "1 week ago",
-          description: "Lead marketing campaigns and drive user acquisition...",
-          tags: ["Digital Marketing", "SEO", "Analytics"],
-        },
-      ]);
-      setIsSearching(false);
-    }, 1000);
+    clearError();
+    searchJobs(query, location);
   };
+
+  const handleFiltersChange = (filters: any) => {
+    clearError();
+
+    // Map frontend filters to API parameters
+    const apiFilters: any = {};
+
+    // Map employment types to jobType
+    if (filters.employmentType && filters.employmentType.length > 0) {
+      // For now, just use the first selected type
+      const employmentMap: Record<string, string> = {
+        "Full-Time": "FULL_TIME",
+        "Part-Time": "PART_TIME",
+        Temporary: "CONTRACT",
+      };
+      apiFilters.jobType = employmentMap[filters.employmentType[0]];
+    }
+
+    // Map work experience to experience level
+    if (filters.workExperience && filters.workExperience !== "Any Experience") {
+      if (filters.workExperience === "Internship") {
+        apiFilters.experienceLevel = "JUNIOR";
+      } else if (filters.workExperience === "Work Remotely") {
+        apiFilters.jobSite = "REMOTE";
+      }
+    }
+
+    // Map location filters
+    if (filters.location) {
+      if (filters.location === "Remote Job") {
+        apiFilters.jobSite = "REMOTE";
+      }
+      // Other location filters could be handled with search terms
+    }
+
+    applyFilters(apiFilters);
+  };
+
+  const handlePageChange = (page: number) => {
+    changePage(page);
+  };
+
+  // Format jobs for display
+  const formattedJobs = jobs.map(formatJobForDisplay);
 
   return (
     <div className="min-h-screen bg-light-gray">
@@ -162,67 +115,89 @@ export default function Jobs() {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Left Sidebar - Filters (Hidden on mobile) */}
           <div className="hidden lg:block lg:col-span-1">
-            <JobFilters onFiltersChange={() => {}} />
+            <JobFilters onFiltersChange={handleFiltersChange} />
           </div>
 
           {/* Main Content - Job Listings */}
           <div className="col-span-full lg:col-span-2">
             {/* Job Results Header */}
-            {searchResults.length > 0 && !isSearching && (
+            {jobs.length > 0 && !isLoading && (
               <div className="mb-6">
                 <h2 className="text-xl font-semibold text-gray-900">
-                  {searchResults.length} jobs found
+                  {pagination?.totalJobs || jobs.length} job
+                  {(pagination?.totalJobs || jobs.length) !== 1 ? "s" : ""}{" "}
+                  found
                 </h2>
                 <p className="text-sm text-gray-600 mt-1">
-                  Showing the best matches for your search
+                  {pagination
+                    ? `Showing ${(pagination.currentPage - 1) * 10 + 1}-${Math.min(pagination.currentPage * 10, pagination.totalJobs)} of ${pagination.totalJobs} results`
+                    : "Showing the best matches for your search"}
                 </p>
               </div>
             )}
 
             {/* Loading State */}
-            {isSearching && (
+            {isLoading && (
               <div className="text-center py-12">
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-base"></div>
                 <p className="mt-4 text-gray-600">Searching for jobs...</p>
               </div>
             )}
 
+            {/* Error State */}
+            {error && !isLoading && (
+              <div className="text-center py-12">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+                  <p className="text-red-600 mb-4">{error}</p>
+                  <button
+                    onClick={() => handleSearch("", "")}
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Job Cards Grid - Responsive */}
-            {searchResults.length > 0 && !isSearching && (
+            {formattedJobs.length > 0 && !isLoading && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-8">
-                {searchResults.map(job => (
+                {formattedJobs.map(job => (
                   <JobCard key={job.id} {...job} />
                 ))}
               </div>
             )}
 
             {/* Empty State */}
-            {searchResults.length === 0 && !isSearching && (
-              <div className="text-center py-16">
-                <FaBoxOpen className="mx-auto w-16 h-16 sm:w-20 sm:h-20 text-base mb-4" />
-                <h3 className="text-lg sm:text-xl font-medium text-gray-900 mb-2">
-                  No jobs found
-                </h3>
-                <p className="text-sm sm:text-base text-gray-500 max-w-md mx-auto">
-                  Try adjusting your search criteria or browse all available
-                  jobs.
-                </p>
-                <button
-                  onClick={() => handleSearch("", "")}
-                  className="mt-6 px-6 py-2 bg-base text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                >
-                  Browse All Jobs
-                </button>
-              </div>
-            )}
+            {formattedJobs.length === 0 &&
+              !isLoading &&
+              !error &&
+              hasSearched && (
+                <div className="text-center py-16">
+                  <FaBoxOpen className="mx-auto w-16 h-16 sm:w-20 sm:h-20 text-base mb-4" />
+                  <h3 className="text-lg sm:text-xl font-medium text-gray-900 mb-2">
+                    No jobs found
+                  </h3>
+                  <p className="text-sm sm:text-base text-gray-500 max-w-md mx-auto">
+                    Try adjusting your search criteria or browse all available
+                    jobs.
+                  </p>
+                  <button
+                    onClick={() => handleSearch("", "")}
+                    className="mt-6 px-6 py-2 bg-base text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                  >
+                    Browse All Jobs
+                  </button>
+                </div>
+              )}
 
             {/* Pagination - Responsive */}
-            {searchResults.length > 0 && !isSearching && (
+            {pagination && pagination.totalPages > 1 && !isLoading && (
               <div className="mt-8">
                 <Pagination
-                  currentPage={1}
-                  totalPages={5}
-                  onPageChange={page => console.log("Page changed to:", page)}
+                  currentPage={pagination.currentPage}
+                  totalPages={pagination.totalPages}
+                  onPageChange={handlePageChange}
                 />
               </div>
             )}
