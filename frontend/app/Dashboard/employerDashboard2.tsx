@@ -232,7 +232,7 @@ const App: React.FC = () => {
                 </table>
               </div>
 
-              {/* Pagination — ✅ Always show 5 buttons: < 01 02 03 04 05 > */}
+              {/* Pagination  Always show 5 buttons: < 01 02 03 04 05 > */}
               <div className="flex justify-center mt-6">
                 <nav className="inline-flex items-center space-x-1">
                   <button
@@ -245,7 +245,7 @@ const App: React.FC = () => {
                     </svg>
                   </button>
 
-                  {/* ✅ Force display 01 to 05 always */}
+                  {/* Force display 01 to 05 always */}
                   {[1, 2, 3, 4, 5].map((page) => (
                     <button
                       key={page}
@@ -262,7 +262,7 @@ const App: React.FC = () => {
 
                   <button
                     onClick={() => paginate(currentPage + 1)}
-                    disabled={currentPage === 5} // ✅ Max 5 pages
+                    disabled={currentPage === 5} // Max 5 pages
                     className="px-3 py-1 text-sm text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
