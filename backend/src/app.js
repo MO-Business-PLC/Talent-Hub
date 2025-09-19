@@ -9,6 +9,7 @@ import applicationsRouter from "./routes/applications.js";
 import jobsRouter from "./routes/jobs.js";
 import adminRouter from "./routes/admin.js";
 import trendsRouter from "./routes/trends.js";
+import uploadRouter from "./routes/upload.js";
 
 dotenv.config();
 
@@ -64,12 +65,16 @@ app.use(morgan("combined"));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
+// Static file serving for uploads
+app.use('/uploads', express.static(process.env.UPLOAD_PATH || './uploads'));
+
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/applications", applicationsRouter);
 app.use("/api/jobs", jobsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/trends", trendsRouter);
+app.use("/api/upload", uploadRouter);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
@@ -93,6 +98,7 @@ app.get("/api", (req, res) => {
       applications: "/api/applications",
       admin: "/api/admin",
       trends: "/api/trends",
+      upload: "/api/upload",
     },
   });
 });
