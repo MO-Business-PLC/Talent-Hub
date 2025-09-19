@@ -1,17 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { postJson } from "../../lib/api";
-import {
-  FiBriefcase,
-  FiMapPin,
-  FiDollarSign,
-  FiClock,
-  FiUsers,
-  FiFileText,
-  FiSave,
-  FiX,
-} from "react-icons/fi";
+import { FiSave } from "react-icons/fi";
 import CustomDropdown from "../../components/ui/CustomDropdown";
+import { useCreateJob } from "../../hooks/useCreateJob";
 
 interface JobFormData {
   title: string;
@@ -44,7 +35,7 @@ interface JobFormData {
 
 export default function PostJob() {
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { createJob, isLoading, error: apiError, clearError } = useCreateJob();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState<JobFormData>({
@@ -58,7 +49,7 @@ export default function PostJob() {
       city: "",
       country: "Ethiopia",
     },
-    skills: [],
+    skills: [], // Will be populated from tags if needed
     sector: "",
     experienceLevel: "MID_LEVEL",
     education: "",
@@ -76,9 +67,8 @@ export default function PostJob() {
     companyDescription: "",
   });
 
-  const [skillInput, setSkillInput] = useState("");
-  const [requirementInput, setRequirementInput] = useState("");
-  const [benefitInput, setBenefitInput] = useState("");
+  // Remove unused state variables for skills, requirements, and benefits
+  // as they're not needed in the simplified form
 
   const jobTypes = [
     { value: "FULL_TIME", label: "Full Time" },
@@ -206,80 +196,44 @@ export default function PostJob() {
     }));
   };
 
-  // const addSkill = () => {
-  //   if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
-  //     setFormData(prev => ({
-  //       ...prev,
-  //       skills: [...prev.skills, skillInput.trim()],
-  //     }));
-  //     setSkillInput("");
-  //   }
-  // };
-
-  // const removeSkill = (skill: string) => {
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     skills: prev.skills.filter(s => s !== skill),
-  //   }));
-  // };
-
-  // const addRequirement = () => {
-  //   if (
-  //     requirementInput.trim() &&
-  //     !formData.requirements.includes(requirementInput.trim())
-  //   ) {
-  //     setFormData(prev => ({
-  //       ...prev,
-  //       requirements: [...prev.requirements, requirementInput.trim()],
-  //     }));
-  //     setRequirementInput("");
-  //   }
-  // };
-
-  // const removeRequirement = (requirement: string) => {
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     requirements: prev.requirements.filter(r => r !== requirement),
-  //   }));
-  // };
-
-  // const addBenefit = () => {
-  //   if (
-  //     benefitInput.trim() &&
-  //     !formData.benefits.includes(benefitInput.trim())
-  //   ) {
-  //     setFormData(prev => ({
-  //       ...prev,
-  //       benefits: [...prev.benefits, benefitInput.trim()],
-  //     }));
-  //     setBenefitInput("");
-  //   }
-  // };
-
-  // const removeBenefit = (benefit: string) => {
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     benefits: prev.benefits.filter(b => b !== benefit),
-  //   }));
-  // };
-
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.title.trim()) newErrors.title = "Job title is required";
-    if (!formData.description.trim())
-      newErrors.description = "Job description is required";
-    if (!formData.location.city.trim()) newErrors.city = "City is required";
-    if (!formData.jobRole.trim()) newErrors.jobRole = "Job role is required";
-    if (!formData.deadline)
-      newErrors.deadline = "Application deadline is required";
-
-    // Check if deadline is in the future
-    if (formData.deadline && new Date(formData.deadline) <= new Date()) {
-      newErrors.deadline = "Deadline must be in the future";
+    // Required fields based on backend API
+    if (!formData.title.trim()) {
+      newErrors.title = "Job title is required";
+    } else if (formData.title.length < 3 || formData.title.length > 100) {
+      newErrors.title = "Job title must be between 3 and 100 characters";
     }
 
-    // Validate salary range
+    if (!formData.description.trim()) {
+      newErrors.description = "Job description is required";
+    } else if (formData.description.length < 20) {
+      newErrors.description = "Job description must be at least 20 characters";
+    }
+
+    if (!formData.location.city.trim()) {
+      newErrors.city = "City is required";
+    }
+
+    if (!formData.location.country.trim()) {
+      newErrors.country = "Country is required";
+    }
+
+    if (!formData.deadline) {
+      newErrors.deadline = "Application deadline is required";
+    } else {
+      // Check if deadline is in the future
+      const deadlineDate = new Date(formData.deadline);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to start of day
+
+      if (deadlineDate <= today) {
+        newErrors.deadline = "Deadline must be in the future";
+      }
+    }
+
+    // Validate salary range if provided
     if (formData.salaryRange.min > 0 && formData.salaryRange.max > 0) {
       if (formData.salaryRange.min >= formData.salaryRange.max) {
         newErrors.salary = "Maximum salary must be greater than minimum salary";
@@ -296,32 +250,38 @@ export default function PostJob() {
     if (!validateForm()) return;
 
     try {
-      setIsSubmitting(true);
+      // Clear any previous API errors
+      clearError();
 
-      // Transform data for API
+      // Transform form data for the API
       const jobData = {
         ...formData,
-        skills: formData.skills,
-        requirements: formData.requirements,
-        benefits: formData.benefits,
+        // Convert tags to skills array if provided
+        skills: formData.tags
+          ? formData.tags
+              .split(",")
+              .map(tag => tag.trim())
+              .filter(Boolean)
+          : [],
+        // Convert deadline to ISO 8601 format
+        deadline: formData.deadline
+          ? new Date(formData.deadline + "T23:59:59.999Z").toISOString()
+          : "",
+        // Only include salary range if values are provided
         salaryRange:
-          formData.salaryRange.min > 0 ? formData.salaryRange : undefined,
+          formData.salaryRange.min > 0 || formData.salaryRange.max > 0
+            ? formData.salaryRange
+            : undefined,
       };
 
-      await postJson("/api/jobs", jobData);
-
-      // Redirect to employer dashboard on success
-      navigate("/employer-dashboard", {
-        replace: true,
-        state: { message: "Job posted successfully!" },
-      });
+      await createJob(jobData);
     } catch (error: any) {
       console.error("Failed to post job:", error);
-      setErrors({
+      // Error is handled by the hook, but we can set additional form errors if needed
+      setErrors(prev => ({
+        ...prev,
         submit: error.message || "Failed to post job. Please try again.",
-      });
-    } finally {
-      setIsSubmitting(false);
+      }));
     }
   };
 
@@ -371,7 +331,7 @@ export default function PostJob() {
                   value={formData.tags}
                   onChange={e => handleInputChange("tags", e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-base focus:border-transparent"
-                  placeholder="Enter your Email"
+                  placeholder="e.g. React, JavaScript, UI/UX (comma separated)"
                 />
               </div>
               <div>
@@ -553,6 +513,7 @@ export default function PostJob() {
                     value={formData.location.country}
                     onChange={value => handleLocationChange("country", value)}
                     placeholder="Select..."
+                    error={errors.country}
                   />
                 </div>
                 <div>
@@ -612,9 +573,11 @@ export default function PostJob() {
             </div>
 
             {/* Submit Error */}
-            {errors.submit && (
+            {(errors.submit || apiError) && (
               <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                <p className="text-sm text-red-600">{errors.submit}</p>
+                <p className="text-sm text-red-600">
+                  {errors.submit || apiError}
+                </p>
               </div>
             )}
 
@@ -629,10 +592,10 @@ export default function PostJob() {
               </button>
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="flex items-center px-8 py-3 bg-base text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                disabled={isLoading}
+                className="flex items-center px-8 py-3 bg-base text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {isSubmitting ? (
+                {isLoading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                     Posting...

@@ -87,7 +87,7 @@ export default function CustomDropdown({
               className={`
                 w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors
                 first:rounded-t-lg last:rounded-b-lg
-                ${value === option.value ? "bg-blue-50 text-blue-700" : "text-gray-900"}
+                ${value === option.value ? "bg-blue-50 text-base" : "text-gray-900"}
               `}
             >
               {option.label}

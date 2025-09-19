@@ -3,7 +3,7 @@ const VITE_BASE = (import.meta as any).env?.VITE_API_BASE_URL;
 const SERVER_BASE =
   typeof process !== "undefined" ? (process as any).env?.BASE_URL : undefined;
 
-export const API_BASE_URL = VITE_BASE || SERVER_BASE || "http://localhost:5000";
+export const API_BASE_URL = VITE_BASE || SERVER_BASE || "http://localhost:5300";
 
 import { getAccessToken, getRefreshToken, setTokens } from "./auth";
 
