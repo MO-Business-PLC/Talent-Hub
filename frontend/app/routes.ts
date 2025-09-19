@@ -30,7 +30,8 @@ export default [
   layout("routes/home-layout.tsx", [
     route("/jobs", "routes/jobs.tsx"),
     route("/jobs/:id", "routes/job.$id.tsx"),
-    route("/job-application", "routes/job-application.tsx"),
+    route("/jobs/:id/apply", "routes/job-application.$id.tsx"),
+    route("/jobs/:jobId/applicants", "routes/job-applicants.$jobId.tsx"),
     route("/home", "routes/home.tsx"),
   ]),
 ] satisfies RouteConfig;

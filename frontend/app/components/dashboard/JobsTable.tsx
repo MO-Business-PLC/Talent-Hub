@@ -1,4 +1,5 @@
 import { FiEye, FiEdit, FiTrash2, FiPlus, FiBriefcase } from "react-icons/fi";
+import { useNavigate } from "react-router";
 
 interface Job {
   id: string;
@@ -25,6 +26,8 @@ export function JobsTable({
   onDelete,
   onCreate,
 }: JobsTableProps) {
+  const navigate = useNavigate();
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Active":
@@ -36,6 +39,10 @@ export function JobsTable({
       default:
         return "bg-gray-100 text-gray-800";
     }
+  };
+
+  const handleViewApplicants = (jobId: string) => {
+    navigate(`/jobs/${jobId}/applicants`);
   };
 
   return (
@@ -97,7 +104,12 @@ export function JobsTable({
                   <div className="text-sm text-gray-900">{job.location}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">{job.applicants}</div>
+                  <button
+                    onClick={() => handleViewApplicants(job.id)}
+                    className="text-sm text-blue-600 hover:text-blue-800 hover:underline font-medium"
+                  >
+                    View Applicants
+                  </button>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span

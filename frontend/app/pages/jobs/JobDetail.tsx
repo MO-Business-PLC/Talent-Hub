@@ -1,58 +1,66 @@
 // import type { Route } from "./+types/job.$id";
 import { Link, useParams } from "react-router";
-import { useState, useEffect } from "react";
 import {
   JobHeader,
   JobDescription,
   JobOverview,
 } from "../../components/job-detail";
-import { getJobById } from "../../lib/api";
 
-// Transform backend job data to frontend format
-const transformJobData = (backendJob: any) => {
-  return {
-    id: backendJob._id,
-    title: backendJob.title,
-    company: backendJob.createdBy?.name || "Unknown Company",
-    location: `${backendJob.location?.city}, ${backendJob.location?.country}`,
-    type: backendJob.jobType === "FULL_TIME" ? "Full-time" : 
-          backendJob.jobType === "PART_TIME" ? "Part-time" : 
-          backendJob.jobType === "CONTRACT" ? "Contract" : "Remote",
-    salary: "Competitive", // Backend doesn't have salary field
-    postedAt: new Date(backendJob.createdAt).toLocaleDateString(),
-    expiresAt: new Date(backendJob.deadline).toLocaleDateString(),
-    level: backendJob.experienceLevel === "JUNIOR" ? "Entry Level" :
-           backendJob.experienceLevel === "MID" ? "Mid Level" : "Senior Level",
-    experience: "2-5 years", // Default since backend doesn't have specific experience range
-    education: "Bachelor's Degree", // Default since backend doesn't have education field
-    isRemote: backendJob.jobSite === "REMOTE",
-    description: backendJob.description,
-    responsibilities: [
-      "Work on exciting projects and cutting-edge technologies",
-      "Collaborate with cross-functional teams",
-      "Contribute to product development and innovation",
-      "Mentor junior team members",
-      "Participate in code reviews and technical discussions"
-    ],
-    requirements: backendJob.skills || [],
-    benefits: [
-      "Competitive salary and benefits package",
-      "Flexible working hours",
-      "Professional development opportunities",
-      "Health insurance coverage",
-      "Team building activities",
-      "Modern office environment"
-    ],
-    companyInfo: {
-      name: backendJob.createdBy?.name || "Company",
-      description: "A dynamic company focused on innovation and growth",
-      website: "#",
-      size: "50-100 employees",
-      industry: backendJob.sector || "Technology",
-      founded: "2020",
-      location: `${backendJob.location?.city}, ${backendJob.location?.country}`,
-    },
-  };
+// Mock data - replace with actual API calls
+const mockJobData = {
+  id: "1",
+  title: "Senior UX Designer",
+  company: "2F Capital",
+  location: "Addis Ababa, Bole",
+  type: "Full-time" as const,
+  salary: "25K - 35K",
+  postedAt: "23 Aug, 2025",
+  expiresAt: "29 Aug, 2025",
+  level: "Entry Level",
+  experience: "6 - 12 month",
+  education: "Graduation",
+  isRemote: false,
+  description:
+    "We're looking for a talented Senior UX Designer to join our dynamic team.",
+  responsibilities: [
+    "Develop and maintain high-quality web applications using React, TypeScript, and modern frontend technologies",
+    "Collaborate with designers and backend engineers to implement user-friendly interfaces",
+    "Optimize applications for maximum speed and scalability",
+    "Write clean, maintainable, and well-documented code",
+    "Participate in code reviews and mentor junior developers",
+    "Stay up-to-date with the latest frontend trends and technologies",
+    "Contribute to technical decisions and architecture discussions",
+  ],
+  requirements: [
+    "Strong troubleshooting and analytical skills",
+    "Over 3 years of back-end development experience",
+    "Proficiency in HTML, JavaScript, CSS, PHP, Symfony, and/or Laravel",
+    "Experience with APIs and Web Services (REST, GraphQL, SOAP, etc.)",
+    "Familiarity with Agile development, commercial software, middleware, servers, storage, and database management",
+    "Experience with version control and project management tools (e.g., GitHub, Jira)",
+    "Ambition and eagerness to advance in a rapidly growing agency",
+  ],
+  benefits: [
+    "Early finishes on Fridays (4:30 PM finish, plus a drink)",
+    "28 days of holiday (increasing annually), plus a birthday day off",
+    "Generous annual bonus",
+    "Comprehensive healthcare package",
+    "Paid community days for charity",
+    "£100 contribution towards personal learning and development",
+    "Free breakfast on Mondays and office snacks",
+    "Access to Perkbox for discounts and free points",
+    "Cycle to Work Scheme",
+  ],
+  companyInfo: {
+    name: "2F Capital",
+    description:
+      "2F Capital is a leading technology company that builds innovative solutions for businesses worldwide. We're passionate about creating products that solve real-world problems and make people's lives easier.",
+    website: "https://2fcapital.com",
+    size: "50-100 employees",
+    industry: "Technology",
+    founded: "2020",
+    location: "Addis Ababa, Ethiopia",
+  },
 };
 
 const mockSimilarJobs = [
@@ -84,81 +92,103 @@ const mockSimilarJobs = [
 
 export default function JobDetail() {
   const { id } = useParams();
-  const [job, setJob] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { job, isLoading, error } = useJob(id);
 
-  useEffect(() => {
-    const fetchJob = async () => {
-      if (!id) {
-        setError("Job ID is required");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await getJobById(id);
-        const transformedJob = transformJobData(response.job);
-        setJob(transformedJob);
-      } catch (err: any) {
-        console.error("Error fetching job:", err);
-        setError(err.message || "Failed to fetch job details");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchJob();
-  }, [id]);
-
-  if (loading) {
+  // Show loading state
+  if (isLoading) {
     return (
-      <div className="min-h-screen bg-light-gray pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading job details...</p>
+      <div className="min-h-screen bg-light-gray pt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
+            <div className="grid lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-8">
+                <div className="h-32 bg-gray-200 rounded"></div>
+                <div className="h-64 bg-gray-200 rounded"></div>
+              </div>
+              <div className="lg:col-span-1">
+                <div className="h-48 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Show error state
   if (error) {
     return (
-      <div className="min-h-screen bg-light-gray pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-red-600 text-6xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Job</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <Link 
-            to="/jobs" 
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
-          >
-            Back to Jobs
-          </Link>
+      <div className="min-h-screen bg-light-gray pt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-red-800 mb-2">Error Loading Job</h2>
+              <p className="text-red-600 mb-4">{error}</p>
+              <Link
+                to="/jobs"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Back to Jobs
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Show not found state
   if (!job) {
     return (
-      <div className="min-h-screen bg-light-gray pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-gray-400 text-6xl mb-4">🔍</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Job Not Found</h2>
-          <p className="text-gray-600 mb-4">The job you're looking for doesn't exist or has been removed.</p>
-          <Link 
-            to="/jobs" 
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
-          >
-            Back to Jobs
-          </Link>
+      <div className="min-h-screen bg-light-gray pt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+              <h2 className="text-xl font-semibold text-yellow-800 mb-2">Job Not Found</h2>
+              <p className="text-yellow-600 mb-4">The job you're looking for doesn't exist or has been removed.</p>
+              <Link
+                to="/jobs"
+                className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+              >
+                Browse All Jobs
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
+
+  // Format job data for display
+  const formattedJob = {
+    id: job._id,
+    title: job.title,
+    company: job.createdBy?.name || "Company",
+    location: `${job.location.city}, ${job.location.country}`,
+    type: formatJobType(job.jobType, job.jobSite),
+    salary: "Salary not specified", // Backend doesn't include salary
+    postedAt: formatTimeAgo(job.createdAt),
+    expiresAt: formatDate(job.deadline),
+    level: formatExperienceLevel(job.experienceLevel),
+    experience: formatExperienceLevel(job.experienceLevel),
+    education: "Not specified",
+    isRemote: job.jobSite === "REMOTE",
+    description: job.description,
+    responsibilities: extractResponsibilities(job.description),
+    requirements: extractRequirements(job.description),
+    benefits: [], // Not provided by backend
+    companyInfo: {
+      name: job.createdBy?.name || "Company",
+      description: `A company in the ${job.sector} sector.`,
+      website: "#",
+      size: "Not specified",
+      industry: job.sector,
+      founded: "Not specified",
+      location: `${job.location.city}, ${job.location.country}`,
+    },
+  };
 
   return (
     <div className="min-h-screen bg-light-gray pt-16">
@@ -198,7 +228,7 @@ export default function JobDetail() {
                 d="M9 5l7 7-7 7"
               />
             </svg>
-            <span className="hover:text-gray-700">Graphics & Design</span>
+            <span className="hover:text-gray-700">{job.sector}</span>
             <svg
               className="w-4 h-4"
               fill="none"
@@ -224,22 +254,22 @@ export default function JobDetail() {
           <div className="lg:col-span-2 space-y-8">
             {/* Job Header */}
             <JobHeader
-              title={job.title}
-              company={job.company}
-              location={job.location}
-              type={job.type}
-              salary={job.salary}
-              postedAt={job.postedAt}
-              isRemote={job.isRemote}
-              jobId={job.id}
+              title={formattedJob.title}
+              company={formattedJob.company}
+              location={formattedJob.location}
+              type={formattedJob.type}
+              salary={formattedJob.salary}
+              postedAt={formattedJob.postedAt}
+              isRemote={formattedJob.isRemote}
+              jobId={formattedJob.id}
             />
 
             {/* Job Description */}
             <JobDescription
-              description={job.description}
-              responsibilities={job.responsibilities}
-              requirements={job.requirements}
-              benefits={job.benefits}
+              description={formattedJob.description}
+              responsibilities={formattedJob.responsibilities}
+              requirements={formattedJob.requirements}
+              benefits={formattedJob.benefits}
             />
           </div>
 
@@ -247,17 +277,119 @@ export default function JobDetail() {
           <div className="lg:col-span-1 space-y-8">
             {/* Job Overview */}
             <JobOverview
-              salary={job.salary}
-              location={job.location}
-              postedAt={job.postedAt}
-              expiresAt={job.expiresAt}
-              level={job.level}
-              experience={job.experience}
-              education={job.education}
+              salary={formattedJob.salary}
+              location={formattedJob.location}
+              postedAt={formattedJob.postedAt}
+              expiresAt={formattedJob.expiresAt}
+              level={formattedJob.level}
+              experience={formattedJob.experience}
+              education={formattedJob.education}
             />
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+// Helper functions
+function formatJobType(
+  jobType: string,
+  jobSite?: string
+): "Full-time" | "Part-time" | "Contract" | "Remote" {
+  if (jobSite === "REMOTE") return "Remote";
+  
+  switch (jobType) {
+    case "FULL_TIME":
+      return "Full-time";
+    case "PART_TIME":
+      return "Part-time";
+    case "CONTRACT":
+      return "Contract";
+    default:
+      return "Full-time";
+  }
+}
+
+function formatExperienceLevel(level: string): string {
+  switch (level) {
+    case "JUNIOR":
+      return "Entry Level";
+    case "MID":
+      return "Mid Level";
+    case "SENIOR":
+      return "Senior Level";
+    case "LEAD":
+      return "Lead Level";
+    default:
+      return "Not specified";
+  }
+}
+
+function formatTimeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays === 0) return "Today";
+  if (diffInDays === 1) return "Yesterday";
+  if (diffInDays < 7) return `${diffInDays} days ago`;
+  if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+  if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
+  return `${Math.floor(diffInDays / 365)} years ago`;
+}
+
+function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+}
+
+function extractResponsibilities(description: string): string[] {
+  // Simple extraction - look for bullet points or numbered lists
+  const lines = description.split('\n');
+  const responsibilities: string[] = [];
+  
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/)) {
+      responsibilities.push(trimmed.replace(/^[-•*]\s/, '').replace(/^\d+\.\s/, ''));
+    }
+  }
+  
+  return responsibilities.length > 0 ? responsibilities : [
+    "Work on assigned projects and tasks",
+    "Collaborate with team members",
+    "Meet project deadlines",
+    "Maintain code quality and standards"
+  ];
+}
+
+function extractRequirements(description: string): string[] {
+  // Simple extraction - look for requirements section
+  const lines = description.split('\n');
+  const requirements: string[] = [];
+  let inRequirementsSection = false;
+  
+  for (const line of lines) {
+    const trimmed = line.trim().toLowerCase();
+    if (trimmed.includes('requirement') || trimmed.includes('qualification')) {
+      inRequirementsSection = true;
+      continue;
+    }
+    
+    if (inRequirementsSection && (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/))) {
+      requirements.push(line.trim().replace(/^[-•*]\s/, '').replace(/^\d+\.\s/, ''));
+    }
+  }
+  
+  return requirements.length > 0 ? requirements : [
+    "Relevant experience in the field",
+    "Strong communication skills",
+    "Ability to work in a team",
+    "Problem-solving skills"
+  ];
 }

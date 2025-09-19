@@ -30,10 +30,9 @@ export function JobHeader({
 
   const handleApplyClick = () => {
     if (jobId) {
-      const encodedTitle = encodeURIComponent(title);
-      navigate(`/job-application?jobId=${jobId}&title=${encodedTitle}`);
+      navigate(`/jobs/${jobId}/apply`);
     } else {
-      navigate("/job-application");
+      navigate("/jobs");
     }
   };
 

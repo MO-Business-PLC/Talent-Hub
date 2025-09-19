@@ -3,6 +3,7 @@ export { JobFilters } from "./JobFilters";
 export { EmailSubscription } from "./EmailSubscription";
 export { ResumeUpload } from "./ResumeUpload";
 export { Pagination } from "./Pagination";
+export { ApplicantCard } from "./ApplicantCard";
 
 export type { JobCardProps } from "./JobCard";
 export type { JobFiltersProps, FilterOptions } from "./JobFilters";
