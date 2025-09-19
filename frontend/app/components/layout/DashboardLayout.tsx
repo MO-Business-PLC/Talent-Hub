@@ -34,22 +34,22 @@ export function DashboardLayout({
       icon: FiHome,
       label: "Overview",
       href:
-        userRole === "employer" ? "/employer-dashboard" : "/employee-dashboard",
+        userRole === "employer" ? "/employer/dashboard" : "/employee-dashboard",
     },
     {
       icon: FiBriefcase,
       label: "Jobs",
-      href: "/jobs",
+      href: "/employer/jobs",
     },
     {
       icon: FiUsers,
       label: userRole === "employer" ? "Candidates" : "Applications",
-      href: userRole === "employer" ? "/candidates" : "/applications",
+      href: userRole === "employer" ? "/employer/candidates" : "/applications",
     },
     {
       icon: FiSettings,
       label: "Settings",
-      href: "/settings",
+      href: "/employer/settings",
     },
   ];
 

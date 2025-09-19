@@ -89,8 +89,8 @@ export function JobOverview({
       <div className="bg-white p-12 rounded-lg">
         <h3 className="text-lg text-gray-900 mb-4">Job Overview</h3>
         <div className="grid grid-cols-3 gap-4">
-          {overviewItems.map((item, index) => (
-            <div key={index} className="">
+          {overviewItems.map((item) => (
+            <div key={item.label} className="">
               <div className="text-base mb-3">{item.icon}</div>
               <p className="text-xs text-gray-500 font-medium">{item.label}</p>
               <p className="text-s text-gray-900">{item.value}</p>

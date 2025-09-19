@@ -51,7 +51,7 @@ export const register = async (req, res) => {
     }
 
     const normalizedRole =
-      role === "employer" || role === "admin" ? role : "employee";
+      role === "employer" ? role : "employee";
 
     const user = await User.create({
       name: name.trim(),

@@ -56,8 +56,8 @@ export function JobDescription({
           Qualifications
         </h3>
         <ul className="space-y-3">
-          {requirements.map((requirement, index) => (
-            <li key={index} className="flex items-start">
+          {requirements.map((requirement) => (
+            <li key={requirement} className="flex items-start">
               <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
               <span className="text-gray-600">{requirement}</span>
             </li>
@@ -99,8 +99,8 @@ export function JobDescription({
           Perks and Benefits
         </h3>
         <ul className="space-y-3">
-          {benefits.map((benefit, index) => (
-            <li key={index} className="flex items-start">
+          {benefits.map((benefit) => (
+            <li key={benefit} className="flex items-start">
               <div className="w-2 h-2 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
               <span className="text-gray-600">{benefit}</span>
             </li>

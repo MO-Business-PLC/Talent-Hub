@@ -10,11 +10,13 @@ import jobsRouter from "./routes/jobs.js";
 import adminRouter from "./routes/admin.js";
 import trendsRouter from "./routes/trends.js";
 import uploadRouter from "./routes/upload.js";
+import createInitialAdmin from "./utils/adminSetup.js";
+
 
 dotenv.config();
 
 // Connect to database
-connectDB();
+connectDB().then(createInitialAdmin);
 
 const app = express();
 
