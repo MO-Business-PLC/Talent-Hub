@@ -50,8 +50,7 @@ export const register = async (req, res) => {
       return res.status(409).json({ error: "Email already in use" });
     }
 
-    const normalizedRole =
-      role === "employer" ? role : "employee";
+    const normalizedRole = role === "employer" ? role : "employee";
 
     const user = await User.create({
       name: name.trim(),
@@ -144,29 +143,32 @@ export const login = async (req, res) => {
     const email = req.body?.email || req.query?.email;
     const password = req.body?.password || req.query?.password;
 
-    console.log('POST Login attempt:', { email, password: password ? '***' : 'missing' });
+    console.log("POST Login attempt:", {
+      email,
+      password: password ? "***" : "missing",
+    });
 
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
     }
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
-    console.log('User found:', user ? 'Yes' : 'No', user ? user.email : 'N/A');
-    
+    console.log("User found:", user ? "Yes" : "No", user ? user.email : "N/A");
+
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
     const isMatch = await user.matchPassword(password);
-    console.log('Password match:', isMatch);
-    
+    console.log("Password match:", isMatch);
+
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
     const tokens = generateTokens(user);
     const safeUser = user.toJSON();
-    console.log(safeUser)
+    console.log(safeUser);
 
     const redirectTo = `/?role=${safeUser.role}`;
     return res.status(200).json({ user: safeUser, ...tokens, redirectTo });
@@ -180,22 +182,25 @@ export const loginGet = async (req, res) => {
   try {
     const { email, password } = req.query;
 
-    console.log('Login attempt:', { email, password: password ? '***' : 'missing' });
+    console.log("Login attempt:", {
+      email,
+      password: password ? "***" : "missing",
+    });
 
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
     }
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
-    console.log('User found:', user ? 'Yes' : 'No', user ? user.email : 'N/A');
-    
+    console.log("User found:", user ? "Yes" : "No", user ? user.email : "N/A");
+
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
     const isMatch = await user.matchPassword(password);
-    console.log('Password match:', isMatch);
-    
+    console.log("Password match:", isMatch);
+
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
@@ -206,7 +211,7 @@ export const loginGet = async (req, res) => {
     const redirectTo = `/?role=${safeUser.role}`;
     return res.status(200).json({ user: safeUser, ...tokens, redirectTo });
   } catch (err) {
-    console.error('Login error:', err);
+    console.error("Login error:", err);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
