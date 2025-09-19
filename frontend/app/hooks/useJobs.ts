@@ -51,7 +51,9 @@ export function useJobs(userId?: string, options: UseJobsOptions = {}) {
 
   useEffect(() => {
     async function fetchJobs() {
-      if (!userId) {
+      let currentUserId = userId;
+
+      if (!currentUserId) {
         // Try to get user from localStorage
         try {
           const userStr = localStorage.getItem("user");
@@ -61,15 +63,17 @@ export function useJobs(userId?: string, options: UseJobsOptions = {}) {
             return;
           }
           const user = JSON.parse(userStr);
-          userId = user._id || user.id;
+          currentUserId = user._id || user.id;
+          console.log("Retrieved user ID from localStorage:", currentUserId);
         } catch (err) {
+          console.error("Failed to parse user data:", err);
           setError("Failed to get user information");
           setIsLoading(false);
           return;
         }
       }
 
-      if (!userId) {
+      if (!currentUserId) {
         setError("User ID is required");
         setIsLoading(false);
         return;
@@ -89,7 +93,7 @@ export function useJobs(userId?: string, options: UseJobsOptions = {}) {
         }
 
         const response = await getJson<JobsResponse>(
-          `/api/jobs/user/${userId}?${queryParams.toString()}`
+          `/api/jobs/user/${currentUserId}?${queryParams.toString()}`
         );
 
         setData(response);

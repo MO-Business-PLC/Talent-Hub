@@ -1,94 +1,7 @@
 // import type { Route } from "./+types/job.$id";
 import { Link, useParams } from "react-router";
-import {
-  JobHeader,
-  JobDescription,
-  JobOverview,
-} from "../../components/job-detail";
-
-// Mock data - replace with actual API calls
-const mockJobData = {
-  id: "1",
-  title: "Senior UX Designer",
-  company: "2F Capital",
-  location: "Addis Ababa, Bole",
-  type: "Full-time" as const,
-  salary: "25K - 35K",
-  postedAt: "23 Aug, 2025",
-  expiresAt: "29 Aug, 2025",
-  level: "Entry Level",
-  experience: "6 - 12 month",
-  education: "Graduation",
-  isRemote: false,
-  description:
-    "We're looking for a talented Senior UX Designer to join our dynamic team.",
-  responsibilities: [
-    "Develop and maintain high-quality web applications using React, TypeScript, and modern frontend technologies",
-    "Collaborate with designers and backend engineers to implement user-friendly interfaces",
-    "Optimize applications for maximum speed and scalability",
-    "Write clean, maintainable, and well-documented code",
-    "Participate in code reviews and mentor junior developers",
-    "Stay up-to-date with the latest frontend trends and technologies",
-    "Contribute to technical decisions and architecture discussions",
-  ],
-  requirements: [
-    "Strong troubleshooting and analytical skills",
-    "Over 3 years of back-end development experience",
-    "Proficiency in HTML, JavaScript, CSS, PHP, Symfony, and/or Laravel",
-    "Experience with APIs and Web Services (REST, GraphQL, SOAP, etc.)",
-    "Familiarity with Agile development, commercial software, middleware, servers, storage, and database management",
-    "Experience with version control and project management tools (e.g., GitHub, Jira)",
-    "Ambition and eagerness to advance in a rapidly growing agency",
-  ],
-  benefits: [
-    "Early finishes on Fridays (4:30 PM finish, plus a drink)",
-    "28 days of holiday (increasing annually), plus a birthday day off",
-    "Generous annual bonus",
-    "Comprehensive healthcare package",
-    "Paid community days for charity",
-    "£100 contribution towards personal learning and development",
-    "Free breakfast on Mondays and office snacks",
-    "Access to Perkbox for discounts and free points",
-    "Cycle to Work Scheme",
-  ],
-  companyInfo: {
-    name: "2F Capital",
-    description:
-      "2F Capital is a leading technology company that builds innovative solutions for businesses worldwide. We're passionate about creating products that solve real-world problems and make people's lives easier.",
-    website: "https://2fcapital.com",
-    size: "50-100 employees",
-    industry: "Technology",
-    founded: "2020",
-    location: "Addis Ababa, Ethiopia",
-  },
-};
-
-const mockSimilarJobs = [
-  {
-    id: "2",
-    title: "Frontend Engineer",
-    company: "StartupXYZ",
-    location: "Remote",
-    salary: "$100,000 - $130,000",
-    type: "Remote" as const,
-  },
-  {
-    id: "3",
-    title: "React Developer",
-    company: "WebCorp",
-    location: "New York, NY",
-    salary: "$110,000 - $140,000",
-    type: "Full-time" as const,
-  },
-  {
-    id: "4",
-    title: "UI Developer",
-    company: "DesignTech",
-    location: "Austin, TX",
-    salary: "$95,000 - $125,000",
-    type: "Full-time" as const,
-  },
-];
+import { JobHeader, JobDescription, JobOverview } from "../../components/job-detail";
+import { useJob } from "../../hooks/useJob";
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -147,7 +60,9 @@ export default function JobDetail() {
           <div className="text-center">
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
               <h2 className="text-xl font-semibold text-yellow-800 mb-2">Job Not Found</h2>
-              <p className="text-yellow-600 mb-4">The job you're looking for doesn't exist or has been removed.</p>
+              <p className="text-yellow-600 mb-4">
+                The job you're looking for doesn't exist or has been removed.
+              </p>
               <Link
                 to="/jobs"
                 className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
@@ -199,48 +114,18 @@ export default function JobDetail() {
             <Link to="/" className="hover:text-gray-700">
               Home
             </Link>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
             <Link to="/jobs" className="hover:text-gray-700">
               Find Job
             </Link>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
             <span className="hover:text-gray-700">{job.sector}</span>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
             <span className="text-gray-900">Job Details</span>
           </nav>
@@ -298,7 +183,7 @@ function formatJobType(
   jobSite?: string
 ): "Full-time" | "Part-time" | "Contract" | "Remote" {
   if (jobSite === "REMOTE") return "Remote";
-  
+
   switch (jobType) {
     case "FULL_TIME":
       return "Full-time";
@@ -330,7 +215,7 @@ function formatTimeAgo(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
   const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-  
+
   if (diffInDays === 0) return "Today";
   if (diffInDays === 1) return "Yesterday";
   if (diffInDays < 7) return `${diffInDays} days ago`;
@@ -341,55 +226,64 @@ function formatTimeAgo(dateString: string): string {
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
+  return date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 }
 
 function extractResponsibilities(description: string): string[] {
   // Simple extraction - look for bullet points or numbered lists
-  const lines = description.split('\n');
+  const lines = description.split("\n");
   const responsibilities: string[] = [];
-  
+
   for (const line of lines) {
     const trimmed = line.trim();
     if (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/)) {
-      responsibilities.push(trimmed.replace(/^[-•*]\s/, '').replace(/^\d+\.\s/, ''));
+      responsibilities.push(trimmed.replace(/^[-•*]\s/, "").replace(/^\d+\.\s/, ""));
     }
   }
-  
-  return responsibilities.length > 0 ? responsibilities : [
-    "Work on assigned projects and tasks",
-    "Collaborate with team members",
-    "Meet project deadlines",
-    "Maintain code quality and standards"
-  ];
+
+  return responsibilities.length > 0
+    ? responsibilities
+    : [
+        "Work on assigned projects and tasks",
+        "Collaborate with team members",
+        "Meet project deadlines",
+        "Maintain code quality and standards",
+      ];
 }
 
 function extractRequirements(description: string): string[] {
   // Simple extraction - look for requirements section
-  const lines = description.split('\n');
+  const lines = description.split("\n");
   const requirements: string[] = [];
   let inRequirementsSection = false;
-  
+
   for (const line of lines) {
     const trimmed = line.trim().toLowerCase();
-    if (trimmed.includes('requirement') || trimmed.includes('qualification')) {
+    if (trimmed.includes("requirement") || trimmed.includes("qualification")) {
       inRequirementsSection = true;
       continue;
     }
-    
+
     if (inRequirementsSection && (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/))) {
-      requirements.push(line.trim().replace(/^[-•*]\s/, '').replace(/^\d+\.\s/, ''));
+      requirements.push(
+        line
+          .trim()
+          .replace(/^[-•*]\s/, "")
+          .replace(/^\d+\.\s/, "")
+      );
     }
   }
-  
-  return requirements.length > 0 ? requirements : [
-    "Relevant experience in the field",
-    "Strong communication skills",
-    "Ability to work in a team",
-    "Problem-solving skills"
-  ];
+
+  return requirements.length > 0
+    ? requirements
+    : [
+        "Relevant experience in the field",
+        "Strong communication skills",
+        "Ability to work in a team",
+        "Problem-solving skills",
+      ];
 }

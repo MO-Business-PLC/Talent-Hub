@@ -8,21 +8,25 @@ export default function DashboardLayoutRoute() {
   useEffect(() => {
     console.log("DashboardLayoutRoute");
     // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem("user");
-    if (!isAuthenticated) {
+    const userStr = localStorage.getItem("user");
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+
+    if (!userStr || isAuthenticated !== "true") {
       console.log("Not authenticated");
       window.location.href = "/login";
       return;
     }
 
     // Check if user has a valid role
-    const userStr = localStorage.getItem("user");
-    if (userStr) {
-      console.log("Not authenticated");
+    try {
       const user = JSON.parse(userStr);
       if (!user.role || !["employer", "employee"].includes(user.role)) {
+        console.log("Invalid user role:", user.role);
         window.location.href = "/login";
       }
+    } catch (error) {
+      console.log("Failed to parse user data:", error);
+      window.location.href = "/login";
     }
   }, []);
 

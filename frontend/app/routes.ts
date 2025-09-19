@@ -1,9 +1,4 @@
-import {
-  type RouteConfig,
-  index,
-  route,
-  layout,
-} from "@react-router/dev/routes";
+import { type RouteConfig, index, route, layout } from "@react-router/dev/routes";
 
 export default [
   // Root route redirects based on authentication and user role
@@ -24,6 +19,7 @@ export default [
     route("/employer/jobs", "routes/employer-dashboard.tsx", {
       id: "/jobs",
     }),
+    route("/employer/candidates", "routes/employer-candidates.tsx"),
     route("/post-job", "routes/post-job.tsx"),
   ]),
   // Home route (optional fallback)

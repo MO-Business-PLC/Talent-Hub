@@ -4,13 +4,10 @@ import Job from "../models/Job.js";
 import User from "../models/User.js";
 import { uploadToCloudinary } from "../utils/cloudinaryUpload.js";
 
-
-
 // GET /applications/employer
 export const getEmployerApplications = async (req, res) => {
   try {
     const userId = req.user?.id;
-    
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -19,7 +16,7 @@ export const getEmployerApplications = async (req, res) => {
     }
 
     const jobs = await Job.find({ createdBy: userId }).select("_id");
-    const jobIds = jobs.map(job => job._id);
+    const jobIds = jobs.map((job) => job._id);
 
     const applications = await Application.find({ jobId: { $in: jobIds } })
       .sort({ createdAt: -1 })
@@ -34,7 +31,6 @@ export const getEmployerApplications = async (req, res) => {
 
 // GET /applications/job/:jobId
 export const getApplicationsByJob = async (req, res) => {
-
   try {
     const { jobId } = req.params;
 
@@ -64,7 +60,7 @@ export const applyToJob = async (req, res) => {
     console.log("Application request body:", req.body);
     console.log("Application request file:", req.file);
     console.log("Application request user:", req.user);
-    
+
     const { jobId, resumeUrl, coverLetter } = req.body;
 
     // Ensure job exists and is open
@@ -76,7 +72,7 @@ export const applyToJob = async (req, res) => {
       return res.status(400).json({ error: "Job is not open for applications" });
     }
 
-     if (!req.file) {
+    if (!req.file) {
       return res.status(400).json({ message: "Resume file is required" });
     }
 
@@ -93,7 +89,7 @@ export const applyToJob = async (req, res) => {
     const application = await Application.create({
       jobId,
       userId: user._id,
-      resumeUrl:cloudinaryUrl,
+      resumeUrl: cloudinaryUrl,
       ...(coverLetter ? { coverLetter } : {}),
     });
 
@@ -102,32 +98,32 @@ export const applyToJob = async (req, res) => {
       .populate({ path: "jobId", select: "title location status" })
       .populate({ path: "userId", select: "name email role" });
 
-    return res.status(201).json({  message: "Application submitted successfully",
-                                    application: result });
+    return res
+      .status(201)
+      .json({ message: "Application submitted successfully", application: result });
   } catch (err) {
     console.error("Application submission error:", err);
-    
+
     if (err?.code === 11000) {
       return res.status(409).json({ error: "You have already applied to this job" });
     }
-    
+
     // More specific error handling
-    if (err.name === 'ValidationError') {
-      const messages = Object.values(err.errors).map(e => e.message);
-      return res.status(400).json({ error: messages.join(', ') });
+    if (err.name === "ValidationError") {
+      const messages = Object.values(err.errors).map((e) => e.message);
+      return res.status(400).json({ error: messages.join(", ") });
     }
-    
-    if (err.name === 'CastError') {
+
+    if (err.name === "CastError") {
       return res.status(400).json({ error: "Invalid job ID format" });
     }
-    
-    return res.status(500).json({ 
+
+    return res.status(500).json({
       error: "Internal Server Error",
-      message: err.message || "An unexpected error occurred"
+      message: err.message || "An unexpected error occurred",
     });
   }
 };
-
 
 // GET /applications/:userId
 export const getUserApplications = async (req, res) => {

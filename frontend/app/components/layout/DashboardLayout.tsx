@@ -1,13 +1,7 @@
 import type { ReactNode } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
-import {
-  FiHome,
-  FiUsers,
-  FiBriefcase,
-  FiSettings,
-  FiLogOut,
-  FiBell,
-} from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { FiHome, FiUsers, FiBriefcase, FiSettings, FiLogOut, FiBell } from "react-icons/fi";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -15,26 +9,50 @@ interface DashboardLayoutProps {
   userRole: "employer" | "employee";
 }
 
-export function DashboardLayout({
-  children,
-  title,
-  userRole,
-}: DashboardLayoutProps) {
+export function DashboardLayout({ children, title, userRole }: DashboardLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+
+  useEffect(() => {
+    // Get user data from localStorage
+    try {
+      const userStr = localStorage.getItem("user");
+      if (userStr) {
+        const userData = JSON.parse(userStr);
+        setUser({
+          name: userData.name || userData.email || "User",
+          email: userData.email || "",
+        });
+      }
+    } catch (error) {
+      console.error("Failed to parse user data:", error);
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     navigate("/login", { replace: true });
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
   };
 
   const sidebarItems = [
     {
       icon: FiHome,
       label: "Overview",
-      href:
-        userRole === "employer" ? "/employer/dashboard" : "/employee-dashboard",
+      href: userRole === "employer" ? "/employer/dashboard" : "/employee-dashboard",
     },
     {
       icon: FiBriefcase,
@@ -76,7 +94,7 @@ export function DashboardLayout({
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6">
             <ul className="space-y-2">
-              {sidebarItems.map(item => {
+              {sidebarItems.map((item) => {
                 const isActive = getIsActive(item.href);
                 return (
                   <li key={item.label}>
@@ -93,9 +111,7 @@ export function DashboardLayout({
                             : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                         }`}
                       >
-                        <item.icon
-                          className={`w-5 h-5 mr-3 ${isActive ? "text-[#1E73BE]" : ""}`}
-                        />
+                        <item.icon className={`w-5 h-5 mr-3 ${isActive ? "text-[#1E73BE]" : ""}`} />
                         {item.label}
                       </Link>
                     </div>
@@ -108,11 +124,13 @@ export function DashboardLayout({
           {/* User Info & Logout */}
           <div className="px-4 py-4 border-t border-gray-200">
             <div className="flex items-center mb-3">
-              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                <span className="text-gray-600 font-medium text-sm">JD</span>
+              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-medium text-sm">
+                  {user ? getUserInitials(user.name) : "U"}
+                </span>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">John Doe</p>
+                <p className="text-sm font-medium text-gray-900">{user?.name || "User"}</p>
                 <p className="text-xs text-gray-500 capitalize">{userRole}</p>
               </div>
             </div>
@@ -139,8 +157,10 @@ export function DashboardLayout({
                   <FiBell className="w-6 h-6" />
                   <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
-                <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                  <span className="text-gray-600 font-medium text-sm">JD</span>
+                <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                  <span className="text-white font-medium text-sm">
+                    {user ? getUserInitials(user.name) : "U"}
+                  </span>
                 </div>
               </div>
             </div>

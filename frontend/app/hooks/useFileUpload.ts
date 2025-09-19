@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { API_BASE_URL } from "../lib/api";
+import { getAccessToken } from "../lib/auth";
 
 interface UploadResponse {
   success: boolean;
