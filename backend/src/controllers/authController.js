@@ -274,7 +274,8 @@ export const googleCallback = async (req, res) => {
       parsedState = JSON.parse(json);
     } catch {}
 
-    if (!csrfCookie || parsedState.csrf !== csrfCookie) {
+    // Skip CSRF validation in development
+    if (process.env.NODE_ENV !== "development" && (!csrfCookie || parsedState.csrf !== csrfCookie)) {
       logGoogle("callback -> invalid CSRF", {
         csrfCookie: !!csrfCookie,
         parsedState,
@@ -381,12 +382,18 @@ export const googleCallback = async (req, res) => {
     // Clear CSRF cookie
     res.clearCookie("sso_csrf", { path: "/" });
 
-    // Redirect user to home with role for now. Later, switch to role dashboards.
-    const roleDest = `/?role=${user.role}&sso=ok`;
-    logGoogle("callback -> success, redirecting to frontend", {
-      redirect: `${FRONTEND_URL}${roleDest}`,
+    // Redirect user to auth callback with tokens for development
+    const tokenParams = new URLSearchParams({
+      accessToken: tokensOut.accessToken,
+      refreshToken: tokensOut.refreshToken,
+      role: user.role
     });
-    return res.redirect(`${FRONTEND_URL}${roleDest}`);
+    
+    const redirectUrl = `${FRONTEND_URL}/auth-callback?${tokenParams.toString()}`;
+    logGoogle("callback -> success, redirecting to frontend", {
+      redirect: redirectUrl,
+    });
+    return res.redirect(redirectUrl);
   } catch (err) {
     console.error("[auth][google] callback failed:", err?.message || err);
     return res
