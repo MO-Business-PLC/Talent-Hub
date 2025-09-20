@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useApplication } from "../../hooks/useApplication";
-import { useFileUpload } from "../../hooks/useFileUpload";
 
 interface FormData {
   fullName: string;
@@ -37,11 +36,6 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
     isLoading: isSubmittingApplication,
     error: applicationError,
   } = useApplication();
-  const {
-    uploadFile,
-    isLoading: isUploadingFile,
-    error: uploadError,
-  } = useFileUpload();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -77,14 +71,11 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
     }
 
     try {
-      // Upload the CV file first
-      const uploadResult = await uploadFile(formData.cvFile);
-
-      // Submit the application
+      // Submit the application with file directly
       await submitApplication({
         jobId,
-        resumeUrl: uploadResult.data?.url || "undefined",
         coverLetter: formData.coverLetter || undefined,
+        resumeFile: formData.cvFile,
       });
 
       setSubmitSuccess(true);
@@ -125,9 +116,9 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
             </p>
 
             {/* Error Message */}
-            {(submitError || applicationError || uploadError) && (
+            {(submitError || applicationError) && (
               <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-                {submitError || applicationError || uploadError}
+                {submitError || applicationError}
               </div>
             )}
 
@@ -159,7 +150,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Enter your full name"
                 required
-                disabled={isSubmittingApplication || isUploadingFile}
+                disabled={isSubmittingApplication}
               />
             </div>
 
@@ -181,7 +172,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Enter your Email"
                 required
-                disabled={isSubmittingApplication || isUploadingFile}
+                disabled={isSubmittingApplication}
               />
             </div>
 
@@ -203,7 +194,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Enter your Phone Number"
                 required
-                disabled={isSubmittingApplication || isUploadingFile}
+                disabled={isSubmittingApplication}
               />
             </div>
 
@@ -224,7 +215,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                 className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Enter your LinkedIn profile URL"
-                disabled={isSubmittingApplication || isUploadingFile}
+                disabled={isSubmittingApplication}
               />
             </div>
 
@@ -245,7 +236,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                 className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Enter your Portfolio URL"
-                disabled={isSubmittingApplication || isUploadingFile}
+                disabled={isSubmittingApplication}
               />
             </div>
 
@@ -267,7 +258,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="Write why you are fit for this position..."
                 required
-                disabled={isSubmittingApplication || isUploadingFile}
+                disabled={isSubmittingApplication}
               />
               <p className="text-sm text-gray-500 mt-2">
                 Make it less than 1000 Characters • {characterCount}/1000
@@ -309,7 +300,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                         onChange={handleFileChange}
                         accept=".pdf"
                         required
-                        disabled={isSubmittingApplication || isUploadingFile}
+                        disabled={isSubmittingApplication}
                       />
                     </label>
                     <p className="pl-2">or drag it here</p>
@@ -358,7 +349,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
               </div>
             )}
 
-            {(submitError || applicationError || uploadError) && (
+            {(submitError || applicationError) && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
                 <div className="flex">
                   <div className="flex-shrink-0">
@@ -379,7 +370,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                       Error submitting application
                     </h3>
                     <div className="mt-2 text-sm text-red-700">
-                      <p>{submitError || applicationError || uploadError}</p>
+                      <p>{submitError || applicationError}</p>
                     </div>
                   </div>
                 </div>
@@ -390,17 +381,17 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
             <div className="flex space-x-6 pt-6">
               <button
                 type="submit"
-                disabled={isSubmittingApplication || isUploadingFile}
+                disabled={isSubmittingApplication}
                 className="flex-1 bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 text-lg font-medium"
               >
-                {isSubmittingApplication || isUploadingFile
+                {isSubmittingApplication
                   ? "Submitting..."
                   : "Submit Application"}
               </button>
               <button
                 type="button"
                 onClick={handleSaveDraft}
-                disabled={isSubmittingApplication || isUploadingFile}
+                disabled={isSubmittingApplication}
                 className="flex-1 bg-gray-200 text-gray-800 py-4 px-6 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 text-lg font-medium disabled:opacity-50"
               >
                 Save It As A Draft
