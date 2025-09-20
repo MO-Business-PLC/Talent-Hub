@@ -83,9 +83,9 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
   const getIsActive = (href: string) => location.pathname === href;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row p-4">
       {/* Sidebar (desktop only) */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:bg-white lg:shadow-lg lg:z-50 lg:w-64 lg:transition-all lg:duration-300 lg:flex">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:bg-white lg:shadow-lg lg:z-50 lg:w-64 lg:transition-all lg:duration-300 lg:flex my-4 mx-4 rounded-lg">
         <div className="flex flex-col h-full w-full">
           {/* Logo */}
           <div className="flex items-center justify-start px-6 py-4 border-b border-gray-200">

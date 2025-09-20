@@ -20,6 +20,13 @@ export default [
   route("/employee-dashboard", "routes/employee-dashboard.tsx"),
   // Dashboard layout with nested routes
   layout("routes/dashboard-layout.tsx", [
+    // !!Employee
+    route("/employee/dashboard", "routes/employee-overview.tsx"),
+    route("/employee/settings", "routes/employee-settings.tsx"),
+    route("/employee/active-jobs", "routes/employee-overview.tsx", {id: "active/jobs"}),
+    route("/employee/favourite", "routes/favourite-jobs.tsx"),
+
+    // !!Employer
     route("/employer/dashboard", "routes/employer-dashboard.tsx"),
     route("/employer/jobs", "routes/employer-dashboard.tsx", {
       id: "/jobs",
