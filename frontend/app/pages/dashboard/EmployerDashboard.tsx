@@ -13,7 +13,7 @@ export default function EmployerDashboard() {
 
   // Transform API jobs to match JobsTable expected format
   const transformedJobs = useMemo(() => {
-    return jobs.map((job) => ({
+    return jobs.map(job => ({
       id: job._id,
       title: job.title,
       company: job.createdBy.name,
@@ -32,7 +32,9 @@ export default function EmployerDashboard() {
   // Calculate stats from real data
   const stats = useMemo(() => {
     const totalJobs = jobs.length;
-    const activeJobs = jobs.filter((job) => job.status.toLowerCase() === "open").length;
+    const activeJobs = jobs.filter(
+      job => job.status.toLowerCase() === "open"
+    ).length;
     const totalApplicants = jobs.reduce((sum, job) => sum + 0, 0); // TODO: Add real applicant count
     const viewsThisMonth = 1234; // TODO: Get real views data
 
@@ -64,58 +66,67 @@ export default function EmployerDashboard() {
     <div className="space-y-6">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <MdWork className="w-6 h-6 text-blue-600" />
+        <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
+          <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
+            <img
+              src="/icons/home/briefcase.png"
+              alt=""
+              className="w-5 h-5 md:w-8 md:h-8"
+            />
+          </div>
+          <div>
+            <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
+              {isLoading ? "..." : stats.totalJobs}
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Total Jobs</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                {isLoading ? "..." : stats.totalJobs}
-              </p>
+            <div className="text-[16px] text-text-secondary">Total Jobs</div>
+          </div>
+        </div>
+        <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
+          <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
+            <img
+              src="/icons/home/briefcase.png"
+              alt=""
+              className="w-5 h-5 md:w-8 md:h-8"
+            />
+          </div>
+          <div>
+            <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
+              {isLoading ? "..." : stats.totalApplicants}
+            </div>
+            <div className="text-[16px] text-text-secondary">
+              Total Applicants
             </div>
           </div>
         </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <HiUsers className="w-6 h-6 text-green-600" />
+        <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
+          <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
+            <img
+              src="/icons/home/briefcase.png"
+              alt=""
+              className="w-5 h-5 md:w-8 md:h-8"
+            />
+          </div>
+          <div>
+            <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
+              {isLoading ? "..." : stats.activeJobs}
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Total Applicants</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                {isLoading ? "..." : stats.totalApplicants}
-              </p>
-            </div>
+            <div className="text-[16px] text-text-secondary">Active Jobs</div>
           </div>
         </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-2 bg-yellow-100 rounded-lg">
-              <IoCheckmarkCircle className="w-6 h-6 text-yellow-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Active Jobs</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                {isLoading ? "..." : stats.activeJobs}
-              </p>
-            </div>
+        <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
+          <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
+            <img
+              src="/icons/home/briefcase.png"
+              alt=""
+              className="w-5 h-5 md:w-8 md:h-8"
+            />
           </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <FiTrendingUp className="w-6 h-6 text-purple-600" />
+          <div>
+            <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
+              {isLoading ? "..." : stats.viewsThisMonth}
             </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Views This Month</p>
-              <p className="text-2xl font-semibold text-gray-900">
-                {isLoading ? "..." : numberFmt.format(stats.viewsThisMonth)}
-              </p>
+            <div className="text-[16px] text-text-secondary">
+              Views This Month
             </div>
           </div>
         </div>
@@ -126,7 +137,11 @@ export default function EmployerDashboard() {
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="w-5 h-5 text-red-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -135,7 +150,9 @@ export default function EmployerDashboard() {
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">Error loading jobs</h3>
+              <h3 className="text-sm font-medium text-red-800">
+                Error loading jobs
+              </h3>
               <div className="mt-2 text-sm text-red-700">
                 <p>{error}</p>
               </div>
