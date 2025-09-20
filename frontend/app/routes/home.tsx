@@ -9,6 +9,8 @@ import ActiveJobsSection from "~/components/home/ActiveJobsSection";
 import EmployerCTA from "~/components/home/EmployerCTA";
 import CandidateCTA from "~/components/home/CandidateCTA";
 import Testimonials from "~/components/home/Testimonials";
+import JobSteps from "~/components/home/JobSteps";
+import { steps } from "~/links/home.steps";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -57,6 +59,8 @@ export default function Home() {
       <TopCompaniesSection />
       <ActiveJobsSection />
       <EmployerCTA />
+      <JobSteps steps={steps} title="How It For" span="Job Seeker"/>
+      <JobSteps steps={steps} title="How It Works For" span="Employee"/>
       <CandidateCTA />
       <Testimonials />
     </>
