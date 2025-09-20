@@ -10,3 +10,4 @@ export function meta({ params }: { params: { jobId: string } }) {
 export default function JobApplicantsRoute() {
   return <JobApplicants />;
 }
+
