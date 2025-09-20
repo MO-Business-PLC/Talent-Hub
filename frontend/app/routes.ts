@@ -23,7 +23,9 @@ export default [
     // !!Employee
     route("/employee/dashboard", "routes/employee-overview.tsx"),
     route("/employee/settings", "routes/employee-settings.tsx"),
-    route("/employee/applied-jobs", "routes/employee-overview.tsx", {id: "applied/jobs"}),
+    route("/employee/applied-jobs", "routes/employee-overview.tsx", {
+      id: "applied/jobs",
+    }),
     route("/employee/favourite", "routes/favourite-jobs.tsx"),
 
     // !!Employer
@@ -32,8 +34,11 @@ export default [
       id: "/jobs",
     }),
     route("/employer/candidates", "routes/employer-candidates.tsx"),
-    route("/post-job", "routes/post-job.tsx"),
-    route("/jobs/:jobId/applicants", "routes/job-applicants.$jobId.tsx"),
+    route("/employer/post-job", "routes/post-job.tsx"),
+    route(
+      "/employer/jobs/:jobId/applicants",
+      "routes/job-applicants.$jobId.tsx"
+    ),
   ]),
   // Home route (optional fallback)
   layout("routes/home-layout.tsx", [
