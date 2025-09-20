@@ -8,6 +8,7 @@ import {
   FiSettings,
   FiLogOut,
   FiBell,
+  FiHeart,
 } from "react-icons/fi";
 
 interface DashboardLayoutProps {
@@ -52,11 +53,34 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
       .toUpperCase()
       .slice(0, 2);
 
-  const sidebarItems = [
+  const sidebarItems = userRole === "employee"?
+  [
     {
       icon: FiHome,
       label: "Overview",
-      href: userRole === "employer" ? "/employer/dashboard" : "/employee-dashboard",
+      href: "/employee/dashboard",
+    },
+    {
+      icon: FiBriefcase,
+      label: "Applied Jobs",
+      href: "/employee/applied-jobs",
+    },
+    {
+      icon: FiHeart,
+      label: "Favourite Jobs",
+      href: "/employee/favourite",
+    },
+    {
+      icon: FiSettings,
+      label: "Settings",
+      href: "/employee/settings",
+    },
+  ]:
+  [
+    {
+      icon: FiHome,
+      label: "Overview",
+      href: userRole === "employer" ? "/employer/dashboard" : "/employee/dashboard",
     },
     {
       icon: FiBriefcase,
@@ -98,7 +122,11 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
               {sidebarItems.map((item) => {
                 const isActive = getIsActive(item.href);
                 return (
-                  <li key={item.label}>
+                  <li className="relative" key={item.label}>
+                    {isActive && (
+
+                     <div className="absolute left-0 top-2 bottom-2 w-1 bg-[#1E73BE] rounded-r-full"></div>
+                    )}
                     <Link
                       to={item.href}
                       className={`flex items-center px-3 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
@@ -148,6 +176,20 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="px-4 lg:px-6 py-4 flex items-center justify-between">
             <h1 className="text-lg lg:text-2xl font-semibold text-gray-900">{title}</h1>
+              {userRole === "employee" && (
+
+            <nav className="flex items-center space-x-8">
+            <Link to="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
+              Find Job
+            </Link>
+            <Link
+              to="/employee/dashboard"
+              className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
+            >
+              Dashboard
+            </Link>
+          </nav>
+              )}
             <div className="flex items-center space-x-4">
               <button className="relative p-2 text-gray-400 hover:text-gray-600">
                 <FiBell className="w-6 h-6" />
@@ -167,10 +209,12 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
               {sidebarItems.map((item) => {
                 const isActive = getIsActive(item.href);
                 return (
-                  <li className="bg-white py-2" key={item.label}>
+                  <li className="py-2" key={item.label}>
+                   
+
                     <Link
                       to={item.href}
-                      className={`flex flex-col items-center justify-center text-xs font-medium px-6 py-1 transition-colors duration-200 ${
+                      className={`flex flex-col items-center justify-center text-xs font-medium px-7 py-2 relative transition-colors duration-200 ${
                         isActive ? "text-[#1E73BE] bg-[#1E73BE33]" : "text-gray-600 hover:text-gray-900"
                       }`}
                     >
@@ -183,6 +227,7 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
             </ul>
           </nav>
         </header>
+        
 
         {/* Page Content */}
         <main className="p-4 lg:p-6">{children}</main>

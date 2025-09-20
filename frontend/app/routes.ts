@@ -23,7 +23,7 @@ export default [
     // !!Employee
     route("/employee/dashboard", "routes/employee-overview.tsx"),
     route("/employee/settings", "routes/employee-settings.tsx"),
-    route("/employee/active-jobs", "routes/employee-overview.tsx", {id: "active/jobs"}),
+    route("/employee/applied-jobs", "routes/employee-overview.tsx", {id: "applied/jobs"}),
     route("/employee/favourite", "routes/favourite-jobs.tsx"),
 
     // !!Employer
