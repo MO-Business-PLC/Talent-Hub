@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useSearchParams } from "react-router";
 import { SearchBar } from "../../components/search";
 import {
   JobCard,
@@ -10,6 +12,7 @@ import { FaBoxOpen } from "react-icons/fa";
 import { useJobSearch, formatJobForDisplay } from "../../hooks/useJobSearch";
 
 export default function Jobs() {
+  const [searchParams] = useSearchParams();
   const {
     jobs,
     pagination,
@@ -21,6 +24,17 @@ export default function Jobs() {
     clearError,
     hasSearched,
   } = useJobSearch();
+
+  // Initialize search from URL parameters
+  useEffect(() => {
+    const searchQuery = searchParams.get("search");
+    const location = searchParams.get("location");
+    
+    // Only search if we have URL parameters and haven't searched yet
+    if ((searchQuery || location) && !hasSearched) {
+      searchJobs(searchQuery || "", location || "");
+    }
+  }, [searchParams, hasSearched]); // Add hasSearched to prevent multiple searches
 
   const handleSearch = (query: string, location: string) => {
     clearError();
