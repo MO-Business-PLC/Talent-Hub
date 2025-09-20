@@ -147,7 +147,7 @@ export default function EmployerCandidates() {
   }
 
   return (
-    <div className="p-6 w-full">
+    <div className="lg:p-6 w-full">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Candidates</h1>

@@ -11,8 +11,6 @@ export function meta({}: Route.MetaArgs) {
 
 export default function EmployerCandidatesPage() {
   return (
-    <DashboardLayout title="Candidates" userRole="employer">
       <EmployerCandidates />
-    </DashboardLayout>
   );
 }
