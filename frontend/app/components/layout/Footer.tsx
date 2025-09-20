@@ -62,7 +62,7 @@ function Footer() {
     },
   ];
   return (
-    <div className="flex mx-3 sm:mx-5 justify-center items-center">
+    <div className="flex mx-3 mb-2 sm:mx-5 justify-center items-center">
       <footer className="bg-background-dark w-full text-white rounded-2xl mt-10 py-6 sm:py-8 lg:py-10">
         {/* TOP AREA */}
         <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 xl:gap-20 px-6 sm:px-10 lg:px-12 xl:px-16 mb-6 lg:mb-10">
