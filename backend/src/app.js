@@ -25,6 +25,7 @@ app.use(helmet());
 
 // CORS configuration
 const defaultAllowedOrigins = [
+  "https://talent-hub-one.vercel.app",
   "http://localhost:5173", // Vite default
   "http://127.0.0.1:5173",
   "http://localhost:3000", // Common React dev port
@@ -115,7 +116,6 @@ app.use((req, res) => {
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error("Error:", err);
 
   res.status(err.status || 500).json({
     error: err.message || "Internal Server Error",
