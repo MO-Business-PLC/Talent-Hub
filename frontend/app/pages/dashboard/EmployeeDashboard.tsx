@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useUserApplications, type UserApplication } from "../../hooks/useUserApplications";
+import { isAuthenticated } from "../../lib/auth";
 import { Menu, X } from "lucide-react"; 
 
 export default function EmployeeDashboard() {
@@ -11,9 +12,8 @@ export default function EmployeeDashboard() {
    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    if (!isAuthenticated) {
+    // Check if user is authenticated using JWT tokens
+    if (!isAuthenticated()) {
       navigate("/login", { replace: true });
       return;
     }

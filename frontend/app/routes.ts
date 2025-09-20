@@ -9,7 +9,7 @@ export default [
   // Root route redirects based on authentication and user role
   index("routes/root-redirect.tsx"),
   // Callback route for OAuth providers
-  route("/auth/callback", "routes/auth-callback.tsx"),
+  route("/auth-callback", "routes/auth-callback.tsx"),
   // Login page
   route("/login", "routes/login.tsx"),
   // Register page
