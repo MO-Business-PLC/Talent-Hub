@@ -1,4 +1,9 @@
-import { type RouteConfig, index, route, layout } from "@react-router/dev/routes";
+import {
+  type RouteConfig,
+  index,
+  route,
+  layout,
+} from "@react-router/dev/routes";
 
 export default [
   // Root route redirects based on authentication and user role
@@ -21,13 +26,13 @@ export default [
     }),
     route("/employer/candidates", "routes/employer-candidates.tsx"),
     route("/post-job", "routes/post-job.tsx"),
+    route("/jobs/:jobId/applicants", "routes/job-applicants.$jobId.tsx"),
   ]),
   // Home route (optional fallback)
   layout("routes/home-layout.tsx", [
-    route("/jobs", "routes/jobs.tsx"),
-    route("/jobs/:id", "routes/job.$id.tsx"),
-    route("/jobs/:id/apply", "routes/job-application.$id.tsx"),
-    route("/jobs/:jobId/applicants", "routes/job-applicants.$jobId.tsx"),
     route("/home", "routes/home.tsx"),
+    route("/jobs", "routes/jobs.tsx"),
+    route("/jobs/:id", "routes/job.tsx"),
+    route("/jobs/:id/apply", "routes/job-application.$id.tsx"),
   ]),
 ] satisfies RouteConfig;

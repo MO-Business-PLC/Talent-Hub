@@ -1,6 +1,10 @@
 // import type { Route } from "./+types/job.$id";
 import { Link, useParams } from "react-router";
-import { JobHeader, JobDescription, JobOverview } from "../../components/job-detail";
+import {
+  JobHeader,
+  JobDescription,
+  JobOverview,
+} from "../../components/job-detail";
 import { useJob } from "../../hooks/useJob";
 
 export default function JobDetail() {
@@ -37,7 +41,9 @@ export default function JobDetail() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-red-800 mb-2">Error Loading Job</h2>
+              <h2 className="text-xl font-semibold text-red-800 mb-2">
+                Error Loading Job
+              </h2>
               <p className="text-red-600 mb-4">{error}</p>
               <Link
                 to="/jobs"
@@ -59,7 +65,9 @@ export default function JobDetail() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-yellow-800 mb-2">Job Not Found</h2>
+              <h2 className="text-xl font-semibold text-yellow-800 mb-2">
+                Job Not Found
+              </h2>
               <p className="text-yellow-600 mb-4">
                 The job you're looking for doesn't exist or has been removed.
               </p>
@@ -114,18 +122,48 @@ export default function JobDetail() {
             <Link to="/" className="hover:text-gray-700">
               Home
             </Link>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
             <Link to="/jobs" className="hover:text-gray-700">
               Find Job
             </Link>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
             <span className="hover:text-gray-700">{job.sector}</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
             <span className="text-gray-900">Job Details</span>
           </nav>
@@ -136,41 +174,41 @@ export default function JobDetail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Job Header */}
-            <JobHeader
-              title={formattedJob.title}
-              company={formattedJob.company}
-              location={formattedJob.location}
-              type={formattedJob.type}
-              salary={formattedJob.salary}
-              postedAt={formattedJob.postedAt}
-              isRemote={formattedJob.isRemote}
-              jobId={formattedJob.id}
-            />
+          <JobHeader
+            title={formattedJob.title}
+            company={formattedJob.company}
+            location={formattedJob.location}
+            type={formattedJob.type}
+            salary={formattedJob.salary}
+            postedAt={formattedJob.postedAt}
+            isRemote={formattedJob.isRemote}
+            jobId={formattedJob.id}
+            className="col-span-3"
+          />
 
-            {/* Job Description */}
-            <JobDescription
-              description={formattedJob.description}
-              responsibilities={formattedJob.responsibilities}
-              requirements={formattedJob.requirements}
-              benefits={formattedJob.benefits}
-            />
-          </div>
+          {/* Job Header */}
+
+          {/* Job Description */}
+          <JobDescription
+            description={formattedJob.description}
+            responsibilities={formattedJob.responsibilities}
+            requirements={formattedJob.requirements}
+            benefits={formattedJob.benefits}
+            className="col-span-2"
+          />
 
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-8">
-            {/* Job Overview */}
-            <JobOverview
-              salary={formattedJob.salary}
-              location={formattedJob.location}
-              postedAt={formattedJob.postedAt}
-              expiresAt={formattedJob.expiresAt}
-              level={formattedJob.level}
-              experience={formattedJob.experience}
-              education={formattedJob.education}
-            />
-          </div>
+
+          {/* Job Overview */}
+          <JobOverview
+            salary={formattedJob.salary}
+            location={formattedJob.location}
+            postedAt={formattedJob.postedAt}
+            expiresAt={formattedJob.expiresAt}
+            level={formattedJob.level}
+            experience={formattedJob.experience}
+            education={formattedJob.education}
+          />
         </div>
       </div>
     </div>
@@ -214,7 +252,9 @@ function formatExperienceLevel(level: string): string {
 function formatTimeAgo(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
-  const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+  const diffInDays = Math.floor(
+    (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+  );
 
   if (diffInDays === 0) return "Today";
   if (diffInDays === 1) return "Yesterday";
@@ -241,7 +281,9 @@ function extractResponsibilities(description: string): string[] {
   for (const line of lines) {
     const trimmed = line.trim();
     if (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/)) {
-      responsibilities.push(trimmed.replace(/^[-•*]\s/, "").replace(/^\d+\.\s/, ""));
+      responsibilities.push(
+        trimmed.replace(/^[-•*]\s/, "").replace(/^\d+\.\s/, "")
+      );
     }
   }
 
@@ -268,7 +310,10 @@ function extractRequirements(description: string): string[] {
       continue;
     }
 
-    if (inRequirementsSection && (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/))) {
+    if (
+      inRequirementsSection &&
+      (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/))
+    ) {
       requirements.push(
         line
           .trim()

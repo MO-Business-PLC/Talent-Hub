@@ -1,5 +1,5 @@
 import { FiBookmark } from "react-icons/fi";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export interface JobHeaderProps {
   title: string;
@@ -21,7 +21,7 @@ export function JobHeader({
   type,
   salary,
   postedAt,
-  logo,
+  logo = "/images/jobs/default_company_logo.png",
   isRemote = false,
   className = "",
   jobId,
@@ -75,14 +75,16 @@ export function JobHeader({
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-1.5">
               {title}
             </h1>
-            <p className="text-base md:text-lg font-medium mb-3">{company}</p>
+            <div className="flex gap-2">
+              <p className="md:text-lg text-secondary-text mb-3">{company}</p>
 
-            <div className="flex items-center gap-3 mb-1.5">
-              <span
-                className={`px-3 py-1 rounded-full text-xs md:text-sm font-medium ${getTypeColor(type)}`}
-              >
-                {type.toUpperCase()}
-              </span>
+              <div className="flex items-center gap-4 mb-1.5">
+                <span
+                  className={`px-3 py-1 rounded-sm text-xs md:text-sm font-medium ${getTypeColor(type)}`}
+                >
+                  {type.toUpperCase()}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -95,12 +97,12 @@ export function JobHeader({
           >
             <FiBookmark className="w-6 h-6" />
           </button>
-          <button 
-            onClick={handleApplyClick}
-            className="bg-base hover:bg-primary-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-lg font-semibold transition-colors duration-200"
+          <Link
+            to={`apply`}
+            className="bg-base hover:bg-primary-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-sm font-semibold transition-colors duration-200"
           >
             Apply Now
-          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -31,27 +31,30 @@ export function useFileUpload(): UseFileUploadReturn {
 
     try {
       const formData = new FormData();
-      formData.append('resume', file);
+      formData.append("resume", file);
 
       const response = await fetch(`${API_BASE_URL}/api/upload/resume`, {
-        method: 'POST',
+        method: "POST",
         body: formData,
-        credentials: 'include',
+        credentials: "include",
         headers: {
           // Don't set Content-Type header - let browser set it with boundary for FormData
-          'Authorization': `Bearer ${getAccessToken()}`,
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || errorData.message || 'Upload failed');
+        throw new Error(
+          errorData.error || errorData.message || "Upload failed"
+        );
       }
 
       const result = await response.json();
       return result;
     } catch (err: any) {
-      const errorMessage = err.message || "Failed to upload file. Please try again.";
+      const errorMessage =
+        err.message || "Failed to upload file. Please try again.";
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -69,15 +72,6 @@ export function useFileUpload(): UseFileUploadReturn {
     error,
     clearError,
   };
-}
-
-// Helper function to get access token
-function getAccessToken(): string | null {
-  try {
-    return localStorage.getItem('accessToken');
-  } catch {
-    return null;
-  }
 }
 
 export type { UploadResponse };

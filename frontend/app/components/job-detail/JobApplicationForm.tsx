@@ -32,13 +32,23 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const { submitApplication, isLoading: isSubmittingApplication, error: applicationError } = useApplication();
-  const { uploadFile, isLoading: isUploadingFile, error: uploadError } = useFileUpload();
+  const {
+    submitApplication,
+    isLoading: isSubmittingApplication,
+    error: applicationError,
+  } = useApplication();
+  const {
+    uploadFile,
+    isLoading: isUploadingFile,
+    error: uploadError,
+  } = useFileUpload();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    
+    setFormData(prev => ({ ...prev, [name]: value }));
+
     if (name === "coverLetter") {
       setCharacterCount(value.length);
     }
@@ -46,7 +56,7 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFormData((prev) => ({ ...prev, cvFile: e.target.files![0] }));
+      setFormData(prev => ({ ...prev, cvFile: e.target.files![0] }));
     }
   };
 
@@ -69,11 +79,11 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
     try {
       // Upload the CV file first
       const uploadResult = await uploadFile(formData.cvFile);
-      
+
       // Submit the application
       await submitApplication({
         jobId,
-        resumeUrl: uploadResult.data?.url||"undefined",
+        resumeUrl: uploadResult.data?.url || "undefined",
         coverLetter: formData.coverLetter || undefined,
       });
 
@@ -90,7 +100,9 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
       });
       setCharacterCount(0);
     } catch (error: any) {
-      setSubmitError(error.message || "Failed to submit application. Please try again.");
+      setSubmitError(
+        error.message || "Failed to submit application. Please try again."
+      );
     }
   };
 
@@ -101,84 +113,24 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-gray-100 pt-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
-          {/* Left - Logo */}
-          <div className="flex items-center ml-4">
-            <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
-          </div>
-
-          {/* Middle - Navigation */}
-          <nav className="flex items-center space-x-8">
-            <a
-              href="/home"
-              className="text-gray-700 hover:text-[#0366c2] font-medium"
-            >
-              Find Job
-            </a>
-            <a
-              href="/job"
-              className="text-gray-700 hover:text-[#0366c2] font-medium"
-            >
-              Find Employer
-            </a>
-            <a
-              href="employee-dashboard"
-              className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
-            >
-              Dashboard
-            </a>
-          </nav>
-
-          {/* Right - Notification + Profile */}
-          <div className="flex items-center space-x-6">
-            {/* Notification */}
-            <div className="relative cursor-pointer">
-              <svg
-                className="h-6 w-6 text-[#0366c2]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-极5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                />
-              </svg>
-              <span className="absolute -top-1 -right-1 bg-[#0366c2] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                3
-              </span>
-            </div>
-
-            {/* Profile Image */}
-            <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
-              <img
-                src="./images/profile.jpg"
-                alt="User"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
           {/* Form Header - Centered with Big Font */}
           <div className="p-8 border-b border-gray-200 text-center">
-            <h2 className="text-5xl mt-4 text-gray-800 font-semibold">Apply for this position</h2>
-            <p className="mt-3 text-gray-600 text-xl">Hey, could you fill out these forms carefully?</p>
-            
+            <h2 className="text-5xl mt-4 text-gray-800 font-semibold">
+              Apply for this position
+            </h2>
+            <p className="mt-3 text-gray-600 text-xl">
+              Hey, could you fill out these forms carefully?
+            </p>
+
             {/* Error Message */}
             {(submitError || applicationError || uploadError) && (
               <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
                 {submitError || applicationError || uploadError}
               </div>
             )}
-            
+
             {/* Success Message */}
             {submitSuccess && (
               <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
@@ -191,7 +143,10 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
           <form onSubmit={handleSubmit} className="p-8 space-y-6">
             {/* Full Name */}
             <div>
-              <label htmlFor="fullName" className="block text-lg font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="fullName"
+                className="block text-lg font-medium text-gray-700 mb-2"
+              >
                 Full Name
               </label>
               <input
@@ -210,7 +165,10 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-lg font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-lg font-medium text-gray-700 mb-2"
+              >
                 Email
               </label>
               <input
@@ -229,7 +187,10 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
 
             {/* Phone Number */}
             <div>
-              <label htmlFor="phoneNumber" className="block text-lg font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="phoneNumber"
+                className="block text-lg font-medium text-gray-700 mb-2"
+              >
                 Phone Number
               </label>
               <input
@@ -247,30 +208,32 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
             </div>
 
             {/* LinkedIn Profile URL */}
-      <div>
-        <label
-          htmlFor="linkedInUrl"
-          className="block text-lg font-medium text-gray-700 mb-2"
-        >
-          LinkedIn profile URL
-        </label>
-        <input
-          type="url"
-          id="linkedInUrl"
-          name="linkedInUrl"
-          value={formData.linkedInUrl}
-          onChange={handleInputChange}
-          className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
+            <div>
+              <label
+                htmlFor="linkedInUrl"
+                className="block text-lg font-medium text-gray-700 mb-2"
+              >
+                LinkedIn profile URL
+              </label>
+              <input
+                type="url"
+                id="linkedInUrl"
+                name="linkedInUrl"
+                value={formData.linkedInUrl}
+                onChange={handleInputChange}
+                className="block w-full px-5 py-3 text-lg border border-gray-300 rounded-md 
                     focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-100 disabled:opacity-50 disabled:cursor-not-allowed"
-          placeholder="Enter your LinkedIn profile URL"
-          disabled={isSubmittingApplication || isUploadingFile}
-        />
-      </div>
-
+                placeholder="Enter your LinkedIn profile URL"
+                disabled={isSubmittingApplication || isUploadingFile}
+              />
+            </div>
 
             {/* Portfolio URL */}
             <div>
-              <label htmlFor="portfolioUrl" className="block text-lg font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="portfolioUrl"
+                className="block text-lg font-medium text-gray-700 mb-2"
+              >
                 Portfolio URL
               </label>
               <input
@@ -288,7 +251,10 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
 
             {/* Cover Letter */}
             <div>
-              <label htmlFor="coverLetter" className="block text-lg font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="coverLetter"
+                className="block text-lg font-medium text-gray-700 mb-2"
+              >
                 Cover letter
               </label>
               <textarea
@@ -365,8 +331,16 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
                 <div className="flex">
                   <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    <svg
+                      className="h-5 w-5 text-green-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <div className="ml-3">
@@ -374,7 +348,10 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                       Application submitted successfully!
                     </h3>
                     <div className="mt-2 text-sm text-green-700">
-                      <p>Your application has been sent to the employer. You will be notified about the status.</p>
+                      <p>
+                        Your application has been sent to the employer. You will
+                        be notified about the status.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -385,8 +362,16 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
                 <div className="flex">
                   <div className="flex-shrink-0">
-                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-2.414 2.414L7.586 10l-1.293 1.293a1 1 0 102.414 2.414L10 12.414l1.293 1.293a1 1 0 002.414-2.414L12.414 10l1.293-1.293a1 1 0 00-2.414-2.414L10 7.586 8.707 6.293z" clipRule="evenodd" />
+                    <svg
+                      className="h-5 w-5 text-red-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-2.414 2.414L7.586 10l-1.293 1.293a1 1 0 102.414 2.414L10 12.414l1.293 1.293a1 1 0 002.414-2.414L12.414 10l1.293-1.293a1 1 0 00-2.414-2.414L10 7.586 8.707 6.293z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                   </div>
                   <div className="ml-3">
@@ -408,7 +393,9 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
                 disabled={isSubmittingApplication || isUploadingFile}
                 className="flex-1 bg-blue-600 text-white py-4 px-6 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 text-lg font-medium"
               >
-                {isSubmittingApplication || isUploadingFile ? "Submitting..." : "Submit Application"}
+                {isSubmittingApplication || isUploadingFile
+                  ? "Submitting..."
+                  : "Submit Application"}
               </button>
               <button
                 type="button"
