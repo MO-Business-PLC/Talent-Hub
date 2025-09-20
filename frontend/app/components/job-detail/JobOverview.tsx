@@ -61,7 +61,7 @@ export function JobOverview({
   ];
 
   return (
-    <div className={`min-w-[500px] ${className}`}>
+    <div className={`${className}`}>
       <div className="mb-6 bg-white p-12 rounded-lg flex justify-between items-center">
         {/* Salary */}
         <div className="text-center flex-1">
@@ -89,7 +89,7 @@ export function JobOverview({
       <div className="bg-white p-12 rounded-lg">
         <h3 className="text-lg text-gray-900 mb-4">Job Overview</h3>
         <div className="grid grid-cols-3 gap-4">
-          {overviewItems.map((item) => (
+          {overviewItems.map(item => (
             <div key={item.label} className="">
               <div className="text-base mb-3">{item.icon}</div>
               <p className="text-xs text-gray-500 font-medium">{item.label}</p>

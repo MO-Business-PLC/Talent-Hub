@@ -100,7 +100,7 @@ export default function JobDetail() {
     isRemote: job.jobSite === "REMOTE",
     description: job.description,
     responsibilities: extractResponsibilities(job.description),
-    requirements: extractRequirements(job.description),
+    requirements: job.skills,
     benefits: [], // Not provided by backend
     companyInfo: {
       name: job.createdBy?.name || "Company",
@@ -112,6 +112,7 @@ export default function JobDetail() {
       location: `${job.location.city}, ${job.location.country}`,
     },
   };
+  console.log(job.description);
 
   return (
     <div className="min-h-screen bg-light-gray pt-16">
