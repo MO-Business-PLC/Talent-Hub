@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
 );
 
 // Unique index for email
-userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ email: 1 });
 
 // Hash password before saving
 userSchema.pre("save", async function (next) {

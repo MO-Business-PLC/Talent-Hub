@@ -159,7 +159,6 @@ export const getJobTrends = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Job trends error:', error);
     res.status(500).json({ error: 'Failed to fetch job trends' });
   }
 };
@@ -347,7 +346,6 @@ export const getApplicationTrends = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Application trends error:', error);
     res.status(500).json({ error: 'Failed to fetch application trends' });
   }
 };
@@ -447,7 +445,6 @@ export const getUserTrends = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('User trends error:', error);
     res.status(500).json({ error: 'Failed to fetch user trends' });
   }
 };
@@ -600,7 +597,6 @@ export const getAnalytics = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Analytics error:', error);
     res.status(500).json({ error: 'Failed to fetch analytics' });
   }
 };
