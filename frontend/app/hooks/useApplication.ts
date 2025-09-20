@@ -122,4 +122,3 @@ export function useApplication(): UseApplicationReturn {
 }
 
 export type { ApplicationData, ApplicationResponse };
-
