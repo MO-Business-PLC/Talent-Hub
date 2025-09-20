@@ -1,39 +1,45 @@
 import React from "react";
 import JobSearchBar from "./JobSearchBar";
+import TopCompanies from "./home/TopCompanies";
 
 function Hero() {
   return (
-    <div className="relative w-full overflow-hidden min-h-[460px] sm:min-h-[500px] lg:h-[500px]">
+    <div className="relative mt-5 w-full overflow-hidden min-h-[460px] sm:min-h-[500px] lg:h-[500px]">
       {/* Background top image (decorative) */}
       <img
-        className="pointer-events-none select-none absolute -top-24 sm:-top-20 w-full max-w-none"
+        className="pointer-events-none select-none bg-[#F8F9FB] absolute -top-24 sm:-top-20 w-full max-w-none"
         src="/images/home/landing_page_top.jpg"
         alt=""
         aria-hidden="true"
         loading="lazy"
       />
       {/* Light overlay */}
-      <div className="absolute inset-0 bg-white/70" />
+      <div className="absolute inset-0 bg-[#F8F9FB]/80 " />
 
       <div className="relative flex flex-col justify-center px-5 sm:px-8 lg:px-16 xl:px-24 py-12 lg:py-0">
         <div className="flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-32 xl:gap-52">
           {/* Left Section */}
 
           <div className="w-full max-w-xl flex flex-col gap-3 text-center lg:text-left">
-            <h1 className="text-background-dark font-bold leading-[1.05] text-4xl sm:text-5xl md:text-6xl lg:text-[80px] tracking-tight">
-              Explore{" "}
-              <span className="relative inline-block align-baseline">
-                {/* Decorative Line */}
+             <h1
+              className="text-background-dark font-bold leading-[1.05] text-6xl md:text-7xl lg:text-[80px] tracking-tight flex flex-wrap justify-center lg:justify-start"
+            >
+              {/* Explore text */}
+              <span className="mr-3">Explore</span>
+
+              {/* Jobs with decorative line on top */}
+              <span className="relative">
                 <img
-                  className="absolute -top-2 left-0 object-contain z-0 w-24 sm:w-28 md:w-32 lg:w-auto hidden xs:block"
-                  src="/images/home/Abstract_Line.jpg"
+                  className="absolute  -top-5 -left-3 z-10 w-6 sm:w-7 md:w-9 lg:w-10 mb-1"
+                  src="./images/home/Abstract_Line.png"
                   alt=""
                   aria-hidden="true"
                   loading="lazy"
                 />
-                <span className="relative z-10">Jobs</span>
+                <span className="relative text-base">Jobs</span>
               </span>
             </h1>
+
             <h2 className="text-background-dark font-bold leading-[1.05] text-4xl sm:text-5xl md:text-6xl lg:text-[80px] tracking-tight">
               Opportunities
             </h2>
@@ -56,10 +62,15 @@ function Hero() {
           <div className="flex-1 w-full flex items-center justify-center lg:justify-end">
             <div className="relative w-72 sm:w-80 md:w-[380px] lg:w-[460px] xl:w-[500px]">
               <img
-                className="w-full h-auto rounded-xl shadow-sm"
-                src="/images/home/landing_page_hero.jpg"
+                className="w-full h-auto rounded-xl "
+                src="/images/home/landing_page_hero.png"
                 alt="Professionals collaborating illustration"
                 loading="lazy"
+              />
+              <img
+              className="absolute top-3 rotate-90 right-12"
+              loading="lazy"
+              src="/images/home/Abstract_Line.png"
               />
               <img
                 src="/images/home/landing_candidates.jpg"
