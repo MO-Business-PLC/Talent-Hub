@@ -48,7 +48,7 @@ export default function AuthCallbackRoute() {
         if (userRole === "employee") {
           navigate("/employee-dashboard", { replace: true });
         } else if (userRole === "employer") {
-          navigate("/employer-dashboard", { replace: true });
+          navigate("/employer/dashboard", { replace: true });
         } else {
           // Fallback if no role is specified
           console.warn("No user role found in profile:", profile);

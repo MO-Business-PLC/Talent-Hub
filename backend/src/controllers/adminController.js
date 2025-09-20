@@ -72,7 +72,7 @@ export const getAllUsers = async (req, res) => {
       stats
     });
   } catch (error) {
-    console.error('Admin getAllUsers error:', error);
+
     res.status(500).json({ error: 'Failed to fetch users' });
   }
 };
@@ -99,7 +99,6 @@ export const getUserById = async (req, res) => {
       createdJobs
     });
   } catch (error) {
-    console.error('Admin getUserById error:', error);
     res.status(500).json({ error: 'Failed to fetch user details' });
   }
 };
@@ -129,7 +128,6 @@ export const updateUserRole = async (req, res) => {
       user
     });
   } catch (error) {
-    console.error('Admin updateUserRole error:', error);
     res.status(500).json({ error: 'Failed to update user role' });
   }
 };
@@ -161,7 +159,6 @@ export const deleteUser = async (req, res) => {
       message: 'User and associated data deleted successfully'
     });
   } catch (error) {
-    console.error('Admin deleteUser error:', error);
     res.status(500).json({ error: 'Failed to delete user' });
   }
 };
@@ -233,7 +230,6 @@ export const getAllJobs = async (req, res) => {
       stats
     });
   } catch (error) {
-    console.error('Admin getAllJobs error:', error);
     res.status(500).json({ error: 'Failed to fetch jobs' });
   }
 };
@@ -263,8 +259,7 @@ export const updateJobStatus = async (req, res) => {
       job
     });
   } catch (error) {
-    console.error('Admin updateJobStatus error:', error);
-    res.status(500).json({ error: 'Failed to update job status' });
+  res.status(500).json({ error: 'Failed to update job status' });
   }
 };
 
@@ -287,7 +282,6 @@ export const deleteJob = async (req, res) => {
       message: 'Job and associated applications deleted successfully'
     });
   } catch (error) {
-    console.error('Admin deleteJob error:', error);
     res.status(500).json({ error: 'Failed to delete job' });
   }
 };
@@ -378,7 +372,6 @@ export const getAllApplications = async (req, res) => {
       stats
     });
   } catch (error) {
-    console.error('Admin getAllApplications error:', error);
     res.status(500).json({ error: 'Failed to fetch applications' });
   }
 };
@@ -408,7 +401,6 @@ export const updateApplicationStatus = async (req, res) => {
       application
     });
   } catch (error) {
-    console.error('Admin updateApplicationStatus error:', error);
     res.status(500).json({ error: 'Failed to update application status' });
   }
 };
@@ -553,7 +545,6 @@ export const getDashboardStats = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Admin getDashboardStats error:', error);
     res.status(500).json({ error: 'Failed to fetch dashboard statistics' });
   }
 };
@@ -599,7 +590,6 @@ export const getSystemHealth = async (req, res) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Admin getSystemHealth error:', error);
     res.status(500).json({ error: 'Failed to fetch system health' });
   }
 };
