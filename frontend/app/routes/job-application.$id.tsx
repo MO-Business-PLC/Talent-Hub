@@ -1,5 +1,8 @@
 import JobApplicationForm from "../components/job-detail/JobApplicationForm";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
+import { isAuthenticated } from "../lib/auth";
+import { useEffect } from "react";
+import { useToast } from "../components/ui";
 
 export function meta({ params }: { params: { id: string } }) {
   return [
@@ -10,6 +13,25 @@ export function meta({ params }: { params: { id: string } }) {
 
 export default function JobApplicationPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { showToast } = useToast();
+  
+  useEffect(() => {
+    // Check if user is authenticated
+    if (!isAuthenticated()) {
+      showToast({
+        type: 'warning',
+        title: 'Login Required',
+        message: 'Please login first to apply for this job.',
+        duration: 4000
+      });
+      // Delay redirect to give users time to see the toast
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+      return;
+    }
+  }, [navigate, showToast]);
   
   if (!id) {
     return (

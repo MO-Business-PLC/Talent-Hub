@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { useUserApplications, type UserApplication } from "../../hooks/useUserApplications";
 
 export default function EmployeeDashboard() {
@@ -110,18 +110,18 @@ export default function EmployeeDashboard() {
           </div>
           {/* Middle - Navigation */}
           <nav className="flex items-center space-x-8">
-            <a href="/home" className="text-gray-700 hover:text-[#0366c2] font-medium">
+            <Link to="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
               Find Job
-            </a>
-            <a href="/job" className="text-gray-700 hover:text-[#0366c2] font-medium">
+            </Link>
+            <Link to="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
               Find Employer
-            </a>
-            <a
-              href="employee-dashboard"
+            </Link>
+            <Link
+              to="/employee-dashboard"
               className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
             >
               Dashboard
-            </a>
+            </Link>
           </nav>
           {/* Right - Notification + Profile */}
           <div className="flex items-center space-x-6">

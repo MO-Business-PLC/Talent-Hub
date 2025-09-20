@@ -1,5 +1,7 @@
 import { FiBookmark } from "react-icons/fi";
 import { Link, useNavigate } from "react-router";
+import { isAuthenticated } from "../../lib/auth";
+import { useToast } from "../../components/ui";
 
 export interface JobHeaderProps {
   title: string;
@@ -27,8 +29,24 @@ export function JobHeader({
   jobId,
 }: JobHeaderProps) {
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const handleApplyClick = () => {
+    // Check if user is authenticated
+    if (!isAuthenticated()) {
+      showToast({
+        type: 'warning',
+        title: 'Login Required',
+        message: 'Please login first to apply for this job.',
+        duration: 4000
+      });
+      // Delay redirect to give users time to see the toast
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+      return;
+    }
+    
     if (jobId) {
       navigate(`/jobs/${jobId}/apply`);
     } else {
@@ -97,12 +115,12 @@ export function JobHeader({
           >
             <FiBookmark className="w-6 h-6" />
           </button>
-          <Link
-            to={`apply`}
+          <button
+            onClick={handleApplyClick}
             className="bg-base hover:bg-primary-600 text-white px-4 md:px-6 py-2.5 md:py-3 rounded-sm font-semibold transition-colors duration-200"
           >
             Apply Now
-          </Link>
+          </button>
         </div>
       </div>
     </div>
