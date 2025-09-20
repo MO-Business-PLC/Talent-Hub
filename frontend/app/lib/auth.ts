@@ -85,3 +85,20 @@ export function getRoleFromToken(): string | null {
   const role = decoded?.role;
   return typeof role === "string" ? role : null;
 }
+
+export function isAuthenticated(): boolean {
+  const token = getAccessToken();
+  if (!token) return false;
+  
+  const decoded = decodeJwt(token);
+  if (!decoded) return false;
+  
+  // Check if token is expired
+  const currentTime = Date.now() / 1000;
+  if (decoded.exp && decoded.exp < currentTime) {
+    clearTokens(); // Clear expired token
+    return false;
+  }
+  
+  return true;
+}
