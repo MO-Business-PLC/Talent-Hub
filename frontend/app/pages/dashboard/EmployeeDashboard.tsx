@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router";
+import { useNavigate } from "react-router";
 import { useUserApplications, type UserApplication } from "../../hooks/useUserApplications";
+import { Menu, X } from "lucide-react"; 
 
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
   const [activePage, setActivePage] = useState("overview");
   const [user, setUser] = useState(null);
   const { applications, isLoading, error } = useUserApplications();
+   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     // Check if user is authenticated
@@ -95,63 +97,95 @@ export default function EmployeeDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-gray-100 pt-4">
-        {" "}
-        {/* Added pt-4 for top spacing */}
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
-          {" "}
-          {/* Changed max-w-7xl to max-w-6xl to reduce width */}
-          {/* Left - Logo */}
-          <div className="flex items-center ml-4">
-            {" "}
-            {/* Added ml-4 to move logo to the right */}
-            <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
-          </div>
-          {/* Middle - Navigation */}
-          <nav className="flex items-center space-x-8">
-            <Link to="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
-              Find Job
-            </Link>
-            <Link to="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
-              Find Employer
-            </Link>
-            <Link
-              to="/employee-dashboard"
-              className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
-            >
-              Dashboard
-            </Link>
-          </nav>
-          {/* Right - Notification + Profile */}
-          <div className="flex items-center space-x-6">
-            {/* Notification */}
-            <div className="relative cursor-pointer">
-              <svg
-                className="h-6 w-6 text-[#0366c2]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-极5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-                />
-              </svg>
-              <span className="absolute -top-1 -right-1 bg-[#0366c2] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-                3
-              </span>
-            </div>
+     {/* Header */}
+<header className="bg-gray-100 pt-4">
+  {/* Container */}
+  <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
+    {/* Left - Logo */}
+    <div className="flex items-center">
+      <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
+    </div>
 
-            {/* Profile Image */}
-            <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
-              <img src="./images/profile.jpg" alt="User" className="h-full w-full object-cover" />
-            </div>
-          </div>
-        </div>
-      </header>
+    {/* Middle - Navigation (hidden on mobile) */}
+    <nav className="hidden md:flex items-center space-x-8">
+      <a href="/home" className="text-gray-700 hover:text-[#0366c2] font-medium">
+        Find Job
+      </a>
+      <a href="/job" className="text-gray-700 hover:text-[#0366c2] font-medium">
+        Find Employer
+      </a>
+      <a
+        href="/employee-dashboard"
+        className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
+      >
+        Dashboard
+      </a>
+    </nav>
+
+    {/* Right - Notification + Profile + Mobile Menu */}
+    <div className="flex items-center space-x-4 md:space-x-6">
+      {/* Notification */}
+      <div className="relative cursor-pointer">
+        <svg
+          className="h-6 w-6 text-[#0366c2]"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+          />
+        </svg>
+        <span className="absolute -top-1 -right-1 bg-[#0366c2] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+          3
+        </span>
+      </div>
+
+      {/* Profile Image */}
+      <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
+        <img src="./images/profile.jpg" alt="User" className="h-full w-full object-cover" />
+      </div>
+
+      {/* Mobile Menu Button (Hamburger) */}
+      <div className="md:hidden">
+        <button
+          onClick={() =>
+            setIsMenuOpen((prev) => !prev)
+          }
+          className="focus:outline-none"
+        >
+          <svg
+            className="h-6 w-6 text-gray-700"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {/* Mobile Dropdown Menu */}
+  {isMenuOpen && (
+    <div className="md:hidden bg-white mt-2 mx-4 rounded-lg shadow-md">
+      <a href="/home" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
+        Find Job
+      </a>
+      <a href="/job" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
+        Find Employer
+      </a>
+      <a href="/employee-dashboard" className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50">
+        Dashboard
+      </a>
+    </div>
+  )}
+</header>
+
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -910,40 +944,61 @@ function Settings() {
       <h2 className="text-3xl font-bold text-gray-900 mb-8">Settings</h2>
 
       {/* Tabs Navigation - Boxed Design */}
-      <div className="bg-white rounded-lg shadow-sm p-2 mb-8">
-        <div className="flex flex-wrap border border-gray-200 rounded-md overflow-hidden">
-          <button
-            className={`py-4 px-6 font-medium text-lg border-r border-gray-200 ${activeTab === "personal" ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500" : "text-gray-600 hover:bg-gray-50"}`}
-            onClick={() => setActiveTab("personal")}
-          >
-            Personal Information
-          </button>
-          <button
-            className={`py-4 px-6 font-medium text-lg border-r border-gray-200 ${activeTab === "contact" ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500" : "text-gray-600 hover:bg-gray-50"}`}
-            onClick={() => setActiveTab("contact")}
-          >
-            Contact Information
-          </button>
-          <button
-            className={`py-4 px-6 font-medium text-lg border-r border-gray-200 ${activeTab === "professional" ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500" : "text-gray-600 hover:bg-gray-50"}`}
-            onClick={() => setActiveTab("professional")}
-          >
-            Profile
-          </button>
-          <button
-            className={`py-4 px-6 font-medium text-lg border-r border-gray-200 ${activeTab === "social" ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500" : "text-gray-600 hover:bg-gray-50"}`}
-            onClick={() => setActiveTab("social")}
-          >
-            Social Presence
-          </button>
-          <button
-            className={`py-4 px-6 font-medium text-lg ${activeTab === "resume" ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500" : "text-gray-600 hover:bg-gray-50"}`}
-            onClick={() => setActiveTab("resume")}
-          >
-            Resume
-          </button>
-        </div>
-      </div>
+<div className="bg-white rounded-lg shadow-sm p-2 mb-8">
+  <div className="flex flex-wrap sm:flex-nowrap border border-gray-200 rounded-md overflow-hidden">
+    <button
+      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+        activeTab === "personal"
+          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+          : "text-gray-600 hover:bg-gray-50"
+      }`}
+      onClick={() => setActiveTab("personal")}
+    >
+      Personal Info
+    </button>
+    <button
+      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+        activeTab === "contact"
+          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+          : "text-gray-600 hover:bg-gray-50"
+      }`}
+      onClick={() => setActiveTab("contact")}
+    >
+      Contact
+    </button>
+    <button
+      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+        activeTab === "professional"
+          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+          : "text-gray-600 hover:bg-gray-50"
+      }`}
+      onClick={() => setActiveTab("professional")}
+    >
+      Profile
+    </button>
+    <button
+      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+        activeTab === "social"
+          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+          : "text-gray-600 hover:bg-gray-50"
+      }`}
+      onClick={() => setActiveTab("social")}
+    >
+      Social
+    </button>
+    <button
+      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium ${
+        activeTab === "resume"
+          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+          : "text-gray-600 hover:bg-gray-50"
+      }`}
+      onClick={() => setActiveTab("resume")}
+    >
+      Resume
+    </button>
+  </div>
+</div>
+
 
       {/* Settings Form */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
