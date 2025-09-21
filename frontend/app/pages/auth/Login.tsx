@@ -140,7 +140,7 @@ export default function Login() {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-sm text-black">Password</label>
-             // In your Login component, update the Forgot Password link
+            
                 <a 
                   href="/forgot-password" 
                   className="text-sm text-gray-500 hover:text-black"
