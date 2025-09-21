@@ -111,7 +111,7 @@ export default function EmployeeDashboard() {
       <a href="/home" className="text-gray-700 hover:text-[#0366c2] font-medium">
         Find Job
       </a>
-      <a href="/job" className="text-gray-700 hover:text-[#0366c2] font-medium">
+      <a href="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
         Find Employer
       </a>
       <a
