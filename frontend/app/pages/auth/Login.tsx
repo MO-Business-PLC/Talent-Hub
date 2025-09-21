@@ -140,7 +140,15 @@ export default function Login() {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="block text-sm text-black">Password</label>
-                <a href="#" className="text-sm text-gray-500 hover:text-black">
+             // In your Login component, update the Forgot Password link
+                <a 
+                  href="/forgot-password" 
+                  className="text-sm text-gray-500 hover:text-black"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate("/forgot-password");
+                  }}
+                >
                   Forgot Password?
                 </a>
               </div>
