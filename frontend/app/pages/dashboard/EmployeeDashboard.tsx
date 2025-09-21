@@ -9,7 +9,8 @@ export default function EmployeeDashboard() {
   const [activePage, setActivePage] = useState("overview");
   const [user, setUser] = useState(null);
   const { applications, isLoading, error } = useUserApplications();
-   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Check if user is authenticated using JWT tokens
@@ -97,95 +98,92 @@ export default function EmployeeDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-     {/* Header */}
-<header className="bg-gray-100 pt-4">
-  {/* Container */}
-  <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
-    {/* Left - Logo */}
-    <div className="flex items-center">
-      <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
-    </div>
+      {/* Header */}
+      <header className="bg-gray-100 pt-4">
+        {/* Container */}
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
+          {/* Left - Logo */}
+          <div className="flex items-center">
+            <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
+          </div>
 
-    {/* Middle - Navigation (hidden on mobile) */}
-    <nav className="hidden md:flex items-center space-x-8">
-      <a href="/home" className="text-gray-700 hover:text-[#0366c2] font-medium">
-        Find Job
-      </a>
-      <a href="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
-        Find Employer
-      </a>
-      <a
-        href="/employee-dashboard"
-        className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
-      >
-        Dashboard
-      </a>
-    </nav>
+          {/* Middle - Navigation (hidden on mobile) */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <a href="/home" className="text-gray-700 hover:text-[#0366c2] font-medium">
+              Find Job
+            </a>
+            <a href="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
+              Find Employer
+            </a>
+            <a
+              href="/employee-dashboard"
+              className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
+            >
+              Dashboard
+            </a>
+          </nav>
 
-    {/* Right - Notification + Profile + Mobile Menu */}
-    <div className="flex items-center space-x-4 md:space-x-6">
-      {/* Notification */}
-      <div className="relative cursor-pointer">
-        <svg
-          className="h-6 w-6 text-[#0366c2]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
-        <span className="absolute -top-1 -right-1 bg-[#0366c2] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
-          3
-        </span>
-      </div>
+          {/* Right - Notification + Profile + Mobile Menu */}
+          <div className="flex items-center space-x-4 md:space-x-6">
+            {/* Notification */}
+            <div className="relative cursor-pointer">
+              <svg
+                className="h-6 w-6 text-[#0366c2]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                />
+              </svg>
+              <span className="absolute -top-1 -right-1 bg-[#0366c2] text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+                3
+              </span>
+            </div>
 
-      {/* Profile Image */}
-      <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
-        <img src="./images/profile.jpg" alt="User" className="h-full w-full object-cover" />
-      </div>
+            {/* Profile Image */}
+            <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
+              <img src="./images/profile.jpg" alt="User" className="h-full w-full object-cover" />
+            </div>
 
-      {/* Mobile Menu Button (Hamburger) */}
-      <div className="md:hidden">
-        <button
-          onClick={() =>
-            setIsMenuOpen((prev) => !prev)
-          }
-          className="focus:outline-none"
-        >
-          <svg
-            className="h-6 w-6 text-gray-700"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </div>
+            {/* Mobile Menu Button (Hamburger) */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMenuOpen((prev) => !prev)}
+                className="focus:outline-none"
+              >
+                <svg
+                  className="h-6 w-6 text-gray-700"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
 
-  {/* Mobile Dropdown Menu */}
-  {isMenuOpen && (
-    <div className="md:hidden bg-white mt-2 mx-4 rounded-lg shadow-md">
-      <a href="/home" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
-        Find Job
-      </a>
-      <a href="/job" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
-        Find Employer
-      </a>
-      <a href="/employee-dashboard" className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50">
-        Dashboard
-      </a>
-    </div>
-  )}
-</header>
-
+        {/* Mobile Dropdown Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white mt-2 mx-4 rounded-lg shadow-md">
+            <a href="/home" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
+              Find Job
+            </a>
+            <a href="/job" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
+              Find Employer
+            </a>
+            <a href="/employee-dashboard" className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50">
+              Dashboard
+            </a>
+          </div>
+        )}
+      </header>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -204,14 +202,28 @@ export default function EmployeeDashboard() {
         </nav>
 
         <div className="flex flex-col md:flex-row gap-6">
+          {/* Mobile Sidebar Toggle Button */}
+          <div className="md:hidden flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold text-gray-900">Dashboard Menu</h2>
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="p-2 rounded-md bg-gray-200 text-gray-700"
+            >
+              {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+
           {/* Sidebar - Now on the left side */}
-          <div className="w-full md:w-64 flex flex-col">
+          <div className={`${isSidebarOpen ? 'block' : 'hidden'} md:block w-full md:w-64 flex flex-col`}>
             <div className="bg-white rounded-lg shadow p-6 flex flex-col h-full">
               <h2 className="text-lg font-bold text-gray-900 mb-4">TalentHub</h2>
               <div className="space-y-2 flex-grow">
                 <div
                   className={`flex items-center p-3 rounded-lg cursor-pointer ${activePage === "overview" ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"}`}
-                  onClick={() => setActivePage("overview")}
+                  onClick={() => {
+                    setActivePage("overview");
+                    setIsSidebarOpen(false);
+                  }}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
                     <svg
@@ -239,7 +251,10 @@ export default function EmployeeDashboard() {
 
                 <div
                   className={`flex items-center p-3 rounded-lg cursor-pointer ${activePage === "applied-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"}`}
-                  onClick={() => setActivePage("applied-jobs")}
+                  onClick={() => {
+                    setActivePage("applied-jobs");
+                    setIsSidebarOpen(false);
+                  }}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
                     <svg
@@ -261,7 +276,10 @@ export default function EmployeeDashboard() {
 
                 <div
                   className={`flex items-center p-3 rounded-lg cursor-pointer ${activePage === "favorite-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"}`}
-                  onClick={() => setActivePage("favorite-jobs")}
+                  onClick={() => {
+                    setActivePage("favorite-jobs");
+                    setIsSidebarOpen(false);
+                  }}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
                     <svg
@@ -283,7 +301,10 @@ export default function EmployeeDashboard() {
 
                 <div
                   className={`flex items-center p-3 rounded-lg cursor-pointer ${activePage === "settings" ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"}`}
-                  onClick={() => setActivePage("settings")}
+                  onClick={() => {
+                    setActivePage("settings");
+                    setIsSidebarOpen(false);
+                  }}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
                     <svg
@@ -314,7 +335,10 @@ export default function EmployeeDashboard() {
               <div className="mt-auto pt-4 border-t border-gray-200">
                 <div
                   className="flex items-center p-3 rounded-lg cursor-pointer text-red-600 hover:bg-red-50"
-                  onClick={handleLogout}
+                  onClick={() => {
+                    handleLogout();
+                    setIsSidebarOpen(false);
+                  }}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
                     <svg
