@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useUserApplications, type UserApplication } from "../../hooks/useUserApplications";
 import { isAuthenticated } from "../../lib/auth";
-import { Menu, X, Home, Briefcase, Heart, Settings, LogOut } from "lucide-react"; 
+import { Menu, X, Home, Briefcase, Heart, Settings as SettingsIcon, LogOut } from "lucide-react"; 
 
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
@@ -241,7 +241,7 @@ export default function EmployeeDashboard() {
                   onClick={() => setActivePage("settings")}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
-                    <Settings className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`} />
+                    <SettingsIcon className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`} />
                   </div>
                   <span>Settings</span>
                 </div>
@@ -293,7 +293,7 @@ export default function EmployeeDashboard() {
                 className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "settings" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
                 onClick={() => setActivePage("settings")}
               >
-                <Settings className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`} />
+                <SettingsIcon className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`} />
                 <span className="text-xs mt-1">Settings</span>
               </button>
             </div>
