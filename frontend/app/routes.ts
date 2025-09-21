@@ -32,7 +32,7 @@ export default [
   layout("routes/home-layout.tsx", [
     route("/home", "routes/home.tsx"),
     route("/jobs", "routes/jobs.tsx"),
-    route("/job-application", "routes/job-application.tsx")
+    route("/job-application", "routes/job-application.tsx"),
     route("/jobs/:id", "routes/job.$id.tsx"),
     route("/jobs/:id/apply", "routes/job-application.$id.tsx"),
   ]),
