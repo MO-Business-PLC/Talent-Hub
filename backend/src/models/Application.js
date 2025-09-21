@@ -14,15 +14,23 @@ const applicationSchema = new Schema(
       ref: "User",
       required: [true, "User ID is required"],
     },
-    resumeUrl: {
-      type: String,
-      required: [true, "Resume URL is required"],
-      validate: {
-        validator: function (v) {
-          // basic URL validation
-          return /^https?:\/\/.+\..+/.test(v);
+    resume: {
+      url: {
+        type: String,
+        required: [true, "Resume URL is required"],
+        validate: {
+          validator: function (v) {
+            return /^https?:\/\/.+\..+/.test(v); // basic URL check
+          },
+          message: (props) => `${props.value} is not a valid URL`,
         },
-        message: (props) => `${props.value} is not a valid URL`,
+      },
+      publicId: {
+        type: String,
+        required: [true, "Cloudinary publicId is required"],
+      },
+      format: {
+        type: String,
       },
     },
     coverLetter: {
@@ -41,12 +49,12 @@ const applicationSchema = new Schema(
   { timestamps: true }
 );
 
-// prevent duplicate applications (same user applying to same job)
+// Prevent duplicate applications (same user applying to same job)
 applicationSchema.index({ jobId: 1, userId: 1 }, { unique: true });
 
 // Error handling middleware for duplicate key (E11000)
 applicationSchema.post("save", function (error, doc, next) {
-    next(error);
+  next(error);
 });
 
 const Application = mongoose.model("Application", applicationSchema);
