@@ -100,7 +100,7 @@ export default function EmployeeDashboard() {
       {/* Header */}
       <header className="bg-gray-100 pt-4">
         {/* Container */}
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
           {/* Left - Logo */}
           <div className="flex items-center">
             <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
