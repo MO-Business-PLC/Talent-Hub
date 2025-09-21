@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useUserApplications, type UserApplication } from "../../hooks/useUserApplications";
 import { isAuthenticated } from "../../lib/auth";
-import { Menu, X, Home, Briefcase, Heart, Settings as SettingsIcon, LogOut } from "lucide-react"; 
+import { Menu, X } from "lucide-react"; 
 
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ export default function EmployeeDashboard() {
       {/* Header */}
       <header className="bg-gray-100 pt-4">
         {/* Container */}
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
           {/* Left - Logo */}
           <div className="flex items-center">
             <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
@@ -201,8 +201,8 @@ export default function EmployeeDashboard() {
         </nav>
 
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar - Hidden on mobile, replaced by horizontal tab bar */}
-          <div className="hidden md:block w-full md:w-64 flex flex-col">
+          {/* Sidebar - Now on the left side for desktop, hidden on mobile */}
+          <div className="hidden md:block md:w-64 flex flex-col">
             <div className="bg-white rounded-lg shadow p-6 flex flex-col h-full">
               <h2 className="text-lg font-bold text-gray-900 mb-4">TalentHub</h2>
               <div className="space-y-2 flex-grow">
@@ -211,7 +211,25 @@ export default function EmployeeDashboard() {
                   onClick={() => setActivePage("overview")}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
-                    <Home className={`h-5 w-5 ${activePage === "overview" ? "text-blue-500" : "text-gray-400"}`} />
+                    <svg
+                      className={`h-5 w-5 ${activePage === "overview" ? "text-blue-500" : "text-gray-400"}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4"
+                      />
+                    </svg>
                   </div>
                   <span>Overview</span>
                 </div>
@@ -221,7 +239,19 @@ export default function EmployeeDashboard() {
                   onClick={() => setActivePage("applied-jobs")}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
-                    <Briefcase className={`h-5 w-5 ${activePage === "applied-jobs" ? "text-blue-500" : "text-gray-400"}`} />
+                    <svg
+                      className={`h-5 w-5 ${activePage === "applied-jobs" ? "text-blue-500" : "text-gray-400"}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
                   </div>
                   <span>Applied Jobs</span>
                 </div>
@@ -231,7 +261,19 @@ export default function EmployeeDashboard() {
                   onClick={() => setActivePage("favorite-jobs")}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
-                    <Heart className={`h-5 w-5 ${activePage === "favorite-jobs" ? "text-blue-500" : "text-gray-400"}`} />
+                    <svg
+                      className={`h-5 w-5 ${activePage === "favorite-jobs" ? "text-blue-500" : "text-gray-400"}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
                   </div>
                   <span>Favorite Jobs</span>
                 </div>
@@ -241,7 +283,25 @@ export default function EmployeeDashboard() {
                   onClick={() => setActivePage("settings")}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
-                    <SettingsIcon className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`} />
+                    <svg
+                      className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
                   </div>
                   <span>Settings</span>
                 </div>
@@ -254,7 +314,19 @@ export default function EmployeeDashboard() {
                   onClick={handleLogout}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
-                    <LogOut className="h-5 w-5 text-red-500" />
+                    <svg
+                      className="h-5 w-5 text-red-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
                   </div>
                   <span className="font-medium">Logout</span>
                 </div>
@@ -262,44 +334,104 @@ export default function EmployeeDashboard() {
             </div>
           </div>
 
-          {/* Mobile Horizontal Tab Bar */}
-          <div className="md:hidden bg-white rounded-lg shadow p-2 mb-4">
+          {/* Mobile Navigation Tabs */}
+          <div className="md:hidden w-full bg-white rounded-lg shadow p-2 mb-4">
             <div className="flex justify-between">
               <button
-                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "overview" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
                 onClick={() => setActivePage("overview")}
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "overview" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
               >
-                <Home className={`h-5 w-5 ${activePage === "overview" ? "text-blue-500" : "text-gray-400"}`} />
+                <svg
+                  className={`h-5 w-5 ${activePage === "overview" ? "text-blue-500" : "text-gray-400"}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4"
+                  />
+                </svg>
                 <span className="text-xs mt-1">Overview</span>
               </button>
-              
+
               <button
-                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "applied-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
                 onClick={() => setActivePage("applied-jobs")}
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "applied-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
               >
-                <Briefcase className={`h-5 w-5 ${activePage === "applied-jobs" ? "text-blue-500" : "text-gray-400"}`} />
-                <span className="text-xs mt-1">Jobs</span>
+                <svg
+                  className={`h-5 w-5 ${activePage === "applied-jobs" ? "text-blue-500" : "text-gray-400"}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <span className="text-xs mt-1">Applied</span>
               </button>
-              
+
               <button
-                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "favorite-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
                 onClick={() => setActivePage("favorite-jobs")}
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "favorite-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
               >
-                <Heart className={`h-5 w-5 ${activePage === "favorite-jobs" ? "text-blue-500" : "text-gray-400"}`} />
+                <svg
+                  className={`h-5 w-5 ${activePage === "favorite-jobs" ? "text-blue-500" : "text-gray-400"}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
                 <span className="text-xs mt-1">Favorites</span>
               </button>
-              
+
               <button
-                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "settings" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
                 onClick={() => setActivePage("settings")}
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "settings" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
               >
-                <SettingsIcon className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`} />
+                <svg
+                  className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
                 <span className="text-xs mt-1">Settings</span>
               </button>
             </div>
           </div>
 
-          {/* Main Content Area */}
+          {/* Main Content Area - Now on the right side */}
           <div className="flex-1">{renderContent()}</div>
         </div>
       </div>
