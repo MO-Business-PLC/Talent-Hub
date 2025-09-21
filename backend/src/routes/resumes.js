@@ -1,6 +1,6 @@
 import express from "express";
 import { auth,authorize } from "../middleware/auth.js";
-import { upload } from "../utils/cloudinaryUpload.js";
+import { upload,checkResume} from "../utils/cloudinaryUpload.js";
 import {
   uploadResume,
   getResume,
@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 // Upload resume (PDF/DOCX etc.)
-router.post("/", auth, authorize("employee") ,upload.single("resume"), uploadResume);
+router.post("/", auth, authorize("employee") ,checkResume,upload.single("resume"), uploadResume);
 
 // Get current user's resume
 router.get("/", auth, getResume);
