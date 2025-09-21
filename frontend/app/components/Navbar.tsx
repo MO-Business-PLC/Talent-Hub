@@ -126,7 +126,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-white mx-25 mt-5 shadow-sm rounded-xl px-4 md:px-6 py-3 flex items-center justify-between relative">
+    <nav className="bg-white mx-5 md:mx-15 lg:mx-25 mt-5 shadow-sm rounded-xl px-4 md:px-6 py-3 flex items-center justify-between relative">
       {/* Brand */}
       <div className="flex items-center flex-shrink-0">
         <h1 className="text-2xl md:text-3xl font-bold text-blue-600">TalentHub</h1>
