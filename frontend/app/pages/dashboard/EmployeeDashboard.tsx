@@ -786,7 +786,7 @@ function FavoriteJobs() {
   const navigate = useNavigate();
 
   const handleApplyNow = (jobId) => {
-    navigate(`/apply`);
+    navigate(`/job-application`);
   };
 
   return (
