@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useUserApplications, type UserApplication } from "../../hooks/useUserApplications";
 import { isAuthenticated } from "../../lib/auth";
+import { Menu, X, Home, Briefcase, Heart, Settings, LogOut } from "lucide-react"; 
 
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
@@ -11,10 +12,13 @@ export default function EmployeeDashboard() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
+    // Check if user is authenticated using JWT tokens
     if (!isAuthenticated()) {
       navigate("/login", { replace: true });
       return;
     }
+
+    // Check if user is actually an employee
     const userStr = localStorage.getItem("user");
     if (userStr) {
       const userData = JSON.parse(userStr);
@@ -32,6 +36,7 @@ export default function EmployeeDashboard() {
     navigate("/login", { replace: true });
   };
 
+  // Function to get user initials
   const getUserInitials = () => {
     if (!user || !user.name) return "U";
     return user.name
@@ -42,10 +47,12 @@ export default function EmployeeDashboard() {
       .slice(0, 2);
   };
 
+  // Function to navigate to job detail page
   const handleViewJobDetail = (jobId) => {
     navigate(`/jobs/${jobId}`);
   };
 
+  // Function to navigate to settings page
   const handleNavigateToSettings = () => {
     setActivePage("settings");
   };
@@ -92,13 +99,14 @@ export default function EmployeeDashboard() {
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
       <header className="bg-gray-100 pt-4">
+        {/* Container */}
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
-          {/* Logo */}
+          {/* Left - Logo */}
           <div className="flex items-center">
             <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
           </div>
 
-          {/* Desktop Nav */}
+          {/* Middle - Navigation (hidden on mobile) */}
           <nav className="hidden md:flex items-center space-x-8">
             <a href="/home" className="text-gray-700 hover:text-[#0366c2] font-medium">
               Find Job
@@ -114,7 +122,7 @@ export default function EmployeeDashboard() {
             </a>
           </nav>
 
-          {/* Right */}
+          {/* Right - Notification + Profile + Mobile Menu */}
           <div className="flex items-center space-x-4 md:space-x-6">
             {/* Notification */}
             <div className="relative cursor-pointer">
@@ -136,14 +144,17 @@ export default function EmployeeDashboard() {
               </span>
             </div>
 
-            {/* Profile */}
+            {/* Profile Image */}
             <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
               <img src="./images/profile.jpg" alt="User" className="h-full w-full object-cover" />
             </div>
 
-            {/* Mobile Hamburger */}
+            {/* Mobile Menu Button (Hamburger) */}
             <div className="md:hidden">
-              <button onClick={() => setIsMenuOpen((prev) => !prev)} className="focus:outline-none">
+              <button
+                onClick={() => setIsMenuOpen((prev) => !prev)}
+                className="focus:outline-none"
+              >
                 <svg
                   className="h-6 w-6 text-gray-700"
                   fill="none"
@@ -157,29 +168,26 @@ export default function EmployeeDashboard() {
           </div>
         </div>
 
-        {/* Mobile Dropdown */}
+        {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-white mt-2 mx-4 rounded-lg shadow-md">
             <a href="/home" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
               Find Job
             </a>
-            <a href="/jobs" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
+            <a href="/job" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
               Find Employer
             </a>
-            <a
-              href="/employee-dashboard"
-              className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50"
-            >
+            <a href="/employee-dashboard" className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50">
               Dashboard
             </a>
           </div>
         )}
       </header>
 
-      {/* Main */}
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Breadcrumb */}
-        <nav className="text-sm text-gray-500 mb-6 flex justify-start">
+        {/* Breadcrumb - Hidden on mobile */}
+        <nav className="hidden md:flex text-sm text-gray-500 mb-6 justify-start">
           <span>Home</span>
           <span className="mx-2">/</span>
           <span>Dashboard</span>
@@ -193,54 +201,60 @@ export default function EmployeeDashboard() {
         </nav>
 
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Mobile Tabs */}
-          <div className="md:hidden bg-white shadow rounded-lg flex justify-around items-center px-2 py-2 mb-4">
-            {[
-              { id: "overview", label: "Overview", icon: "M3 7v10a2..." },
-              { id: "applied-jobs", label: "Jobs", icon: "M9 12h6m-6..." },
-              { id: "favorite-jobs", label: "Favorites", icon: "M4.318 6.318..." },
-              { id: "settings", label: "Settings", icon: "M10.325 4.317..." },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                className={`flex flex-col items-center px-3 py-2 rounded-md ${
-                  activePage === tab.id ? "text-blue-600" : "text-gray-500"
-                }`}
-                onClick={() => setActivePage(tab.id)}
-              >
-                <svg className="h-5 w-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={tab.icon} />
-                </svg>
-                <span className="text-xs">{tab.label}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Desktop Sidebar */}
-          <div className="hidden md:block w-64 flex-shrink-0">
+          {/* Sidebar - Hidden on mobile, replaced by horizontal tab bar */}
+          <div className="hidden md:block w-full md:w-64 flex flex-col">
             <div className="bg-white rounded-lg shadow p-6 flex flex-col h-full">
               <h2 className="text-lg font-bold text-gray-900 mb-4">TalentHub</h2>
-              {/* your existing sidebar items here */}
-              {/* Logout */}
+              <div className="space-y-2 flex-grow">
+                <div
+                  className={`flex items-center p-3 rounded-lg cursor-pointer ${activePage === "overview" ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"}`}
+                  onClick={() => setActivePage("overview")}
+                >
+                  <div className="h-5 w-5 mr-3 flex items-center justify-center">
+                    <Home className={`h-5 w-5 ${activePage === "overview" ? "text-blue-500" : "text-gray-400"}`} />
+                  </div>
+                  <span>Overview</span>
+                </div>
+
+                <div
+                  className={`flex items-center p-3 rounded-lg cursor-pointer ${activePage === "applied-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"}`}
+                  onClick={() => setActivePage("applied-jobs")}
+                >
+                  <div className="h-5 w-5 mr-3 flex items-center justify-center">
+                    <Briefcase className={`h-5 w-5 ${activePage === "applied-jobs" ? "text-blue-500" : "text-gray-400"}`} />
+                  </div>
+                  <span>Applied Jobs</span>
+                </div>
+
+                <div
+                  className={`flex items-center p-3 rounded-lg cursor-pointer ${activePage === "favorite-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"}`}
+                  onClick={() => setActivePage("favorite-jobs")}
+                >
+                  <div className="h-5 w-5 mr-3 flex items-center justify-center">
+                    <Heart className={`h-5 w-5 ${activePage === "favorite-jobs" ? "text-blue-500" : "text-gray-400"}`} />
+                  </div>
+                  <span>Favorite Jobs</span>
+                </div>
+
+                <div
+                  className={`flex items-center p-3 rounded-lg cursor-pointer ${activePage === "settings" ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"}`}
+                  onClick={() => setActivePage("settings")}
+                >
+                  <div className="h-5 w-5 mr-3 flex items-center justify-center">
+                    <Settings className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`} />
+                  </div>
+                  <span>Settings</span>
+                </div>
+              </div>
+
+              {/* Logout at the bottom with red styling */}
               <div className="mt-auto pt-4 border-t border-gray-200">
                 <div
                   className="flex items-center p-3 rounded-lg cursor-pointer text-red-600 hover:bg-red-50"
                   onClick={handleLogout}
                 >
                   <div className="h-5 w-5 mr-3 flex items-center justify-center">
-                    <svg
-                      className="h-5 w-5 text-red-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                      />
-                    </svg>
+                    <LogOut className="h-5 w-5 text-red-500" />
                   </div>
                   <span className="font-medium">Logout</span>
                 </div>
@@ -248,7 +262,44 @@ export default function EmployeeDashboard() {
             </div>
           </div>
 
-          {/* Content */}
+          {/* Mobile Horizontal Tab Bar */}
+          <div className="md:hidden bg-white rounded-lg shadow p-2 mb-4">
+            <div className="flex justify-between">
+              <button
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "overview" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
+                onClick={() => setActivePage("overview")}
+              >
+                <Home className={`h-5 w-5 ${activePage === "overview" ? "text-blue-500" : "text-gray-400"}`} />
+                <span className="text-xs mt-1">Overview</span>
+              </button>
+              
+              <button
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "applied-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
+                onClick={() => setActivePage("applied-jobs")}
+              >
+                <Briefcase className={`h-5 w-5 ${activePage === "applied-jobs" ? "text-blue-500" : "text-gray-400"}`} />
+                <span className="text-xs mt-1">Jobs</span>
+              </button>
+              
+              <button
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "favorite-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
+                onClick={() => setActivePage("favorite-jobs")}
+              >
+                <Heart className={`h-5 w-5 ${activePage === "favorite-jobs" ? "text-blue-500" : "text-gray-400"}`} />
+                <span className="text-xs mt-1">Favorites</span>
+              </button>
+              
+              <button
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "settings" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
+                onClick={() => setActivePage("settings")}
+              >
+                <Settings className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`} />
+                <span className="text-xs mt-1">Settings</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Main Content Area */}
           <div className="flex-1">{renderContent()}</div>
         </div>
       </div>
