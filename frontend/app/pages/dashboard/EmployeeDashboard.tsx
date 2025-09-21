@@ -780,13 +780,13 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
   );
 }
 
-// Favorite Jobs Component
+
 // Favorite Jobs Component
 function FavoriteJobs() {
   const navigate = useNavigate();
 
   const handleApplyNow = (jobId) => {
-    navigate(`/job-application`);
+    navigate(`/apply`);
   };
 
   return (
