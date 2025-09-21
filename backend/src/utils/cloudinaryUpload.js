@@ -15,26 +15,35 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+//upload to cloudinary
 export const uploadToCloudinary = (fileBuffer, folder = "resumes") => {
-    return new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        {
-          folder,
-          resource_type: "raw", // important for PDFs
-        },
-        (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-
-            resolve(result.secure_url); // public link
-          }
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: "raw", // for PDFs/DOCs
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({
+            url: result.secure_url,
+            publicId: result.public_id,
+            format: result.format,
+          });
         }
-      );
-  
-      if (!fileBuffer) return reject(new Error("No file buffer provided"));
-      stream.end(fileBuffer);
-    });
-  };
-  
-  
+      }
+    );
+
+    if (!fileBuffer) return reject(new Error("No file buffer provided"));
+    stream.end(fileBuffer);
+  });
+};
+
+// Delete from Cloudinary
+export const deleteFromCloudinary = async (publicId) => {
+  if (!publicId) return;
+  return cloudinary.uploader.destroy(publicId, { resource_type: "raw" });
+};
+

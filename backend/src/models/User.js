@@ -28,13 +28,26 @@ const userSchema = new mongoose.Schema(
       enum: ["employee", "employer", "admin"],
       default: "employee",
     },
-    resumeUrl: {
-      type: String,
-      validate: {
-        validator: (v) => !v || /^https?:\/\/.+\..+/.test(v),
-        message: (props) => `${props.value} is not a valid URL`,
-      },
+       resume: {
+  url: {
+    type: String,
+    validate: {
+      validator: (v) => !v || /^https?:\/\/.+\..+/.test(v),
+      message: (props) => `${props.value} is not a valid URL`,
     },
+  },
+  publicId: {
+    type: String,
+  },
+  originalName: {
+    type: String,
+    trim: true,
+  },
+  format: {
+    type: String,
+    trim: true,
+  },
+},
     profileImage: {
       type: String, // Cloudinary / S3 URL
       validate: {
@@ -96,7 +109,7 @@ const userSchema = new mongoose.Schema(
 // Unique index for email
 userSchema.index({ email: 1 });
 
-// Hash password before saving
+// Hash password before savinga
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
 
