@@ -785,9 +785,9 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
 function FavoriteJobs() {
   const navigate = useNavigate();
 
-  const handleApplyNow = (jobId) => {
-    navigate(`/job-application`);
-  };
+ const handleApplyNow = (jobId) => {
+  navigate(`/jobs/${jobId}/apply`);
+};
 
   return (
     <div className="h-full">
