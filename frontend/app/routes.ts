@@ -14,6 +14,10 @@ export default [
   route("/login", "routes/login.tsx"),
   // Register page
   route("/register", "routes/register.tsx"),
+  
+  route("/forgot-password", "routes/forgot-password.tsx"),
+  route("/verify-email", "routes/verify-email.tsx"),
+  route("/reset-password", "routes/reset-password.tsx"),
 
   // Jobs routes
 

@@ -9,7 +9,7 @@ import applicationsRouter from "./routes/applications.js";
 import jobsRouter from "./routes/jobs.js";
 import adminRouter from "./routes/admin.js";
 import trendsRouter from "./routes/trends.js";
-import uploadRouter from "./routes/upload.js";
+import resumeRouter from "./routes/resumes.js";
 import createInitialAdmin from "./utils/adminSetup.js";
 
 
@@ -77,7 +77,7 @@ app.use("/api/applications", applicationsRouter);
 app.use("/api/jobs", jobsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/trends", trendsRouter);
-app.use("/api/upload", uploadRouter);
+app.use("/api/resume", resumeRouter);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
@@ -101,7 +101,7 @@ app.get("/api", (req, res) => {
       applications: "/api/applications",
       admin: "/api/admin",
       trends: "/api/trends",
-      upload: "/api/upload",
+      resume: "/api/resume",
     },
   });
 });
