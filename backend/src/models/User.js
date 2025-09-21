@@ -28,6 +28,67 @@ const userSchema = new mongoose.Schema(
       enum: ["employee", "employer", "admin"],
       default: "employee",
     },
+    resumeUrl: {
+      type: String,
+      validate: {
+        validator: (v) => !v || /^https?:\/\/.+\..+/.test(v),
+        message: (props) => `${props.value} is not a valid URL`,
+      },
+    },
+    profileImage: {
+      type: String, // Cloudinary / S3 URL
+      validate: {
+        validator: (v) => !v || /^https?:\/\/.+\..+/.test(v),
+        message: (props) => `${props.value} is not a valid URL`,
+      },
+    },
+    professionalTitle: {
+      type: String,
+      trim: true,
+      maxlength: [100, "Professional title cannot exceed 100 characters"],
+    },
+    industry: {
+      type: String,
+      trim: true,
+      maxlength: [100, "Industry cannot exceed 100 characters"],
+    },
+    experienceLevel: {
+      type: String,
+      enum: ["junior", "mid", "senior", "lead"],
+    },
+    phoneNumber: {
+      type: String,
+      match: [/^\+?[0-9]{7,15}$/, "Please enter a valid phone number"],
+    },
+    location: {
+      city: { type: String, trim: true },
+      country: { type: String, trim: true },
+    },
+    professionalSummary: {
+      type: String,
+      maxlength: [2000, "Professional summary cannot exceed 2000 characters"],
+    },
+    linkedInUrl: {
+      type: String,
+      validate: {
+        validator: (v) => !v || /^https?:\/\/(www\.)?linkedin\.com\/.+$/.test(v),
+        message: (props) => `${props.value} is not a valid LinkedIn URL`,
+      },
+    },
+    githubUrl: {
+      type: String,
+      validate: {
+        validator: (v) => !v || /^https?:\/\/(www\.)?github\.com\/.+$/.test(v),
+        message: (props) => `${props.value} is not a valid GitHub URL`,
+      },
+    },
+    portfolioUrl: {
+      type: String,
+      validate: {
+        validator: (v) => !v || /^https?:\/\/.+\..+/.test(v),
+        message: (props) => `${props.value} is not a valid portfolio URL`,
+      },
+    },
   },
   { timestamps: true }
 );
@@ -60,7 +121,6 @@ userSchema.set("toJSON", {
     return ret;
   },
 });
-
 
 const User = mongoose.model("User", userSchema);
 export default User;
