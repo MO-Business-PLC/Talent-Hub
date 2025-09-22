@@ -103,7 +103,6 @@ export default function RootRedirect() {
       } else if (userRole === "employer") {
         setRedirectPath("/employer/dashboard");
       } else {
-        // If we don't have a role, try to fetch it from the API
         fetchUserProfile();
       }
     };
@@ -165,7 +164,8 @@ export default function RootRedirect() {
         <p className="text-gray-600">Redirecting to your dashboard...</p>
         <div className="mt-6 bg-blue-50 rounded-lg p-4">
           <p className="text-sm text-blue-700">
-            If you're not redirected automatically, check your browser's console for any issues.
+            If you're not redirected automatically, check your browser's console
+            for any issues.
           </p>
         </div>
       </div>
