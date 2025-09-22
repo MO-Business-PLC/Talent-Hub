@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-<<<<<<< HEAD
 import {
   useUserApplications,
   type UserApplication,
 } from "../../hooks/useUserApplications";
-=======
-import { useUserApplications, type UserApplication } from "../../hooks/useUserApplications";
 import { isAuthenticated } from "../../lib/auth";
-import { Menu, X } from "lucide-react"; 
->>>>>>> 4cc52f706ecc49ade3ea1a5fb7e98e99e806494a
+import { Menu, X } from "lucide-react";
 
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
@@ -109,18 +105,16 @@ export default function EmployeeDashboard() {
         {/* Container */}
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
           {/* Left - Logo */}
-<<<<<<< HEAD
-          <div className="flex items-center ml-4">
-            {" "}
-            {/* Added ml-4 to move logo to the right */}
+          <div className="flex items-center">
             <img
               src="./images/auth/logo.png"
               alt="TalentHub"
               className="h-8 w-auto"
             />
           </div>
-          {/* Middle - Navigation */}
-          <nav className="flex items-center space-x-8">
+
+          {/* Middle - Navigation (hidden on mobile) */}
+          <nav className="hidden md:flex items-center space-x-8">
             <a
               href="/home"
               className="text-gray-700 hover:text-[#0366c2] font-medium"
@@ -128,21 +122,9 @@ export default function EmployeeDashboard() {
               Find Job
             </a>
             <a
-              href="/job"
+              href="/jobs"
               className="text-gray-700 hover:text-[#0366c2] font-medium"
             >
-=======
-          <div className="flex items-center">
-            <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
-          </div>
-
-          {/* Middle - Navigation (hidden on mobile) */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="/home" className="text-gray-700 hover:text-[#0366c2] font-medium">
-              Find Job
-            </a>
-            <a href="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
->>>>>>> 4cc52f706ecc49ade3ea1a5fb7e98e99e806494a
               Find Employer
             </a>
             <a
@@ -196,7 +178,12 @@ export default function EmployeeDashboard() {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               </button>
             </div>
@@ -206,13 +193,22 @@ export default function EmployeeDashboard() {
         {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-white mt-2 mx-4 rounded-lg shadow-md">
-            <a href="/home" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
+            <a
+              href="/home"
+              className="block px-6 py-3 text-gray-700 hover:bg-gray-100"
+            >
               Find Job
             </a>
-            <a href="/job" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
+            <a
+              href="/job"
+              className="block px-6 py-3 text-gray-700 hover:bg-gray-100"
+            >
               Find Employer
             </a>
-            <a href="/employee-dashboard" className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50">
+            <a
+              href="/employee-dashboard"
+              className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50"
+            >
               Dashboard
             </a>
           </div>
@@ -475,7 +471,6 @@ export default function EmployeeDashboard() {
     </div>
   );
 }
-
 
 // Overview Component
 function Overview({
@@ -946,14 +941,13 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
   );
 }
 
-
 // Favorite Jobs Component
 function FavoriteJobs() {
   const navigate = useNavigate();
 
- const handleApplyNow = (jobId) => {
-  navigate(`/jobs/${jobId}/apply`);
-};
+  const handleApplyNow = (jobId) => {
+    navigate(`/jobs/${jobId}/apply`);
+  };
 
   return (
     <div className="h-full">
@@ -1122,61 +1116,60 @@ function Settings() {
       <h2 className="text-3xl font-bold text-gray-900 mb-8">Settings</h2>
 
       {/* Tabs Navigation - Boxed Design */}
-<div className="bg-white rounded-lg shadow-sm p-2 mb-8">
-  <div className="flex flex-wrap sm:flex-nowrap border border-gray-200 rounded-md overflow-hidden">
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
-        activeTab === "personal"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("personal")}
-    >
-      Personal Info
-    </button>
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
-        activeTab === "contact"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("contact")}
-    >
-      Contact
-    </button>
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
-        activeTab === "professional"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("professional")}
-    >
-      Profile
-    </button>
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
-        activeTab === "social"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("social")}
-    >
-      Social
-    </button>
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium ${
-        activeTab === "resume"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("resume")}
-    >
-      Resume
-    </button>
-  </div>
-</div>
-
+      <div className="bg-white rounded-lg shadow-sm p-2 mb-8">
+        <div className="flex flex-wrap sm:flex-nowrap border border-gray-200 rounded-md overflow-hidden">
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+              activeTab === "personal"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("personal")}
+          >
+            Personal Info
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+              activeTab === "contact"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("contact")}
+          >
+            Contact
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+              activeTab === "professional"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("professional")}
+          >
+            Profile
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+              activeTab === "social"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("social")}
+          >
+            Social
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium ${
+              activeTab === "resume"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("resume")}
+          >
+            Resume
+          </button>
+        </div>
+      </div>
 
       {/* Settings Form */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
