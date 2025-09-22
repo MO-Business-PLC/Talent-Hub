@@ -29,6 +29,10 @@ const applicationSchema = new Schema(
         type: String,
         required: [true, "Cloudinary publicId is required"],
       },
+      originalName: {
+    type: String,
+    trim: true,
+  },
       format: {
         type: String,
       },

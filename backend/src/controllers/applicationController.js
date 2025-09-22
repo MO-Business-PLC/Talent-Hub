@@ -88,6 +88,7 @@ export const applyToJob = async (req, res) => {
         url: uploadedResume.url,
         publicId: uploadedResume.publicId,
         format: uploadedResume.format,
+        originalName: req.file.originalname,
       };
     } else if (user.resume && user.resume.url) {
       // Use user's saved resume
@@ -95,6 +96,7 @@ export const applyToJob = async (req, res) => {
         url: user.resume.url,
         publicId: user.resume.publicId,
         format: user.resume.format,
+        originalName: user.resume.originalname,
       };
     } else {
       return res.status(400).json({ error: "No resume provided or saved in profile" });
