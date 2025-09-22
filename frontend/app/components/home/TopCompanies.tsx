@@ -1,6 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { getPublicStats, type PublicStats } from "~/lib/api";
+
+function formatNumber(n: number) {
+  // Use Indian grouping to match existing visual style (e.g., 1,75,324)
+  try {
+    return new Intl.NumberFormat("en-IN").format(n);
+  } catch {
+    return new Intl.NumberFormat().format(n);
+  }
+}
 
 export default function TopCompanies() {
+  const [stats, setStats] = useState<PublicStats | null>(null);
+  const [hasTried, setHasTried] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    getPublicStats()
+      .then((data) => {
+        if (!cancelled) setStats(data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (!cancelled) setHasTried(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
   return (
     <section className="relative w-full">
       {/* Subtle top background image for depth */}
@@ -50,22 +77,38 @@ export default function TopCompanies() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-5">
           <StatCard
             icon="/icons/home/briefcase.png"
-            value="1,75,324"
+            value={
+              stats ? formatNumber(stats.jobs.total) : hasTried ? "0" : "1,75,324"
+            }
             label="Live Job"
           />
           <StatCard
             icon="/icons/home/building.png"
-            value="97,354"
+            value={
+              stats
+                ? formatNumber(stats.users.employers)
+                : hasTried
+                ? "0"
+                : "97,354"
+            }
             label="Companies"
           />
           <StatCard
             icon="/icons/home/avatar.png"
-            value="38,47,154"
+            value={
+              stats
+                ? formatNumber(stats.users.employees)
+                : hasTried
+                ? "0"
+                : "38,47,154"
+            }
             label="Candidates"
           />
           <StatCard
             icon="/icons/home/briefcase.png"
-            value="7,532"
+            value={
+              stats ? formatNumber(stats.jobs.today) : hasTried ? "0" : "7,532"
+            }
             label="New Jobs"
           />
         </div>
