@@ -11,7 +11,7 @@ import adminRouter from "./routes/admin.js";
 import trendsRouter from "./routes/trends.js";
 import resumeRouter from "./routes/resumes.js";
 import createInitialAdmin from "./utils/adminSetup.js";
-
+import subscriptionRoutes from "./routes/subscription.js"; 
 
 dotenv.config();
 
@@ -78,6 +78,7 @@ app.use("/api/jobs", jobsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/trends", trendsRouter);
 app.use("/api/resume", resumeRouter);
+app.use("/api/subscriptions", subscriptionRoutes);
 
 // Health check endpoint
 app.get("/health", (req, res) => {
