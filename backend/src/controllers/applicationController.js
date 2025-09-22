@@ -87,7 +87,7 @@ export const applyToJob = async (req, res) => {
     }
 
     // Get user
-    const user = await User.findById(req.user?._id);
+    const user = await User.findById(req.user?.id);
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
