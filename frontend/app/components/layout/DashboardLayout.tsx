@@ -16,10 +16,16 @@ interface DashboardLayoutProps {
   userRole: "employer" | "employee";
 }
 
-export function DashboardLayout({ children, title, userRole }: DashboardLayoutProps) {
+export function DashboardLayout({
+  children,
+  title,
+  userRole,
+}: DashboardLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(
+    null
+  );
 
   useEffect(() => {
     try {
@@ -47,7 +53,7 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
   const getUserInitials = (name: string) =>
     name
       .split(" ")
-      .map((n) => n[0])
+      .map(n => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
@@ -56,7 +62,8 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
     {
       icon: FiHome,
       label: "Overview",
-      href: userRole === "employer" ? "/employer/dashboard" : "/employee-dashboard",
+      href:
+        userRole === "employer" ? "/employer/dashboard" : "/employee-dashboard",
     },
     {
       icon: FiBriefcase,
@@ -72,11 +79,6 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
       icon: FiUsers,
       label: userRole === "employer" ? "Candidates" : "Applications",
       href: userRole === "employer" ? "/employer/candidates" : "/applications",
-    },
-    {
-      icon: FiSettings,
-      label: "Settings",
-      href: "/employer/settings",
     },
   ];
 
@@ -95,7 +97,7 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
           {/* Navigation */}
           <nav className="flex-1 px-4 py-6">
             <ul className="space-y-2">
-              {sidebarItems.map((item) => {
+              {sidebarItems.map(item => {
                 const isActive = getIsActive(item.href);
                 return (
                   <li key={item.label}>
@@ -127,7 +129,9 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
                 </span>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">{user?.name || "User"}</p>
+                <p className="text-sm font-medium text-gray-900">
+                  {user?.name || "User"}
+                </p>
                 <p className="text-xs text-gray-500 capitalize">{userRole}</p>
               </div>
             </div>
@@ -147,7 +151,9 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
         {/* Header (all screens) */}
         <header className="bg-white shadow-sm border-b border-gray-200">
           <div className="px-4 lg:px-6 py-4 flex items-center justify-between">
-            <h1 className="text-lg lg:text-2xl font-semibold text-gray-900">{title}</h1>
+            <h1 className="text-lg lg:text-2xl font-semibold text-gray-900">
+              {title}
+            </h1>
             <div className="flex items-center space-x-4">
               <button className="relative p-2 text-gray-400 hover:text-gray-600">
                 <FiBell className="w-6 h-6" />
@@ -164,14 +170,16 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
           {/* Mobile horizontal nav (below header) */}
           <nav className="lg:hidden border-t overflow-x-auto scrollbar-thin">
             <ul className="flex space-x-2 px-4 py-3 whitespace-nowrap">
-              {sidebarItems.map((item) => {
+              {sidebarItems.map(item => {
                 const isActive = getIsActive(item.href);
                 return (
                   <li className="bg-white py-2" key={item.label}>
                     <Link
                       to={item.href}
                       className={`flex flex-col items-center justify-center text-xs font-medium px-6 py-1 transition-colors duration-200 ${
-                        isActive ? "text-[#1E73BE] bg-[#1E73BE33]" : "text-gray-600 hover:text-gray-900"
+                        isActive
+                          ? "text-[#1E73BE] bg-[#1E73BE33]"
+                          : "text-gray-600 hover:text-gray-900"
                       }`}
                     >
                       <item.icon className="w-5 h-5 mb-1" />
