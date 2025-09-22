@@ -74,9 +74,23 @@ const dateFmt = new Intl.DateTimeFormat("en-US", {
   timeZone: "UTC",
 });
 
+function safeFormatDateString(dateInput?: string | number | Date | null): string {
+  if (!dateInput) return "";
+  try {
+    const d = typeof dateInput === "string" && dateInput.length === 10
+      ? new Date(`${dateInput}T00:00:00Z`)
+      : new Date(dateInput as any);
+    const t = d.getTime();
+    if (!Number.isFinite(t)) return "";
+    return dateFmt.format(d);
+  } catch {
+    return "";
+  }
+}
+
 function formatDateKey(key: string) {
   try {
-    if (key.length === 10) return dateFmt.format(new Date(key + "T00:00:00Z"));
+    if (key.length === 10) return safeFormatDateString(key);
     return key;
   } catch {
     return key;
@@ -326,15 +340,11 @@ export default function AdminDashboard() {
                 </h2>
                 <span className="text-xs text-gray-500">
                   {jobs?.dateRange?.start
-                    ? dateFmt.format(
-                        new Date(jobs.dateRange.start + "T00:00:00Z")
-                      )
+                    ? safeFormatDateString(jobs.dateRange.start)
                     : ""}{" "}
                   –{" "}
                   {jobs?.dateRange?.end
-                    ? dateFmt.format(
-                        new Date(jobs.dateRange.end + "T00:00:00Z")
-                      )
+                    ? safeFormatDateString(jobs.dateRange.end)
                     : ""}
                 </span>
               </div>
@@ -386,15 +396,11 @@ export default function AdminDashboard() {
                 </h2>
                 <span className="text-xs text-gray-500">
                   {applications?.dateRange?.start
-                    ? dateFmt.format(
-                        new Date(applications.dateRange.start + "T00:00:00Z")
-                      )
+                    ? safeFormatDateString(applications.dateRange.start)
                     : ""}{" "}
                   –{" "}
                   {applications?.dateRange?.end
-                    ? dateFmt.format(
-                        new Date(applications.dateRange.end + "T00:00:00Z")
-                      )
+                    ? safeFormatDateString(applications.dateRange.end)
                     : ""}
                 </span>
               </div>
@@ -429,15 +435,11 @@ export default function AdminDashboard() {
                 <h2 className="font-semibold text-gray-900">User Signups</h2>
                 <span className="text-xs text-gray-500">
                   {users?.dateRange?.start
-                    ? dateFmt.format(
-                        new Date(users.dateRange.start + "T00:00:00Z")
-                      )
+                    ? safeFormatDateString(users.dateRange.start)
                     : ""}{" "}
                   –{" "}
                   {users?.dateRange?.end
-                    ? dateFmt.format(
-                        new Date(users.dateRange.end + "T00:00:00Z")
-                      )
+                    ? safeFormatDateString(users.dateRange.end)
                     : ""}
                 </span>
               </div>
@@ -503,7 +505,7 @@ export default function AdminDashboard() {
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="text-sm text-gray-500">
-                            {dateFmt.format(new Date(j.createdAt))}
+                            {safeFormatDateString(j.createdAt)}
                           </div>
                           <div className="mt-1 font-semibold text-gray-900">
                             {j.title}
@@ -562,7 +564,7 @@ export default function AdminDashboard() {
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="text-sm text-gray-500">
-                            {dateFmt.format(new Date(a.createdAt))}
+                            {safeFormatDateString(a.createdAt)}
                           </div>
                           <div className="mt-1 font-semibold text-gray-900">
                             {a?.jobId?.title || "Job"}

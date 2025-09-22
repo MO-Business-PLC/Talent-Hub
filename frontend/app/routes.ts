@@ -21,6 +21,9 @@ export default [
 
   // Jobs routes
 
+  // Admin dashboard
+  route("/admin-dashboard", "routes/admin-dashboard.tsx"),
+
   // Employee dashboard (support both slug and legacy path)
   route("/employee/dashboard", "routes/employee-dashboard.tsx"),
   route("/employee-dashboard", "routes/employee-dashboard.tsx", {
