@@ -28,7 +28,7 @@ export async function loader({ request }: { request: Request }) {
   } else if (userRole === "employee") {
     return redirect("/employee-dashboard");
   } else if (userRole === "employer") {
-    return redirect("/employer-dashboard");
+    return redirect("/employer/dashboard");
   }
 
   // If no role found but user is authenticated, try to fetch profile
@@ -49,7 +49,7 @@ export async function loader({ request }: { request: Request }) {
       } else if (role === "employee") {
         return redirect("/employee-dashboard");
       } else if (role === "employer") {
-        return redirect("/employer-dashboard");
+        return redirect("/employer/dashboard");
       }
     }
   } catch (error) {
@@ -101,9 +101,8 @@ export default function RootRedirect() {
       } else if (userRole === "employee") {
         setRedirectPath("/employee-dashboard");
       } else if (userRole === "employer") {
-        setRedirectPath("/employer-dashboard");
+        setRedirectPath("/employer/dashboard");
       } else {
-        // If we don't have a role, try to fetch it from the API
         fetchUserProfile();
       }
     };
@@ -130,7 +129,7 @@ export default function RootRedirect() {
           } else if (role === "employee") {
             setRedirectPath("/employee-dashboard");
           } else if (role === "employer") {
-            setRedirectPath("/employer-dashboard");
+            setRedirectPath("/employer/dashboard");
           } else {
             setRedirectPath("/home");
           }
@@ -165,7 +164,8 @@ export default function RootRedirect() {
         <p className="text-gray-600">Redirecting to your dashboard...</p>
         <div className="mt-6 bg-blue-50 rounded-lg p-4">
           <p className="text-sm text-blue-700">
-            If you're not redirected automatically, check your browser's console for any issues.
+            If you're not redirected automatically, check your browser's console
+            for any issues.
           </p>
         </div>
       </div>
