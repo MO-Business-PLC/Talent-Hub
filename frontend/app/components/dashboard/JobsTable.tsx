@@ -42,7 +42,7 @@ export function JobsTable({
   };
 
   const handleViewApplicants = (jobId: string) => {
-    navigate(`/jobs/${jobId}/applicants`);
+    navigate(`/employer/jobs/${jobId}/applicants`);
   };
 
   return (

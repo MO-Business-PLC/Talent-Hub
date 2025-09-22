@@ -14,7 +14,7 @@ export default [
   route("/login", "routes/login.tsx"),
   // Register page
   route("/register", "routes/register.tsx"),
-  
+
   route("/forgot-password", "routes/forgot-password.tsx"),
   route("/verify-email", "routes/verify-email.tsx"),
   route("/reset-password", "routes/reset-password.tsx"),
@@ -31,6 +31,15 @@ export default [
   }),
   // Dashboard layout with nested routes
   layout("routes/dashboard-layout.tsx", [
+    // !!Employee
+    route("/employee/dashboard", "routes/employee-overview.tsx"),
+    route("/employee/settings", "routes/employee-settings.tsx"),
+    route("/employee/applied-jobs", "routes/employee-overview.tsx", {
+      id: "applied/jobs",
+    }),
+    route("/employee/favourite", "routes/favourite-jobs.tsx"),
+
+    // !!Employer
     route("/employer/dashboard", "routes/employer-dashboard.tsx"),
     // Alias path to support /employer-dashboard while keeping the same layout
     route("/employer-dashboard", "routes/employer-dashboard.tsx", {

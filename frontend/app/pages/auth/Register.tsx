@@ -74,7 +74,7 @@ export default function Register() {
       agree: agree ? "" : "You must agree to the Terms and Privacy Policy",
     } as const;
     const cleaned: any = {};
-    (Object.keys(errs) as Array<keyof typeof errs>).forEach((k) => {
+    (Object.keys(errs) as Array<keyof typeof errs>).forEach(k => {
       if (errs[k]) cleaned[k] = errs[k];
     });
     setFieldErrors(cleaned);
@@ -106,7 +106,7 @@ export default function Register() {
       // Redirect based on user role
       const userRole = data.user?.role || ROLE_MAP[roleTab];
       if (userRole === "employee") {
-        navigate("/employee-dashboard", { replace: true });
+        navigate("/employee/dashboard", { replace: true });
       } else if (userRole === "employer") {
         navigate("/employer/dashboard", { replace: true });
       } else {
@@ -153,7 +153,7 @@ export default function Register() {
                 CREATE ACCOUNT AS
               </div>
               <div className="grid grid-cols-2 gap-3">
-                {(["Employee", "Employer"] as const).map((tab) => {
+                {(["Employee", "Employer"] as const).map(tab => {
                   const active = roleTab === tab;
                   return (
                     <button
@@ -197,9 +197,9 @@ export default function Register() {
                 type="text"
                 placeholder="Enter your Name"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
                 onBlur={() =>
-                  setFieldErrors((p) => ({
+                  setFieldErrors(p => ({
                     ...p,
                     name: validateName(name) || undefined,
                   }))
@@ -216,9 +216,9 @@ export default function Register() {
                 type="email"
                 placeholder="Enter your Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 onBlur={() =>
-                  setFieldErrors((p) => ({
+                  setFieldErrors(p => ({
                     ...p,
                     email: validateEmail(email) || undefined,
                   }))
@@ -235,9 +235,9 @@ export default function Register() {
                 type="password"
                 placeholder="Enter your Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 onBlur={() =>
-                  setFieldErrors((p) => ({
+                  setFieldErrors(p => ({
                     ...p,
                     password: validatePassword(password) || undefined,
                   }))
@@ -255,7 +255,7 @@ export default function Register() {
               <input
                 type="checkbox"
                 checked={agree}
-                onChange={(e) => setAgree(e.target.checked)}
+                onChange={e => setAgree(e.target.checked)}
                 className="mt-0.5 h-4 w-4 rounded border border-gray-300 bg-light-gray accent-base [color-scheme:light] focus:ring-0"
               />
               <span>

@@ -44,14 +44,14 @@ export default function EmployeeDashboard() {
     if (!user || !user.name) return "U";
     return user.name
       .split(" ")
-      .map((word) => word[0])
+      .map(word => word[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
   };
 
   // Function to navigate to job detail page
-  const handleViewJobDetail = (jobId) => {
+  const handleViewJobDetail = jobId => {
     navigate(`/jobs/${jobId}`);
   };
 
@@ -128,7 +128,7 @@ export default function EmployeeDashboard() {
               Find Employer
             </a>
             <a
-              href="/employee-dashboard"
+              href="/employee/dashboard"
               className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
             >
               Dashboard
@@ -169,7 +169,7 @@ export default function EmployeeDashboard() {
             {/* Mobile Menu Button (Hamburger) */}
             <div className="md:hidden">
               <button
-                onClick={() => setIsMenuOpen((prev) => !prev)}
+                onClick={() => setIsMenuOpen(prev => !prev)}
                 className="focus:outline-none"
               >
                 <svg
@@ -206,7 +206,7 @@ export default function EmployeeDashboard() {
               Find Employer
             </a>
             <a
-              href="/employee-dashboard"
+              href="/employee/dashboard"
               className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50"
             >
               Dashboard
@@ -483,16 +483,16 @@ function Overview({
   // Calculate stats from real data
   const totalApplications = applications.length;
   const viewedApplications = applications.filter(
-    (app) => app.status === "applied"
+    app => app.status === "applied"
   ).length;
   const shortlistedApplications = applications.filter(
-    (app) => app.status === "shortlisted"
+    app => app.status === "shortlisted"
   ).length;
   const rejectedApplications = applications.filter(
-    (app) => app.status === "rejected"
+    app => app.status === "rejected"
   ).length;
 
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -500,7 +500,7 @@ function Overview({
     });
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = status => {
     switch (status) {
       case "applied":
         return "bg-blue-100 text-blue-800";
@@ -513,7 +513,7 @@ function Overview({
     }
   };
 
-  const getStatusText = (status) => {
+  const getStatusText = status => {
     switch (status) {
       case "applied":
         return "Applied";
@@ -713,7 +713,7 @@ function Overview({
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {applications.slice(0, 5).map((application) => (
+                {applications.slice(0, 5).map(application => (
                   <tr key={application._id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {application.jobId.title}
@@ -778,7 +778,7 @@ function Overview({
 
 // Applied Jobs Component
 function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -786,7 +786,7 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
     });
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = status => {
     switch (status) {
       case "applied":
         return "bg-blue-100 text-blue-800";
@@ -799,7 +799,7 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
     }
   };
 
-  const getStatusText = (status) => {
+  const getStatusText = status => {
     switch (status) {
       case "applied":
         return "Applied";
@@ -906,7 +906,7 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {applications.map((application) => (
+                {applications.map(application => (
                   <tr key={application._id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {application.jobId.title}
@@ -945,7 +945,7 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
 function FavoriteJobs() {
   const navigate = useNavigate();
 
-  const handleApplyNow = (jobId) => {
+  const handleApplyNow = jobId => {
     navigate(`/jobs/${jobId}/apply`);
   };
 
@@ -1085,9 +1085,9 @@ function Settings() {
     portfolio: "",
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const { id, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [id]: value,
     }));
