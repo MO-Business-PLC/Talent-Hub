@@ -82,3 +82,4 @@ export function useJobApplicants(jobId: string | undefined): UseJobApplicantsRet
 
 export type { Applicant, ApplicationsResponse };
 
+

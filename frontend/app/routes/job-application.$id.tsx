@@ -47,3 +47,4 @@ export default function JobApplicationPage() {
   return <JobApplicationForm jobId={id} />;
 }
 
+
