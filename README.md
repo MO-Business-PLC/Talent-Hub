@@ -1,6 +1,6 @@
 # Talent Hub – Full-Stack Documentation
 
-Talent Hub is a full-stack platform for talent management. Applicants can register, browse and apply for jobs; employers can post and manage jobs and review applicants; admins have oversight with analytics and management tools.
+Talent Hub is a full-stack platform for talent management. Applicants can register, browse, and apply for jobs; employers can post and manage jobs and review applicants; admins have oversight with analytics and management tools.
 
 ---
 
@@ -39,12 +39,12 @@ cp backend/env.example backend/.env
 
 Key backend variables:
 
-- PORT, NODE_ENV
-- FRONTEND_URL (comma-separated origins for CORS)
-- MONGODB_URI
-- JWT_SECRET, JWT_EXPIRES_IN, JWT_REFRESH_EXPIRES_IN
-- GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (for Google SSO)
-- CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET (for resume uploads)
+- `PORT`, `NODE_ENV`
+- `FRONTEND_URL` (comma-separated origins for CORS)
+- `MONGODB_URI`
+- `JWT_SECRET`, `JWT_EXPIRES_IN`, `JWT_REFRESH_EXPIRES_IN`
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` (for Google SSO)
+- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` (for resume uploads)
 
 Frontend uses `VITE_API_BASE_URL` and optional `VITE_TOKEN_STORAGE` ("cookie" | "localStorage").
 
@@ -87,14 +87,16 @@ Base URL: `http://localhost:5000`
 
 ### Authentication (`/api/auth`)
 
-- POST `/register` → body `{ name, email, password, role? }` returns `{ user, accessToken, refreshToken, redirectTo }`
-- POST `/login` → body `{ email, password }` returns `{ user, accessToken, refreshToken, redirectTo }`
-- GET `/login?email=..&password=..` → convenience GET login
-- POST `/refresh` → refresh tokens from body `{ refreshToken }` or cookie; returns tokens
-- GET `/profile` → requires `Authorization: Bearer <accessToken>`; returns `{ user }`
+- **POST `/register`** → body `{ name, email, password, role? }` returns `{ user, accessToken, refreshToken, redirectTo }`
+  - Validates `name` (min 2 chars), `email` (unique, valid format), `password` (min 6 chars)
+  - `role` defaults to `employee` unless `employer` is specified
+- **POST `/login`** → body `{ email, password }` returns `{ user, accessToken, refreshToken, redirectTo }`
+- **GET `/login?email=..&password=..`** → convenience GET login
+- **POST `/refresh`** → refresh tokens from body `{ refreshToken }` or cookie; returns `{ user, accessToken, refreshToken }`
+- **GET `/profile`** → requires `Authorization: Bearer <accessToken>`; returns `{ user }` with user details (excludes password)
 - Google OAuth (optional):
-  - GET `/google/start?role=employee|employer` → redirects to Google
-  - GET `/google/callback` → sets httpOnly cookies and redirects to frontend
+  - **GET `/google/start?role=employee|employer`** → redirects to Google with CSRF protection
+  - **GET `/google/callback`** → sets httpOnly cookies and redirects to frontend with tokens in query params (`accessToken`, `refreshToken`, `role`)
 
 Auth headers/cookies:
 
@@ -419,8 +421,14 @@ Retrieve all applications for jobs created by the authenticated employer.
             "email": "string",
             "role": "string"
           },
-          "resumeUrl": "string",
+          "resume": {
+            "url": "string",
+            "publicId": "string",
+            "originalName": "string",
+            "format": "string"
+          },
           "coverLetter": "string",
+          "status": "string",
           "createdAt": "string (ISO 8601)",
           "updatedAt": "string (ISO 8601)"
         }
@@ -457,7 +465,33 @@ Retrieve all applications for a specific job, accessible to the job’s creator 
   - **200 OK**:
     ```json
     {
-      "applications": [ /* Same structure as GET /applications/employer */ ]
+      "applications": [
+        {
+          "_id": "string",
+          "jobId": {
+            "_id": "string",
+            "title": "string",
+            "location": { "city": "string", "country": "string" },
+            "status": "string"
+          },
+          "userId": {
+            "_id": "string",
+            "name": "string",
+            "email": "string",
+            "role": "string"
+          },
+          "resume": {
+            "url": "string",
+            "publicId": "string",
+            "originalName": "string",
+            "format": "string"
+          },
+          "coverLetter": "string",
+          "status": "string",
+          "createdAt": "string (ISO 8601)",
+          "updatedAt": "string (ISO 8601)"
+        }
+      ]
     }
     ```
   - **403 Forbidden**:
@@ -479,20 +513,21 @@ Retrieve all applications for a specific job, accessible to the job’s creator 
   ```
 
 #### 3. Apply to Job
-Submit a new application for a job, including a resume file upload.
+Submit a new application for a job, including a resume file upload or using a previously uploaded resume.
 
 - **Method**: POST
 - **Path**: `/applications`
 - **Authentication**: Required (role: `employee`)
 - **Request Body** (multipart/form-data):
   - `jobId` (string, required): Job ID.
-  - `resume` (file, required): Resume file (PDF or DOC, uploaded to Cloudinary).
-  - `coverLetter` (string, optional): Cover letter text.
+  - `resume` (file, optional): Resume file (PDF or DOCX, uploaded to Cloudinary). Required if user has no saved resume.
+  - `coverLetter` (string, optional): Cover letter text (max 2000 characters).
 - **Validation Rules**:
   - `jobId`: Required, valid MongoDB ObjectId, must correspond to an existing job.
-  - `resume`: Required, valid PDF or DOC file.
-  - `coverLetter`: Optional, string.
+  - `resume`: Required if user has no saved resume in profile; must be PDF or DOCX.
+  - `coverLetter`: Optional, max 2000 characters.
   - Job must have `status: "OPEN"`.
+  - User cannot apply to the same job twice (enforced by unique index on `jobId` and `userId`).
 - **Response**:
   - **201 Created**:
     ```json
@@ -512,8 +547,14 @@ Submit a new application for a job, including a resume file upload.
           "email": "string",
           "role": "string"
         },
-        "resumeUrl": "string",
+        "resume": {
+          "url": "string",
+          "publicId": "string",
+          "originalName": "string",
+          "format": "string"
+        },
         "coverLetter": "string",
+        "status": "string",
         "createdAt": "string (ISO 8601)",
         "updatedAt": "string (ISO 8601)"
       }
@@ -521,11 +562,15 @@ Submit a new application for a job, including a resume file upload.
     ```
   - **400 Bad Request**:
     ```json
-    { "error": "Job ID is required, Resume file is required" }
+    { "error": "Job ID is required, No resume provided or saved in profile" }
     ```
     or
     ```json
     { "error": "Job is not open for applications" }
+    ```
+    or
+    ```json
+    { "error": "Invalid job ID format" }
     ```
   - **401 Unauthorized**:
     ```json
@@ -541,7 +586,7 @@ Submit a new application for a job, including a resume file upload.
     ```
   - **500 Internal Server Error**:
     ```json
-    { "error": "Internal Server Error" }
+    { "error": "Internal Server Error", "message": "..." }
     ```
 - **Example**:
   ```
@@ -576,8 +621,14 @@ Retrieve all applications submitted by a specific user, accessible to the user o
             "status": "string"
           },
           "userId": "string",
-          "resumeUrl": "string",
+          "resume": {
+            "url": "string",
+            "publicId": "string",
+            "originalName": "string",
+            "format": "string"
+          },
           "coverLetter": "string",
+          "status": "string",
           "createdAt": "string (ISO 8601)",
           "updatedAt": "string (ISO 8601)"
         }
@@ -735,18 +786,86 @@ Delete the resume of the authenticated user.
 
 ### Data Models (Mongoose)
 
-- `User`: `{ name, email(unique), password(hashed), role(employee|employer|admin), resume?{url,publicId,originalName,format} }`
-- `Job`: `{ title, description, jobType, jobSite, location{city,country}, skills[], sector, experienceLevel, deadline, createdBy(ref User), status }` + text index for search
-- `Application`: `{ jobId(ref Job), userId(ref User), resumeUrl, coverLetter?, status(applied|shortlisted|rejected) }` + unique index `(jobId,userId)`
+- **User**:
+  ```javascript
+  {
+    name: { type: String, required, minlength: 2, trim: true },
+    email: { type: String, required, unique, lowercase, trim, match: email regex },
+    password: { type: String, required, minlength: 6 },
+    role: { type: String, enum: ["employee", "employer", "admin"], default: "employee" },
+    resume: {
+      url: { type: String, validate: URL },
+      publicId: { type: String },
+      originalName: { type: String, trim: true },
+      format: { type: String, trim: true }
+    },
+    profileImage: { type: String, validate: URL },
+    professionalTitle: { type: String, trim: true, maxlength: 100 },
+    industry: { type: String, trim: true, maxlength: 100 },
+    experienceLevel: { type: String, enum: ["junior", "mid", "senior", "lead"] },
+    phoneNumber: { type: String, match: phone regex (7-15 digits) },
+    location: {
+      city: { type: String, trim: true },
+      country: { type: String, trim: true }
+    },
+    professionalSummary: { type: String, maxlength: 2000 },
+    linkedInUrl: { type: String, validate: LinkedIn URL },
+    githubUrl: { type: String, validate: GitHub URL },
+    portfolioUrl: { type: String, validate: URL }
+  }
+  ```
+  - Indexes: `email` (unique)
+  - Pre-save: Hash password with bcrypt
+  - Methods: `matchPassword` for password comparison
+  - toJSON: Excludes `password`
+
+- **Job**:
+  ```javascript
+  {
+    title: { type: String, required, minlength: 3, maxlength: 100 },
+    description: { type: String, required, minlength: 20 },
+    jobType: { type: String, enum: ["FULL_TIME", "PART_TIME", "CONTRACT", "INTERNSHIP", "FREELANCE"], default: "FULL_TIME" },
+    jobSite: { type: String, enum: ["ONSITE", "REMOTE", "HYBRID"], default: "ONSITE" },
+    location: {
+      city: { type: String, required },
+      country: { type: String, required }
+    },
+    skills: [{ type: String }],
+    sector: { type: String },
+    experienceLevel: { type: String, enum: ["JUNIOR", "MID", "SENIOR"], default: "MID" },
+    deadline: { type: Date, required },
+    createdBy: { type: Schema.Types.ObjectId, ref: "User", required },
+    status: { type: String, enum: ["OPEN", "CLOSED"], default: "OPEN" }
+  }
+  ```
+  - Indexes: Text index on `title`, `description`, `skills`, `sector` for search
+
+- **Application**:
+  ```javascript
+  {
+    jobId: { type: Schema.Types.ObjectId, ref: "Job", required },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required },
+    resume: {
+      url: { type: String, required, validate: URL },
+      publicId: { type: String, required },
+      originalName: { type: String, trim: true },
+      format: { type: String }
+    },
+    coverLetter: { type: String, maxlength: 2000 },
+    status: { type: String, enum: ["applied", "shortlisted", "rejected"], default: "applied" }
+  }
+  ```
+  - Indexes: Unique index on `jobId` and `userId` to prevent duplicate applications
+  - Timestamps: `createdAt`, `updatedAt`
 
 ### Error Handling
 
-- 400 validation errors: `{ error: "..." }`
-- 401: missing/invalid token
-- 403: insufficient permissions
-- 404: resource not found
-- 409: duplicates (email in use, already applied)
-- 500: internal server error
+- **400**: Validation errors (e.g., missing required fields, invalid formats)
+- **401**: Missing or invalid token
+- **403**: Insufficient permissions (e.g., wrong role or unauthorized access)
+- **404**: Resource not found (e.g., job, user, or resume)
+- **409**: Duplicates (e.g., email in use, already applied to job)
+- **500**: Internal server error with optional `message`
 
 ---
 
@@ -781,10 +900,20 @@ await postJson("/api/jobs", {
   deadline: new Date(Date.now() + 7 * 24 * 3600e3).toISOString(),
 });
 
-// Upload resume (employee)
+// Apply to job (employee)
 const formData = new FormData();
-formData.append("resume", file); // file is a File object from input
-await postForm("/api/resume", formData);
+formData.append("jobId", "68c9d9935aa91b8266b06533");
+formData.append("coverLetter", "Dear Hiring Manager...");
+formData.append("resume", file); // file is a File object from input (optional if user has saved resume)
+await postForm("/api/applications", formData);
+
+// Get user applications
+const applications = await getJson<{ applications: any[] }>("/api/applications/68c9d9935aa91b8266b06533");
+
+// Upload resume (employee)
+const resumeForm = new FormData();
+resumeForm.append("resume", file); // file is a File object from input
+await postForm("/api/resume", resumeForm);
 
 // Get resume
 const resume = await getJson<{ data: { url: string, publicId: string, originalName: string, format: string } }>("/api/resume");
@@ -802,12 +931,14 @@ await postJson("/api/resume", {}, { method: "DELETE" });
 - Set `FRONTEND_URL` to trusted origins only
 - Configure Cloudinary securely and restrict file types to PDF/DOCX
 - Validate all inputs server-side; keep Mongo indexes in sync after seeding
-- Never log sensitive data
+- Never log sensitive data (e.g., passwords, tokens)
+- Use CSRF protection for Google OAuth flows
+- Ensure `resume` URLs are validated and stored securely in Cloudinary
 
 ## Deployment
 
-- Backend: set `NODE_ENV=production`, configure `PORT`, `MONGODB_URI`, `FRONTEND_URL`, JWT, Google SSO, Cloudinary credentials
-- Frontend: set `VITE_API_BASE_URL` to backend URL
+- Backend: Set `NODE_ENV=production`, configure `PORT`, `MONGODB_URI`, `FRONTEND_URL`, JWT, Google SSO, Cloudinary credentials
+- Frontend: Set `VITE_API_BASE_URL` to backend URL
 
 ## Project Structure (condensed)
 
