@@ -9,6 +9,7 @@ Talent Hub is a full-stack platform for talent management. Applicants can regist
 - Backend: Node.js, Express, Mongoose (MongoDB), JWT, express-validator, Helmet, CORS, Morgan
 - Frontend: React Router 7 + Vite, TypeScript, Tailwind CSS
 - Auth: JWT access/refresh, role-based access control, optional Google OAuth
+- File Upload: Cloudinary for resume storage
 
 ---
 
@@ -19,6 +20,7 @@ Talent Hub is a full-stack platform for talent management. Applicants can regist
 - Node.js 18+
 - npm
 - MongoDB (local or Atlas)
+- Cloudinary account (for resume uploads)
 
 ### Install
 
@@ -42,6 +44,7 @@ Key backend variables:
 - MONGODB_URI
 - JWT_SECRET, JWT_EXPIRES_IN, JWT_REFRESH_EXPIRES_IN
 - GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET (for Google SSO)
+- CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET (for resume uploads)
 
 Frontend uses `VITE_API_BASE_URL` and optional `VITE_TOKEN_STORAGE` ("cookie" | "localStorage").
 
@@ -599,6 +602,112 @@ Retrieve all applications submitted by a specific user, accessible to the user o
   Authorization: Bearer <token>
   ```
 
+### Resume (`/api/resume`)
+
+#### 1. Upload Resume
+Upload a resume file for the authenticated user.
+
+- **Method**: POST
+- **Path**: `/resume`
+- **Authentication**: Required (role: `employee`)
+- **Request Body** (multipart/form-data):
+  - `resume` (file, required): Resume file (PDF or DOCX, uploaded to Cloudinary).
+- **Validation Rules**:
+  - `resume`: Required, valid PDF or DOCX file.
+- **Response**:
+  - **200 OK**:
+    ```json
+    {
+      "message": "Resume uploaded successfully",
+      "data": {
+        "url": "string",
+        "publicId": "string",
+        "originalName": "string",
+        "format": "string"
+      }
+    }
+    ```
+  - **400 Bad Request**:
+    ```json
+    { "error": "No file uploaded", "message": "Please select a resume file to upload" }
+    ```
+  - **401 Unauthorized**:
+    ```json
+    { "error": "Unauthorized" }
+    ```
+  - **500 Internal Server Error**:
+    ```json
+    { "error": "Upload failed", "message": "..." }
+    ```
+- **Example**:
+  ```
+  POST /api/resume
+  Authorization: Bearer <token>
+  Content-Type: multipart/form-data
+  resume=<file.pdf>
+  ```
+
+#### 2. Get Resume
+Retrieve the resume of the authenticated user.
+
+- **Method**: GET
+- **Path**: `/resume`
+- **Authentication**: Required
+- **Response**:
+  - **200 OK**:
+    ```json
+    {
+      "data": {
+        "url": "string",
+        "publicId": "string",
+        "originalName": "string",
+        "format": "string"
+      }
+    }
+    ```
+  - **404 Not Found**:
+    ```json
+    { "error": "Resume not found", "message": "This user has not uploaded a resume" }
+    ```
+  - **500 Internal Server Error**:
+    ```json
+    { "error": "Fetch failed", "message": "..." }
+    ```
+- **Example**:
+  ```
+  GET /api/resume
+  Authorization: Bearer <token>
+  ```
+
+#### 3. Delete Resume
+Delete the resume of the authenticated user.
+
+- **Method**: DELETE
+- **Path**: `/resume`
+- **Authentication**: Required (role: `employee` or `admin`)
+- **Response**:
+  - **200 OK**:
+    ```json
+    { "message": "Resume deleted successfully" }
+    ```
+  - **404 Not Found**:
+    ```json
+    { "error": "Resume not found", "message": "This user has no uploaded resume" }
+    ```
+  - **401 Unauthorized**:
+    ```json
+    { "error": "Unauthorized" }
+    ```
+  - **500 Internal Server Error**:
+    ```json
+    { "error": "Delete failed", "message": "..." }
+    ```
+- **Example**:
+  ```
+  DELETE /api/resume
+  Authorization: Bearer <token>
+  ```
+
 ### Admin (`/api/admin`) – requires role `admin`
 
 - Dashboard & system:
@@ -626,7 +735,7 @@ Retrieve all applications submitted by a specific user, accessible to the user o
 
 ### Data Models (Mongoose)
 
-- `User`: `{ name, email(unique), password(hashed), role(employee|employer|admin) }`
+- `User`: `{ name, email(unique), password(hashed), role(employee|employer|admin), resume?{url,publicId,originalName,format} }`
 - `Job`: `{ title, description, jobType, jobSite, location{city,country}, skills[], sector, experienceLevel, deadline, createdBy(ref User), status }` + text index for search
 - `Application`: `{ jobId(ref Job), userId(ref User), resumeUrl, coverLetter?, status(applied|shortlisted|rejected) }` + unique index `(jobId,userId)`
 
@@ -657,7 +766,7 @@ Token storage (`app/lib/auth.ts`):
 Common calls:
 
 ```ts
-import { getJson, postJson } from "./app/lib/api";
+import { getJson, postJson, postForm } from "./app/lib/api";
 
 // List jobs
 const jobs = await getJson<{ jobs: any[]; pagination: any }>("/api/jobs?page=1&limit=10");
@@ -671,6 +780,17 @@ await postJson("/api/jobs", {
   location: { city: "Paris", country: "FR" },
   deadline: new Date(Date.now() + 7 * 24 * 3600e3).toISOString(),
 });
+
+// Upload resume (employee)
+const formData = new FormData();
+formData.append("resume", file); // file is a File object from input
+await postForm("/api/resume", formData);
+
+// Get resume
+const resume = await getJson<{ data: { url: string, publicId: string, originalName: string, format: string } }>("/api/resume");
+
+// Delete resume
+await postJson("/api/resume", {}, { method: "DELETE" });
 ```
 
 ---
@@ -680,12 +800,13 @@ await postJson("/api/jobs", {
 - Use strong `JWT_SECRET`; rotate periodically
 - Prefer cookie storage in production (`VITE_TOKEN_STORAGE=cookie`) with Secure/Lax
 - Set `FRONTEND_URL` to trusted origins only
+- Configure Cloudinary securely and restrict file types to PDF/DOCX
 - Validate all inputs server-side; keep Mongo indexes in sync after seeding
 - Never log sensitive data
 
 ## Deployment
 
-- Backend: set `NODE_ENV=production`, configure `PORT`, `MONGODB_URI`, `FRONTEND_URL`, JWT, Google SSO
+- Backend: set `NODE_ENV=production`, configure `PORT`, `MONGODB_URI`, `FRONTEND_URL`, JWT, Google SSO, Cloudinary credentials
 - Frontend: set `VITE_API_BASE_URL` to backend URL
 
 ## Project Structure (condensed)

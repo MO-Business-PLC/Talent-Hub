@@ -14,7 +14,7 @@ function Footer() {
       links: [
         { name: "About us", url: "/about" },
         { name: "Browse Jobs", url: "/jobs" },
-        { name: "Post a Job", url: "/post-job" },
+        { name: "Post a Job", url: "/employer/post-job" },
       ],
     },
     {
@@ -28,7 +28,7 @@ function Footer() {
     {
       main: "Employers",
       links: [
-        { name: "Post a Job", url: "/post-job" },
+        { name: "Post a Job", url: "/employer/post-job" },
         { name: "Browse Candidates", url: "/candidates" },
         { name: "Applications", url: "/applications" },
       ],

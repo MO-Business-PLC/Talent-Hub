@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApplication } from "../../hooks/useApplication";
+import { useUserProfile } from "../../hooks/useUserProfile";
 
 interface FormData {
   fullName: string;
@@ -37,6 +38,11 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
     error: applicationError,
   } = useApplication();
 
+  const { user, isLoading: isLoadingUser } = useUserProfile();
+
+  // Check if user has a resume URL
+  const hasResumeUrl = user?.resume?.url;
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -65,17 +71,19 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
       return;
     }
 
-    if (!formData.cvFile) {
+    // Only require CV file if user doesn't have a resume URL
+    if (!hasResumeUrl && !formData.cvFile) {
       setSubmitError("Please upload your CV");
       return;
     }
 
     try {
-      // Submit the application with file directly
+      // Submit the application with file or URL
       await submitApplication({
         jobId,
         coverLetter: formData.coverLetter || undefined,
-        resumeFile: formData.cvFile,
+        resumeFile: hasResumeUrl ? undefined : (formData.cvFile || undefined),
+        resumeUrl: hasResumeUrl ? user?.resume?.url : undefined,
       });
 
       setSubmitSuccess(true);
@@ -102,6 +110,18 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
     alert("Application saved as draft!");
   };
 
+  // Show loading state while user data is being loaded
+  if (isLoadingUser) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="py-8 px-4 sm:px-6 lg:px-8">
@@ -114,6 +134,19 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
             <p className="mt-3 text-gray-600 text-xl">
               Hey, could you fill out these forms carefully?
             </p>
+
+            {/* Show resume status if user has resume URL */}
+            {hasResumeUrl && (
+              <div className="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">Resume Found!</span>
+                  <span className="ml-2">We'll use your uploaded resume: {user?.resume?.originalName}</span>
+                </div>
+              </div>
+            )}
 
             {/* Error Message */}
             {(submitError || applicationError) && (
@@ -265,57 +298,59 @@ export default function JobApplicationForm({ jobId }: JobApplicationFormProps) {
               </p>
             </div>
 
-            {/* Upload CV */}
-            <div>
-              <label className="block text-lg font-medium text-gray-700 mb-2">
-                Upload your CV
-              </label>
-              <div className="mt-1 flex justify-center px-8 pt-8 pb-8 border-2 border-gray-300 border-dashed rounded-md">
-                <div className="space-y-3 text-center">
-                  <svg
-                    className="mx-auto h-16 w-16 text-gray-400"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 48 48"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <div className="flex text-lg text-gray-600 justify-center">
-                    <label
-                      htmlFor="cvFile"
-                      className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+            {/* Upload CV - Only show if user doesn't have resume URL */}
+            {!hasResumeUrl && (
+              <div>
+                <label className="block text-lg font-medium text-gray-700 mb-2">
+                  Upload your CV
+                </label>
+                <div className="mt-1 flex justify-center px-8 pt-8 pb-8 border-2 border-gray-300 border-dashed rounded-md">
+                  <div className="space-y-3 text-center">
+                    <svg
+                      className="mx-auto h-16 w-16 text-gray-400"
+                      stroke="currentColor"
+                      fill="none"
+                      viewBox="0 0 48 48"
+                      aria-hidden="true"
                     >
-                      <span>Browse File</span>
-                      <input
-                        id="cvFile"
-                        name="cvFile"
-                        type="file"
-                        className="sr-only"
-                        onChange={handleFileChange}
-                        accept=".pdf"
-                        required
-                        disabled={isSubmittingApplication}
+                      <path
+                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
-                    </label>
-                    <p className="pl-2">or drag it here</p>
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    Only pdf file and Max File size 2MB
-                  </p>
-                  {formData.cvFile && (
-                    <p className="text-md text-green-600 mt-2">
-                      Selected: {formData.cvFile.name}
+                    </svg>
+                    <div className="flex text-lg text-gray-600 justify-center">
+                      <label
+                        htmlFor="cvFile"
+                        className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500"
+                      >
+                        <span>Browse File</span>
+                        <input
+                          id="cvFile"
+                          name="cvFile"
+                          type="file"
+                          className="sr-only"
+                          onChange={handleFileChange}
+                          accept=".pdf"
+                          required
+                          disabled={isSubmittingApplication}
+                        />
+                      </label>
+                      <p className="pl-2">or drag it here</p>
+                    </div>
+                    <p className="text-sm text-gray-500">
+                      Only pdf file and Max File size 2MB
                     </p>
-                  )}
+                    {formData.cvFile && (
+                      <p className="text-md text-green-600 mt-2">
+                        Selected: {formData.cvFile.name}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Success/Error Messages */}
             {submitSuccess && (

@@ -15,7 +15,7 @@ function JobSteps({steps, title, span, description}: {title?: string, span?: str
       {/* Header */}
       <div className="text-center mb-8 sm:mb-12 md:mb-16">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-background-dark mb-2">
-          {title} <span className="sm:text-base">{span}</span>
+          {title} <span className="text-base">{span}</span>
         </h2>
       </div>
 

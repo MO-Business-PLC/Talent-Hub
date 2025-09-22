@@ -9,11 +9,15 @@ export default [
   // Root route redirects based on authentication and user role
   index("routes/root-redirect.tsx"),
   // Callback route for OAuth providers
-  route("/auth/callback", "routes/auth-callback.tsx"),
+  route("/auth-callback", "routes/auth-callback.tsx"),
   // Login page
   route("/login", "routes/login.tsx"),
   // Register page
   route("/register", "routes/register.tsx"),
+  
+  route("/forgot-password", "routes/forgot-password.tsx"),
+  route("/verify-email", "routes/verify-email.tsx"),
+  route("/reset-password", "routes/reset-password.tsx"),
 
   // Jobs routes
 
@@ -33,13 +37,14 @@ export default [
       id: "/jobs",
     }),
     route("/employer/candidates", "routes/employer-candidates.tsx"),
-    route("/post-job", "routes/post-job.tsx"),
+    route("/employer/post-job", "routes/post-job.tsx"),
     route("/jobs/:jobId/applicants", "routes/job-applicants.$jobId.tsx"),
   ]),
   layout("routes/home-layout.tsx", [
     route("/home", "routes/home.tsx"),
     route("/about", "routes/about.tsx"),
     route("/jobs", "routes/jobs.tsx"),
+    // route("/job-application", "routes/job-application.tsx"),
     route("/jobs/:id", "routes/job.$id.tsx"),
     route("/jobs/:id/apply", "routes/job-application.$id.tsx"),
   ]),

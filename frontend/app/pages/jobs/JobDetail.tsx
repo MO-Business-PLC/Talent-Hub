@@ -1,15 +1,16 @@
+"use client"
+
+import { Link } from "react-router"
 // import type { Route } from "./+types/job.$id";
-import { Link, useParams } from "react-router";
-import {
-  JobHeader,
-  JobDescription,
-  JobOverview,
-} from "../../components/job-detail";
-import { useJob } from "../../hooks/useJob";
+import { JobHeader, JobDescription, JobOverview } from "../../components/job-detail"
+import { useJob } from "../../hooks/useJob"
+// Removed useState (was used for mobile tab navigation)
+import { useParams } from "react-router"
 
 export default function JobDetail() {
-  const { id } = useParams();
-  const { job, isLoading, error } = useJob(id);
+  const { id } = useParams()
+  const { job, isLoading, error } = useJob(id)
+  // Mobile view now shows overview followed by description (no tabs)
 
   // Show loading state
   if (isLoading) {
@@ -31,7 +32,7 @@ export default function JobDetail() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Show error state
@@ -41,9 +42,7 @@ export default function JobDetail() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-red-800 mb-2">
-                Error Loading Job
-              </h2>
+              <h2 className="text-xl font-semibold text-red-800 mb-2">Error Loading Job</h2>
               <p className="text-red-600 mb-4">{error}</p>
               <Link
                 to="/jobs"
@@ -55,7 +54,7 @@ export default function JobDetail() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Show not found state
@@ -65,12 +64,8 @@ export default function JobDetail() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-yellow-800 mb-2">
-                Job Not Found
-              </h2>
-              <p className="text-yellow-600 mb-4">
-                The job you're looking for doesn't exist or has been removed.
-              </p>
+              <h2 className="text-xl font-semibold text-yellow-800 mb-2">Job Not Found</h2>
+              <p className="text-yellow-600 mb-4">The job you're looking for doesn't exist or has been removed.</p>
               <Link
                 to="/jobs"
                 className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
@@ -81,7 +76,7 @@ export default function JobDetail() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   // Format job data for display
@@ -111,60 +106,27 @@ export default function JobDetail() {
       founded: "Not specified",
       location: `${job.location.city}, ${job.location.country}`,
     },
-  };
-  console.log(job.description);
+  }
+  console.log(job.description)
 
   return (
     <div className="min-h-screen bg-light-gray pt-16">
       {/* Breadcrumb */}
       <div className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <nav className="flex items-center justify-end space-x-2 text-sm text-gray-500">
+          <nav className="hidden sm:flex items-center justify-end space-x-2 text-sm text-gray-500">
             <Link to="/" className="hover:text-gray-700">
               Home
             </Link>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
             <Link to="/jobs" className="hover:text-gray-700">
               Find Job
             </Link>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
             <span className="hover:text-gray-700">{job.sector}</span>
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
             <span className="text-gray-900">Job Details</span>
           </nav>
@@ -172,119 +134,130 @@ export default function JobDetail() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <JobHeader
-            title={formattedJob.title}
-            company={formattedJob.company}
-            location={formattedJob.location}
-            type={formattedJob.type}
-            salary={formattedJob.salary}
-            postedAt={formattedJob.postedAt}
-            isRemote={formattedJob.isRemote}
-            jobId={formattedJob.id}
-            className="col-span-3"
-          />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4 sm:gap-8">
+          {/* Job Header - Full width on all screens */}
+          <div className="lg:col-span-3">
+            <JobHeader
+              title={formattedJob.title}
+              company={formattedJob.company}
+              location={formattedJob.location}
+              type={formattedJob.type}
+              salary={formattedJob.salary}
+              postedAt={formattedJob.postedAt}
+              isRemote={formattedJob.isRemote}
+              jobId={formattedJob.id}
+            />
+          </div>
 
-          {/* Job Header */}
+          {/* Mobile stacked layout (overview on top of description) */}
+          <div className="lg:hidden pt-4 space-y-6">
+            <JobDescription
+              description={formattedJob.description}
+              responsibilities={formattedJob.responsibilities}
+              requirements={formattedJob.requirements}
+              benefits={formattedJob.benefits}
+            />
+            <JobOverview
+              salary={formattedJob.salary}
+              location={formattedJob.location}
+              postedAt={formattedJob.postedAt}
+              expiresAt={formattedJob.expiresAt}
+              level={formattedJob.level}
+              experience={formattedJob.experience}
+              education={formattedJob.education}
+            />
 
-          {/* Job Description */}
-          <JobDescription
-            description={formattedJob.description}
-            responsibilities={formattedJob.responsibilities}
-            requirements={formattedJob.requirements}
-            benefits={formattedJob.benefits}
-            className="col-span-2"
-          />
+          </div>
 
-          {/* Sidebar */}
+          <div className="hidden lg:block lg:col-span-2">
+            <JobDescription
+              description={formattedJob.description}
+              responsibilities={formattedJob.responsibilities}
+              requirements={formattedJob.requirements}
+              benefits={formattedJob.benefits}
+            />
+          </div>
 
-          {/* Job Overview */}
-          <JobOverview
-            salary={formattedJob.salary}
-            location={formattedJob.location}
-            postedAt={formattedJob.postedAt}
-            expiresAt={formattedJob.expiresAt}
-            level={formattedJob.level}
-            experience={formattedJob.experience}
-            education={formattedJob.education}
-          />
+          <div className="hidden lg:block lg:col-span-1">
+            <JobOverview
+              salary={formattedJob.salary}
+              location={formattedJob.location}
+              postedAt={formattedJob.postedAt}
+              expiresAt={formattedJob.expiresAt}
+              level={formattedJob.level}
+              experience={formattedJob.experience}
+              education={formattedJob.education}
+            />
+          </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Helper functions
-function formatJobType(
-  jobType: string,
-  jobSite?: string
-): "Full-time" | "Part-time" | "Contract" | "Remote" {
-  if (jobSite === "REMOTE") return "Remote";
+function formatJobType(jobType: string, jobSite?: string): "Full-time" | "Part-time" | "Contract" | "Remote" {
+  if (jobSite === "REMOTE") return "Remote"
 
   switch (jobType) {
     case "FULL_TIME":
-      return "Full-time";
+      return "Full-time"
     case "PART_TIME":
-      return "Part-time";
+      return "Part-time"
     case "CONTRACT":
-      return "Contract";
+      return "Contract"
     default:
-      return "Full-time";
+      return "Full-time"
   }
 }
 
 function formatExperienceLevel(level: string): string {
   switch (level) {
     case "JUNIOR":
-      return "Entry Level";
+      return "Entry Level"
     case "MID":
-      return "Mid Level";
+      return "Mid Level"
     case "SENIOR":
-      return "Senior Level";
+      return "Senior Level"
     case "LEAD":
-      return "Lead Level";
+      return "Lead Level"
     default:
-      return "Not specified";
+      return "Not specified"
   }
 }
 
 function formatTimeAgo(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffInDays = Math.floor(
-    (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
-  );
+  const date = new Date(dateString)
+  const now = new Date()
+  const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
 
-  if (diffInDays === 0) return "Today";
-  if (diffInDays === 1) return "Yesterday";
-  if (diffInDays < 7) return `${diffInDays} days ago`;
-  if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
-  if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
-  return `${Math.floor(diffInDays / 365)} years ago`;
+  if (diffInDays === 0) return "Today"
+  if (diffInDays === 1) return "Yesterday"
+  if (diffInDays < 7) return `${diffInDays} days ago`
+  if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`
+  if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`
+  return `${Math.floor(diffInDays / 365)} years ago`
 }
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString);
+  const date = new Date(dateString)
   return date.toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",
     year: "numeric",
-  });
+  })
 }
 
 function extractResponsibilities(description: string): string[] {
   // Simple extraction - look for bullet points or numbered lists
-  const lines = description.split("\n");
-  const responsibilities: string[] = [];
+  const lines = description.split("\n")
+  const responsibilities: string[] = []
 
   for (const line of lines) {
-    const trimmed = line.trim();
+    const trimmed = line.trim()
     if (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/)) {
-      responsibilities.push(
-        trimmed.replace(/^[-•*]\s/, "").replace(/^\d+\.\s/, "")
-      );
+      responsibilities.push(trimmed.replace(/^[-•*]\s/, "").replace(/^\d+\.\s/, ""))
     }
   }
 
@@ -295,32 +268,29 @@ function extractResponsibilities(description: string): string[] {
         "Collaborate with team members",
         "Meet project deadlines",
         "Maintain code quality and standards",
-      ];
+      ]
 }
 
 function extractRequirements(description: string): string[] {
   // Simple extraction - look for requirements section
-  const lines = description.split("\n");
-  const requirements: string[] = [];
-  let inRequirementsSection = false;
+  const lines = description.split("\n")
+  const requirements: string[] = []
+  let inRequirementsSection = false
 
   for (const line of lines) {
-    const trimmed = line.trim().toLowerCase();
+    const trimmed = line.trim().toLowerCase()
     if (trimmed.includes("requirement") || trimmed.includes("qualification")) {
-      inRequirementsSection = true;
-      continue;
+      inRequirementsSection = true
+      continue
     }
 
-    if (
-      inRequirementsSection &&
-      (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/))
-    ) {
+    if (inRequirementsSection && (trimmed.match(/^[-•*]\s/) || trimmed.match(/^\d+\.\s/))) {
       requirements.push(
         line
           .trim()
           .replace(/^[-•*]\s/, "")
-          .replace(/^\d+\.\s/, "")
-      );
+          .replace(/^\d+\.\s/, ""),
+      )
     }
   }
 
@@ -331,5 +301,5 @@ function extractRequirements(description: string): string[] {
         "Strong communication skills",
         "Ability to work in a team",
         "Problem-solving skills",
-      ];
+      ]
 }

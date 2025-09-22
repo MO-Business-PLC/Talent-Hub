@@ -33,7 +33,7 @@ export function useFileUpload(): UseFileUploadReturn {
       const formData = new FormData();
       formData.append("resume", file);
 
-      const response = await fetch(`${API_BASE_URL}/api/upload/resume`, {
+      const response = await fetch(`${API_BASE_URL}/api/resume`, {
         method: "POST",
         body: formData,
         credentials: "include",
@@ -75,3 +75,4 @@ export function useFileUpload(): UseFileUploadReturn {
 }
 
 export type { UploadResponse };
+
