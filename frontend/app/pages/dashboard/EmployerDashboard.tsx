@@ -59,7 +59,7 @@ export default function EmployerDashboard() {
 
   const handleCreateJob = () => {
     // Navigate to create job page
-    navigate("/post-job");
+    navigate("/employer/post-job");
   };
 
   return (
