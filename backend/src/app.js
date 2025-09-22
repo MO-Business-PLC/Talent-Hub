@@ -12,7 +12,7 @@ import trendsRouter from "./routes/trends.js";
 import resumeRouter from "./routes/resumes.js";
 import publicRouter from "./routes/public.js";
 import createInitialAdmin from "./utils/adminSetup.js";
-
+import subscriptionRoutes from "./routes/subscription.js"; 
 
 dotenv.config();
 
@@ -79,6 +79,7 @@ app.use("/api/jobs", jobsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/trends", trendsRouter);
 app.use("/api/resume", resumeRouter);
+app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/public", publicRouter);
 
 // Health check endpoint
