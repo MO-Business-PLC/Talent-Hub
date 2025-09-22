@@ -60,7 +60,7 @@ function Hero() {
 
           {/* Right Section */}
           <div className="flex-1 w-full flex items-center justify-center lg:justify-end">
-            <div className="relative w-72 sm:w-80 md:w-[380px] lg:w-[460px] xl:w-[500px]">
+            <div className="relative w-100  md:w-[380px] lg:w-[460px] xl:w-[500px]">
               <img
                 className="w-full h-auto rounded-xl "
                 src="/images/home/landing_page_hero.png"
@@ -68,7 +68,7 @@ function Hero() {
                 loading="lazy"
               />
               <img
-              className="absolute top-3 rotate-90 right-12"
+              className="absolute top-1 rotate-90 right-6 lg:right-12"
               loading="lazy"
               src="/images/home/Abstract_Line.png"
               />
