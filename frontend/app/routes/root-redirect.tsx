@@ -7,7 +7,7 @@ export async function loader({ request }: { request: Request }) {
   // Check for authentication via cookies (works on server)
   const cookieHeader = request.headers.get("Cookie") || "";
   const cookies = Object.fromEntries(
-    cookieHeader.split("; ").map((cookie) => {
+    cookieHeader.split("; ").map(cookie => {
       const [key, ...value] = cookie.split("=");
       return [key, value.join("=")];
     })
@@ -26,7 +26,7 @@ export async function loader({ request }: { request: Request }) {
   if (userRole === "admin") {
     return redirect("/admin-dashboard");
   } else if (userRole === "employee") {
-    return redirect("/employee-dashboard");
+    return redirect("/employee/dashboard");
   } else if (userRole === "employer") {
     return redirect("/employer/dashboard");
   }
@@ -47,7 +47,7 @@ export async function loader({ request }: { request: Request }) {
       if (role === "admin") {
         return redirect("/admin-dashboard");
       } else if (role === "employee") {
-        return redirect("/employee-dashboard");
+        return redirect("/employee/dashboard");
       } else if (role === "employer") {
         return redirect("/employer/dashboard");
       }
@@ -80,7 +80,7 @@ export default function RootRedirect() {
         console.log("localStorage not available, using cookies");
         // Fallback to cookies if localStorage isn't available
         const cookies = Object.fromEntries(
-          document.cookie.split("; ").map((cookie) => {
+          document.cookie.split("; ").map(cookie => {
             const [key, ...value] = cookie.split("=");
             return [key, value.join("=")];
           })
@@ -99,7 +99,7 @@ export default function RootRedirect() {
       if (userRole === "admin") {
         setRedirectPath("/admin-dashboard");
       } else if (userRole === "employee") {
-        setRedirectPath("/employee-dashboard");
+        setRedirectPath("/employee/dashboard");
       } else if (userRole === "employer") {
         setRedirectPath("/employer/dashboard");
       } else {
@@ -127,7 +127,7 @@ export default function RootRedirect() {
           if (role === "admin") {
             setRedirectPath("/admin-dashboard");
           } else if (role === "employee") {
-            setRedirectPath("/employee-dashboard");
+            setRedirectPath("/employee/dashboard");
           } else if (role === "employer") {
             setRedirectPath("/employer/dashboard");
           } else {

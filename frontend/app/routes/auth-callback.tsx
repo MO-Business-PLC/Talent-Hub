@@ -35,14 +35,14 @@ export default function AuthCallbackRoute() {
         if (accessToken) {
           // Token-in-query mode (less secure, but sometimes used in dev)
           setTokens(accessToken, refreshToken || undefined);
-          
+
           // Wait a moment for tokens to be stored
           await new Promise(resolve => setTimeout(resolve, 100));
         }
 
         // Get user profile to determine role
         const profile = await getJson<ProfileResponse>(`/api/auth/profile`);
-        
+
         console.log("Auth callback - Profile response:", profile);
         console.log("Auth callback - User object:", profile?.user);
 
@@ -54,12 +54,12 @@ export default function AuthCallbackRoute() {
         // Extract role from different possible response structures
         const userRole =
           profile?.role || profile?.user?.role || profile?.data?.role;
-          
+
         console.log("Auth callback - User role:", userRole);
 
         // Redirect based on user role
         if (userRole === "employee") {
-          navigate("/employee-dashboard", { replace: true });
+          navigate("/employee/dashboard", { replace: true });
         } else if (userRole === "employer") {
           navigate("/employer/dashboard", { replace: true });
         } else {

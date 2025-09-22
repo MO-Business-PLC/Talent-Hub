@@ -3,11 +3,15 @@ import { Link, useNavigate } from "react-router";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
+  const [user, setUser] = useState<{
+    name: string;
+    email: string;
+    role: string;
+  } | null>(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
 
-  const toggle = () => setOpen((o) => !o);
+  const toggle = () => setOpen(o => !o);
   const closeMenu = () => setOpen(false);
 
   useEffect(() => {
@@ -18,7 +22,11 @@ function Navbar() {
         const userRole = localStorage.getItem("userRole");
         const isAuthenticated = localStorage.getItem("isAuthenticated");
 
-        console.log("Navbar auth check:", { userStr, userRole, isAuthenticated });
+        console.log("Navbar auth check:", {
+          userStr,
+          userRole,
+          isAuthenticated,
+        });
 
         if (userStr && userRole && isAuthenticated === "true") {
           const userData = JSON.parse(userStr);
@@ -43,7 +51,11 @@ function Navbar() {
 
     // Also listen for storage changes (in case user logs in/out in another tab)
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "user" || e.key === "userRole" || e.key === "isAuthenticated") {
+      if (
+        e.key === "user" ||
+        e.key === "userRole" ||
+        e.key === "isAuthenticated"
+      ) {
         checkAuth();
       }
     };
@@ -90,7 +102,7 @@ function Navbar() {
       case "employer":
         return "/employer/dashboard";
       case "employee":
-        return "/employee-dashboard";
+        return "/employee/dashboard";
       default:
         return "/home";
     }
@@ -99,7 +111,7 @@ function Navbar() {
   const getUserInitials = (name: string) => {
     return name
       .split(" ")
-      .map((n) => n[0])
+      .map(n => n[0])
       .join("")
       .toUpperCase()
       .slice(0, 2);
@@ -143,14 +155,17 @@ function Navbar() {
       {/* Brand */}
       <div className="flex items-center flex-shrink-0">
         <Link to={"/home"}>
-        <img src="/images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
-
+          <img
+            src="/images/auth/logo.png"
+            alt="TalentHub"
+            className="h-8 w-auto"
+          />
         </Link>
       </div>
 
       {/* Desktop Nav Links */}
       <div className="hidden md:flex md:items-center md:space-x-2 lg:space-x-4">
-        {regularNavLinks.map((link) => (
+        {regularNavLinks.map(link => (
           <Link
             to={link.url}
             key={link.name}
@@ -171,7 +186,9 @@ function Navbar() {
               className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-medium text-sm">{getUserInitials(user.name)}</span>
+                <span className="text-white font-medium text-sm">
+                  {getUserInitials(user.name)}
+                </span>
               </div>
               {/* <span className="text-gray-700 font-medium">{user.name}</span> */}
               <svg
@@ -195,8 +212,12 @@ function Navbar() {
             {showUserMenu && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
                 <div className="px-4 py-2 border-b border-gray-100">
-                  <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                  <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-gray-500 capitalize">
+                    {user.role}
+                  </p>
                 </div>
                 <Link
                   to={getDashboardPath(user.role)}
@@ -283,7 +304,7 @@ function Navbar() {
       >
         <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
           <div className="flex flex-col p-3">
-            {regularNavLinks.map((link) => (
+            {regularNavLinks.map(link => (
               <Link
                 to={link.url}
                 key={link.name}
@@ -305,8 +326,12 @@ function Navbar() {
                       </span>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{user.name}</p>
-                      <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        {user.name}
+                      </p>
+                      <p className="text-xs text-gray-500 capitalize">
+                        {user.role}
+                      </p>
                     </div>
                   </div>
                 </div>

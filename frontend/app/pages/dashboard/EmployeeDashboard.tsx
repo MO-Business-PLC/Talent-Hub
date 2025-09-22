@@ -128,7 +128,7 @@ export default function EmployeeDashboard() {
               Find Employer
             </a>
             <a
-              href="/employee-dashboard"
+              href="/employee/dashboard"
               className="bg-blue-100 text-[#0366c2] font-medium px-3 py-1 rounded-md"
             >
               Dashboard
@@ -206,7 +206,7 @@ export default function EmployeeDashboard() {
               Find Employer
             </a>
             <a
-              href="/employee-dashboard"
+              href="/employee/dashboard"
               className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50"
             >
               Dashboard
