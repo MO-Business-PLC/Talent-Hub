@@ -6,6 +6,19 @@ import { uploadToCloudinary } from "../utils/cloudinaryUpload.js";
 
 
 
+// Local helper to standardize express-validator error handling
+const handleValidation = (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const message = errors
+      .array()
+      .map((e) => e.msg)
+      .join(", ");
+    return res.status(400).json({ error: message });
+  }
+  return null;
+};
+
 // GET /applications/employer
 export const getEmployerApplications = async (req, res) => {
   try {
