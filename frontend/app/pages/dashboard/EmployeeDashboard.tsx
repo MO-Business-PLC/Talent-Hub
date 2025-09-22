@@ -189,29 +189,6 @@ export default function EmployeeDashboard() {
             </div>
           </div>
         </div>
-            {/* Mobile Menu Button (Hamburger) */}
-            <div className="md:hidden">
-              <button
-                onClick={() => setIsMenuOpen((prev) => !prev)}
-                className="focus:outline-none"
-              >
-                <svg
-                  className="h-6 w-6 text-gray-700"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
 
         {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
@@ -513,15 +490,6 @@ function Overview({
   ).length;
   const rejectedApplications = applications.filter(
     app => app.status === "rejected"
-  ).length;
-  const viewedApplications = applications.filter(
-    (app) => app.status === "applied"
-  ).length;
-  const shortlistedApplications = applications.filter(
-    (app) => app.status === "shortlisted"
-  ).length;
-  const rejectedApplications = applications.filter(
-    (app) => app.status === "rejected"
   ).length;
 
   const formatDate = dateString => {
@@ -977,7 +945,7 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
 function FavoriteJobs() {
   const navigate = useNavigate();
 
-  const handleApplyNow = (jobId) => {
+  const handleApplyNow = jobId => {
     navigate(`/jobs/${jobId}/apply`);
   };
 
