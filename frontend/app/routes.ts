@@ -29,7 +29,7 @@ export default [
       id: "/jobs",
     }),
     route("/employer/candidates", "routes/employer-candidates.tsx"),
-    route("/post-job", "routes/post-job.tsx"),
+    route("/employer/post-job", "routes/post-job.tsx"),
     route("/jobs/:jobId/applicants", "routes/job-applicants.$jobId.tsx"),
   ]),
   // Home route (optional fallback)
