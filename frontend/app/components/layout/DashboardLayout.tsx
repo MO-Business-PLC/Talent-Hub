@@ -107,11 +107,6 @@ export function DashboardLayout({
                 ? "/employer/candidates"
                 : "/applications",
           },
-          {
-            icon: FiSettings,
-            label: "Settings",
-            href: "/employer/settings",
-          },
         ];
 
   const getIsActive = (href: string) => location.pathname === href;

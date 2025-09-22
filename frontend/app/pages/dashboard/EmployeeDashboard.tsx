@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import {
   useUserApplications,
   type UserApplication,
 } from "../../hooks/useUserApplications";
+import { isAuthenticated } from "../../lib/auth";
 import { Menu, X } from "lucide-react";
 
 export default function EmployeeDashboard() {
@@ -14,9 +15,8 @@ export default function EmployeeDashboard() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-    if (!isAuthenticated) {
+    // Check if user is authenticated using JWT tokens
+    if (!isAuthenticated()) {
       navigate("/login", { replace: true });
       return;
     }
@@ -103,7 +103,7 @@ export default function EmployeeDashboard() {
       {/* Header */}
       <header className="bg-gray-100 pt-4">
         {/* Container */}
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
           {/* Left - Logo */}
           <div className="flex items-center">
             <img
@@ -122,7 +122,7 @@ export default function EmployeeDashboard() {
               Find Job
             </a>
             <a
-              href="/job"
+              href="/jobs"
               className="text-gray-700 hover:text-[#0366c2] font-medium"
             >
               Find Employer
@@ -189,6 +189,29 @@ export default function EmployeeDashboard() {
             </div>
           </div>
         </div>
+            {/* Mobile Menu Button (Hamburger) */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMenuOpen((prev) => !prev)}
+                className="focus:outline-none"
+              >
+                <svg
+                  className="h-6 w-6 text-gray-700"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
@@ -217,8 +240,8 @@ export default function EmployeeDashboard() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Breadcrumb - Fixed alignment */}
-        <nav className="text-sm text-gray-500 mb-6 flex justify-start">
+        {/* Breadcrumb - Hidden on mobile */}
+        <nav className="hidden md:flex text-sm text-gray-500 mb-6 justify-start">
           <span>Home</span>
           <span className="mx-2">/</span>
           <span>Dashboard</span>
@@ -232,8 +255,8 @@ export default function EmployeeDashboard() {
         </nav>
 
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar - Now on the left side */}
-          <div className="w-full md:w-64 flex flex-col">
+          {/* Sidebar - Now on the left side for desktop, hidden on mobile */}
+          <div className="hidden md:block md:w-64 flex flex-col">
             <div className="bg-white rounded-lg shadow p-6 flex flex-col h-full">
               <h2 className="text-lg font-bold text-gray-900 mb-4">
                 TalentHub
@@ -367,6 +390,103 @@ export default function EmployeeDashboard() {
             </div>
           </div>
 
+          {/* Mobile Navigation Tabs */}
+          <div className="md:hidden w-full bg-white rounded-lg shadow p-2 mb-4">
+            <div className="flex justify-between">
+              <button
+                onClick={() => setActivePage("overview")}
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "overview" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
+              >
+                <svg
+                  className={`h-5 w-5 ${activePage === "overview" ? "text-blue-500" : "text-gray-400"}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4"
+                  />
+                </svg>
+                <span className="text-xs mt-1">Overview</span>
+              </button>
+
+              <button
+                onClick={() => setActivePage("applied-jobs")}
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "applied-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
+              >
+                <svg
+                  className={`h-5 w-5 ${activePage === "applied-jobs" ? "text-blue-500" : "text-gray-400"}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <span className="text-xs mt-1">Applied</span>
+              </button>
+
+              <button
+                onClick={() => setActivePage("favorite-jobs")}
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "favorite-jobs" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
+              >
+                <svg
+                  className={`h-5 w-5 ${activePage === "favorite-jobs" ? "text-blue-500" : "text-gray-400"}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+                <span className="text-xs mt-1">Favorites</span>
+              </button>
+
+              <button
+                onClick={() => setActivePage("settings")}
+                className={`flex flex-col items-center p-2 rounded-lg flex-1 ${activePage === "settings" ? "bg-blue-100 text-blue-700" : "text-gray-700"}`}
+              >
+                <svg
+                  className={`h-5 w-5 ${activePage === "settings" ? "text-blue-500" : "text-gray-400"}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+                <span className="text-xs mt-1">Settings</span>
+              </button>
+            </div>
+          </div>
+
           {/* Main Content Area - Now on the right side */}
           <div className="flex-1">{renderContent()}</div>
         </div>
@@ -393,6 +513,15 @@ function Overview({
   ).length;
   const rejectedApplications = applications.filter(
     app => app.status === "rejected"
+  ).length;
+  const viewedApplications = applications.filter(
+    (app) => app.status === "applied"
+  ).length;
+  const shortlistedApplications = applications.filter(
+    (app) => app.status === "shortlisted"
+  ).length;
+  const rejectedApplications = applications.filter(
+    (app) => app.status === "rejected"
   ).length;
 
   const formatDate = dateString => {
@@ -845,12 +974,11 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
 }
 
 // Favorite Jobs Component
-// Favorite Jobs Component
 function FavoriteJobs() {
   const navigate = useNavigate();
 
-  const handleApplyNow = jobId => {
-    navigate(`/job-application`);
+  const handleApplyNow = (jobId) => {
+    navigate(`/jobs/${jobId}/apply`);
   };
 
   return (

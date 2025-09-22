@@ -1,15 +1,12 @@
 import { JobsTable } from "../../components";
-import { MdWork } from "react-icons/md";
-import { HiUsers } from "react-icons/hi";
-import { IoCheckmarkCircle } from "react-icons/io5";
-import { FiTrendingUp } from "react-icons/fi";
 import { useJobs } from "../../hooks/useJobs";
 import { useMemo } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 export default function EmployerDashboard() {
   const navigate = useNavigate();
   const { jobs, isLoading, error, refetch } = useJobs();
+  const location = useLocation();
 
   // Transform API jobs to match JobsTable expected format
   const transformedJobs = useMemo(() => {
@@ -65,72 +62,74 @@ export default function EmployerDashboard() {
   return (
     <div className="space-y-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
-          <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
-            <img
-              src="/icons/home/briefcase.png"
-              alt=""
-              className="w-5 h-5 md:w-8 md:h-8"
-            />
-          </div>
-          <div>
-            <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
-              {isLoading ? "..." : stats.totalJobs}
+      {!location.pathname.includes("/employer/jobs") && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
+            <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
+              <img
+                src="/icons/home/briefcase.png"
+                alt=""
+                className="w-5 h-5 md:w-8 md:h-8"
+              />
             </div>
-            <div className="text-[16px] text-text-secondary">Total Jobs</div>
+            <div>
+              <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
+                {isLoading ? "..." : stats.totalJobs}
+              </div>
+              <div className="text-[16px] text-text-secondary">Total Jobs</div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
+            <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
+              <img
+                src="/icons/home/briefcase.png"
+                alt=""
+                className="w-5 h-5 md:w-8 md:h-8"
+              />
+            </div>
+            <div>
+              <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
+                {isLoading ? "..." : stats.totalApplicants}
+              </div>
+              <div className="text-[16px] text-text-secondary">
+                Total Applicants
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
+            <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
+              <img
+                src="/icons/home/briefcase.png"
+                alt=""
+                className="w-5 h-5 md:w-8 md:h-8"
+              />
+            </div>
+            <div>
+              <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
+                {isLoading ? "..." : stats.activeJobs}
+              </div>
+              <div className="text-[16px] text-text-secondary">Active Jobs</div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
+            <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
+              <img
+                src="/icons/home/briefcase.png"
+                alt=""
+                className="w-5 h-5 md:w-8 md:h-8"
+              />
+            </div>
+            <div>
+              <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
+                {isLoading ? "..." : stats.viewsThisMonth}
+              </div>
+              <div className="text-[16px] text-text-secondary">
+                Views This Month
+              </div>
+            </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
-          <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
-            <img
-              src="/icons/home/briefcase.png"
-              alt=""
-              className="w-5 h-5 md:w-8 md:h-8"
-            />
-          </div>
-          <div>
-            <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
-              {isLoading ? "..." : stats.totalApplicants}
-            </div>
-            <div className="text-[16px] text-text-secondary">
-              Total Applicants
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
-          <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
-            <img
-              src="/icons/home/briefcase.png"
-              alt=""
-              className="w-5 h-5 md:w-8 md:h-8"
-            />
-          </div>
-          <div>
-            <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
-              {isLoading ? "..." : stats.activeJobs}
-            </div>
-            <div className="text-[16px] text-text-secondary">Active Jobs</div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg border border-gray-100 px-4 md:px-6 py-4 md:py-5 flex items-center gap-3 md:gap-4">
-          <div className="shrink-0 grid place-items-center w-10 h-10 md:w-16 md:h-16 rounded-lg bg-background-light">
-            <img
-              src="/icons/home/briefcase.png"
-              alt=""
-              className="w-5 h-5 md:w-8 md:h-8"
-            />
-          </div>
-          <div>
-            <div className="text-lg md:text-2xl font-semibold text-primary-text leading-tight">
-              {isLoading ? "..." : stats.viewsThisMonth}
-            </div>
-            <div className="text-[16px] text-text-secondary">
-              Views This Month
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* Error Display */}
       {error && (
