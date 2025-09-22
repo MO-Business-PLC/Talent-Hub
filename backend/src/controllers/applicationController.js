@@ -4,10 +4,13 @@ import Job from "../models/Job.js";
 import User from "../models/User.js";
 import { uploadToCloudinary } from "../utils/cloudinaryUpload.js";
 
+
+
 // GET /applications/employer
 export const getEmployerApplications = async (req, res) => {
   try {
     const userId = req.user?.id;
+    
 
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -16,7 +19,7 @@ export const getEmployerApplications = async (req, res) => {
     }
 
     const jobs = await Job.find({ createdBy: userId }).select("_id");
-    const jobIds = jobs.map((job) => job._id);
+    const jobIds = jobs.map(job => job._id);
 
     const applications = await Application.find({ jobId: { $in: jobIds } })
       .sort({ createdAt: -1 })
@@ -31,6 +34,7 @@ export const getEmployerApplications = async (req, res) => {
 
 // GET /applications/job/:jobId
 export const getApplicationsByJob = async (req, res) => {
+
   try {
     const { jobId } = req.params;
 
@@ -55,13 +59,10 @@ export const getApplicationsByJob = async (req, res) => {
 };
 
 // POST /applications
+
 export const applyToJob = async (req, res) => {
   try {
-    console.log("Application request body:", req.body);
-    console.log("Application request file:", req.file);
-    console.log("Application request user:", req.user);
-
-    const { jobId, resumeUrl, coverLetter } = req.body;
+    const { jobId, coverLetter } = req.body;
 
     // Ensure job exists and is open
     const job = await Job.findById(jobId);
@@ -72,35 +73,52 @@ export const applyToJob = async (req, res) => {
       return res.status(400).json({ error: "Job is not open for applications" });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ message: "Resume file is required" });
-    }
-
-    // Upload resume PDF/DOC to Cloudinary
-    const cloudinaryUrl = await uploadToCloudinary(req.file.buffer);
-
-    // Ensure user exists (from token)
-    const user = await User.findById(req.user?.id);
+    // Get user
+    const user = await User.findById(req.user?._id);
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    let resumeData;
+
+    if (req.file) {
+      // Upload new resume
+      const uploadedResume = await uploadToCloudinary(req.file.buffer, "resumes");
+      resumeData = {
+        url: uploadedResume.url,
+        publicId: uploadedResume.publicId,
+        format: uploadedResume.format,
+        originalName: req.file.originalname,
+      };
+    } else if (user.resume && user.resume.url) {
+      // Use user's saved resume
+      resumeData = {
+        url: user.resume.url,
+        publicId: user.resume.publicId,
+        format: user.resume.format,
+        originalName: user.resume.originalname,
+      };
+    } else {
+      return res.status(400).json({ error: "No resume provided or saved in profile" });
     }
 
     // Create application
     const application = await Application.create({
       jobId,
       userId: user._id,
-      resumeUrl: cloudinaryUrl,
+      resume: resumeData,
       ...(coverLetter ? { coverLetter } : {}),
     });
 
-    // Populate response
+    // Populate for response
     const result = await Application.findById(application._id)
       .populate({ path: "jobId", select: "title location status" })
       .populate({ path: "userId", select: "name email role" });
 
-    return res
-      .status(201)
-      .json({ message: "Application submitted successfully", application: result });
+    return res.status(201).json({
+      message: "Application submitted successfully",
+      application: result,
+    });
   } catch (err) {
     console.error("Application submission error:", err);
 
@@ -108,7 +126,6 @@ export const applyToJob = async (req, res) => {
       return res.status(409).json({ error: "You have already applied to this job" });
     }
 
-    // More specific error handling
     if (err.name === "ValidationError") {
       const messages = Object.values(err.errors).map((e) => e.message);
       return res.status(400).json({ error: messages.join(", ") });
@@ -125,12 +142,12 @@ export const applyToJob = async (req, res) => {
   }
 };
 
+
+
 // GET /applications/:userId
 export const getUserApplications = async (req, res) => {
-  const validationErr = validationResult(req);
-  if (!validationErr.isEmpty()) {
-    return res.status(400).json({ errors: validationErr.array() });
-  }
+  const validationErr = handleValidation(req, res);
+  if (validationErr) return validationErr;
 
   try {
     const { userId } = req.params;

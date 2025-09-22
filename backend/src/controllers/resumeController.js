@@ -4,7 +4,7 @@ import {
   deleteFromCloudinary,
 } from "../utils/cloudinaryUpload.js";
 
-// POST /upload/resume
+// POST /resume
 export const uploadResume = async (req, res) => {
   try {
     if (!req.file) {
@@ -47,7 +47,7 @@ export const uploadResume = async (req, res) => {
   }
 };
 
-// GET /upload/resume
+// GET /resume
 export const getResume = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("resume");
@@ -70,7 +70,7 @@ export const getResume = async (req, res) => {
   }
 };
 
-// DELETE /upload/resume
+// DELETE /resume
 export const deleteResume = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
