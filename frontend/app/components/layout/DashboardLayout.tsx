@@ -66,7 +66,7 @@ export function DashboardLayout({ children, title, userRole }: DashboardLayoutPr
     {
       icon: FiBriefcase,
       label: "Post Job",
-      href: "/post-job",
+      href: "/employer/post-job",
     },
     {
       icon: FiUsers,

@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useUserApplications, type UserApplication } from "../../hooks/useUserApplications";
+import {
+  useUserApplications,
+  type UserApplication,
+} from "../../hooks/useUserApplications";
 import { isAuthenticated } from "../../lib/auth";
-import { Menu, X } from "lucide-react"; 
+import { Menu, X } from "lucide-react";
 
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
@@ -103,15 +106,25 @@ export default function EmployeeDashboard() {
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-3 bg-white rounded-2xl shadow-sm">
           {/* Left - Logo */}
           <div className="flex items-center">
-            <img src="./images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
+            <img
+              src="./images/auth/logo.png"
+              alt="TalentHub"
+              className="h-8 w-auto"
+            />
           </div>
 
           {/* Middle - Navigation (hidden on mobile) */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="/home" className="text-gray-700 hover:text-[#0366c2] font-medium">
+            <a
+              href="/home"
+              className="text-gray-700 hover:text-[#0366c2] font-medium"
+            >
               Find Job
             </a>
-            <a href="/jobs" className="text-gray-700 hover:text-[#0366c2] font-medium">
+            <a
+              href="/jobs"
+              className="text-gray-700 hover:text-[#0366c2] font-medium"
+            >
               Find Employer
             </a>
             <a
@@ -146,7 +159,11 @@ export default function EmployeeDashboard() {
 
             {/* Profile Image */}
             <div className="h-10 w-10 rounded-full overflow-hidden cursor-pointer">
-              <img src="./images/profile.jpg" alt="User" className="h-full w-full object-cover" />
+              <img
+                src="./images/profile.jpg"
+                alt="User"
+                className="h-full w-full object-cover"
+              />
             </div>
 
             {/* Mobile Menu Button (Hamburger) */}
@@ -161,7 +178,12 @@ export default function EmployeeDashboard() {
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               </button>
             </div>
@@ -171,13 +193,22 @@ export default function EmployeeDashboard() {
         {/* Mobile Dropdown Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-white mt-2 mx-4 rounded-lg shadow-md">
-            <a href="/home" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
+            <a
+              href="/home"
+              className="block px-6 py-3 text-gray-700 hover:bg-gray-100"
+            >
               Find Job
             </a>
-            <a href="/job" className="block px-6 py-3 text-gray-700 hover:bg-gray-100">
+            <a
+              href="/job"
+              className="block px-6 py-3 text-gray-700 hover:bg-gray-100"
+            >
               Find Employer
             </a>
-            <a href="/employee-dashboard" className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50">
+            <a
+              href="/employee-dashboard"
+              className="block px-6 py-3 text-[#0366c2] font-medium hover:bg-blue-50"
+            >
               Dashboard
             </a>
           </div>
@@ -204,7 +235,9 @@ export default function EmployeeDashboard() {
           {/* Sidebar - Now on the left side for desktop, hidden on mobile */}
           <div className="hidden md:block md:w-64 flex flex-col">
             <div className="bg-white rounded-lg shadow p-6 flex flex-col h-full">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">TalentHub</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">
+                TalentHub
+              </h2>
               <div className="space-y-2 flex-grow">
                 <div
                   className={`flex items-center p-3 rounded-lg cursor-pointer ${activePage === "overview" ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100"}`}
@@ -439,14 +472,25 @@ export default function EmployeeDashboard() {
   );
 }
 
-
 // Overview Component
-function Overview({ applications, isLoading, error, onViewDetail, onNavigateToSettings }) {
+function Overview({
+  applications,
+  isLoading,
+  error,
+  onViewDetail,
+  onNavigateToSettings,
+}) {
   // Calculate stats from real data
   const totalApplications = applications.length;
-  const viewedApplications = applications.filter((app) => app.status === "applied").length;
-  const shortlistedApplications = applications.filter((app) => app.status === "shortlisted").length;
-  const rejectedApplications = applications.filter((app) => app.status === "rejected").length;
+  const viewedApplications = applications.filter(
+    (app) => app.status === "applied"
+  ).length;
+  const shortlistedApplications = applications.filter(
+    (app) => app.status === "shortlisted"
+  ).length;
+  const rejectedApplications = applications.filter(
+    (app) => app.status === "rejected"
+  ).length;
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -536,7 +580,9 @@ function Overview({ applications, isLoading, error, onViewDetail, onNavigateToSe
               </svg>
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-gray-900">{totalApplications}</h3>
+              <h3 className="text-3xl font-bold text-gray-900">
+                {totalApplications}
+              </h3>
               <p className="text-gray-500">Applied jobs</p>
             </div>
           </div>
@@ -560,7 +606,9 @@ function Overview({ applications, isLoading, error, onViewDetail, onNavigateToSe
               </svg>
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-gray-900">{shortlistedApplications}</h3>
+              <h3 className="text-3xl font-bold text-gray-900">
+                {shortlistedApplications}
+              </h3>
               <p className="text-gray-500">Shortlisted</p>
             </div>
           </div>
@@ -584,7 +632,9 @@ function Overview({ applications, isLoading, error, onViewDetail, onNavigateToSe
               </svg>
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-gray-900">{rejectedApplications}</h3>
+              <h3 className="text-3xl font-bold text-gray-900">
+                {rejectedApplications}
+              </h3>
               <p className="text-gray-500">Rejected</p>
             </div>
           </div>
@@ -597,7 +647,9 @@ function Overview({ applications, isLoading, error, onViewDetail, onNavigateToSe
           <h3 className="text-lg font-medium text-gray-900">
             Recently applied jobs ({applications.length})
           </h3>
-          <button className="text-blue-600 hover:text-blue-800 font-medium">Show all jobs →</button>
+          <button className="text-blue-600 hover:text-blue-800 font-medium">
+            Show all jobs →
+          </button>
         </div>
         <div className="overflow-x-auto">
           {applications.length === 0 ? (
@@ -617,8 +669,12 @@ function Overview({ applications, isLoading, error, onViewDetail, onNavigateToSe
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No applications yet</h3>
-              <p className="text-gray-600">Start applying to jobs to see them here!</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No applications yet
+              </h3>
+              <p className="text-gray-600">
+                Start applying to jobs to see them here!
+              </p>
             </div>
           ) : (
             <table className="min-w-full divide-y divide-gray-200">
@@ -693,9 +749,15 @@ function Overview({ applications, isLoading, error, onViewDetail, onNavigateToSe
       <div className="bg-[#0073b1] rounded-md flex items-center justify-between px-6 py-4 mt-6">
         {/* Left Stars Image */}
         <div className="flex items-center">
-          <img src="/images/auth/stars.png" alt="Stars" className="w-6 h-6 mr-3" />
+          <img
+            src="/images/auth/stars.png"
+            alt="Stars"
+            className="w-6 h-6 mr-3"
+          />
           <div>
-            <h3 className="text-white font-semibold text-lg">Your profile isn't finished!</h3>
+            <h3 className="text-white font-semibold text-lg">
+              Your profile isn't finished!
+            </h3>
             <p className="text-white text-sm">
               Complete your profile and add resumes to boost hiring chances!
             </p>
@@ -800,8 +862,12 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No applications yet</h3>
-              <p className="text-gray-600">Start applying to jobs to see them here!</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                No applications yet
+              </h3>
+              <p className="text-gray-600">
+                Start applying to jobs to see them here!
+              </p>
             </div>
           ) : (
             <table className="min-w-full divide-y divide-gray-200">
@@ -875,18 +941,19 @@ function AppliedJobs({ applications, isLoading, error, onViewDetail }) {
   );
 }
 
-
 // Favorite Jobs Component
 function FavoriteJobs() {
   const navigate = useNavigate();
 
- const handleApplyNow = (jobId) => {
-  navigate(`/jobs/${jobId}/apply`);
-};
+  const handleApplyNow = (jobId) => {
+    navigate(`/jobs/${jobId}/apply`);
+  };
 
   return (
     <div className="h-full">
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">Favorite Jobs (12)</h2>
+      <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        Favorite Jobs (12)
+      </h2>
 
       {/* Favorite Jobs Table */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -931,7 +998,9 @@ function FavoriteJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   Frontend Developer
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">TechCorp</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  TechCorp
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   San Francisco, CA
                 </td>
@@ -949,8 +1018,12 @@ function FavoriteJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   Data Scientist
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">DataWorks</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Remote</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  DataWorks
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  Remote
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   $130,000 - $160,000
                 </td>
@@ -965,8 +1038,12 @@ function FavoriteJobs() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   Product Designer
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">DesignHub</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">New York, NY</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  DesignHub
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  New York, NY
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   $110,000 - $140,000
                 </td>
@@ -1039,61 +1116,60 @@ function Settings() {
       <h2 className="text-3xl font-bold text-gray-900 mb-8">Settings</h2>
 
       {/* Tabs Navigation - Boxed Design */}
-<div className="bg-white rounded-lg shadow-sm p-2 mb-8">
-  <div className="flex flex-wrap sm:flex-nowrap border border-gray-200 rounded-md overflow-hidden">
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
-        activeTab === "personal"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("personal")}
-    >
-      Personal Info
-    </button>
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
-        activeTab === "contact"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("contact")}
-    >
-      Contact
-    </button>
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
-        activeTab === "professional"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("professional")}
-    >
-      Profile
-    </button>
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
-        activeTab === "social"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("social")}
-    >
-      Social
-    </button>
-    <button
-      className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium ${
-        activeTab === "resume"
-          ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
-          : "text-gray-600 hover:bg-gray-50"
-      }`}
-      onClick={() => setActiveTab("resume")}
-    >
-      Resume
-    </button>
-  </div>
-</div>
-
+      <div className="bg-white rounded-lg shadow-sm p-2 mb-8">
+        <div className="flex flex-wrap sm:flex-nowrap border border-gray-200 rounded-md overflow-hidden">
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+              activeTab === "personal"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("personal")}
+          >
+            Personal Info
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+              activeTab === "contact"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("contact")}
+          >
+            Contact
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+              activeTab === "professional"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("professional")}
+          >
+            Profile
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium border-r border-gray-200 ${
+              activeTab === "social"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("social")}
+          >
+            Social
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 sm:px-6 text-sm sm:text-lg font-medium ${
+              activeTab === "resume"
+                ? "bg-blue-50 text-blue-700 border-b-2 border-b-blue-500"
+                : "text-gray-600 hover:bg-gray-50"
+            }`}
+            onClick={() => setActiveTab("resume")}
+          >
+            Resume
+          </button>
+        </div>
+      </div>
 
       {/* Settings Form */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -1102,11 +1178,15 @@ function Settings() {
             {/* Personal Information Tab */}
             {activeTab === "personal" && (
               <div className="space-y-8">
-                <h3 className="text-xl font-semibold text-gray-900">Personal Information</h3>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Personal Information
+                </h3>
 
                 {/* Profile Image Section */}
                 <div>
-                  <h4 className="text-lg font-medium text-gray-800 mb-4">Profile Image</h4>
+                  <h4 className="text-lg font-medium text-gray-800 mb-4">
+                    Profile Image
+                  </h4>
                   <div className="flex flex-col md:flex-row gap-8">
                     <div className="flex-1">
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center h-64 flex flex-col justify-center items-center">
@@ -1123,14 +1203,22 @@ function Settings() {
                             d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                           />
                         </svg>
-                        <p className="text-base text-gray-600 mb-2">Upload Photo or Drag it here</p>
-                        <p className="text-sm text-gray-500">Max File size 2 MB</p>
+                        <p className="text-base text-gray-600 mb-2">
+                          Upload Photo or Drag it here
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Max File size 2 MB
+                        </p>
                         <label
                           htmlFor="profile-upload"
                           className="mt-4 inline-block px-5 py-3 bg-blue-600 text-white text-base font-medium rounded-md hover:bg-blue-700 cursor-pointer"
                         >
                           Browse File
-                          <input id="profile-upload" type="file" className="sr-only" />
+                          <input
+                            id="profile-upload"
+                            type="file"
+                            className="sr-only"
+                          />
                         </label>
                       </div>
                     </div>
@@ -1153,13 +1241,19 @@ function Settings() {
                         <p className="text-base text-gray-600 mb-2">
                           Upload Cover Photo or Drag it here
                         </p>
-                        <p className="text-sm text-gray-500">Max File size 2 MB</p>
+                        <p className="text-sm text-gray-500">
+                          Max File size 2 MB
+                        </p>
                         <label
                           htmlFor="cover-upload"
                           className="mt-4 inline-block px-5 py-3 bg-blue-600 text-white text-base font-medium rounded-md hover:bg-blue-700 cursor-pointer"
                         >
                           Browse File
-                          <input id="cover-upload" type="file" className="sr-only" />
+                          <input
+                            id="cover-upload"
+                            type="file"
+                            className="sr-only"
+                          />
                         </label>
                       </div>
                     </div>
@@ -1250,7 +1344,9 @@ function Settings() {
             {/* Contact Information Tab */}
             {activeTab === "contact" && (
               <div className="space-y-8">
-                <h3 className="text-xl font-semibold text-gray-900">Contact Information</h3>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Contact Information
+                </h3>
 
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
@@ -1310,10 +1406,15 @@ function Settings() {
             {/* Professional Profile Tab */}
             {activeTab === "professional" && (
               <div className="space-y-8">
-                <h3 className="text-xl font-semibold text-gray-900">Professional Profile</h3>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Professional Profile
+                </h3>
 
                 <div>
-                  <label htmlFor="bio" className="block text-base font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="bio"
+                    className="block text-base font-medium text-gray-700 mb-2"
+                  >
                     Professional Summary
                   </label>
                   <textarea
@@ -1331,7 +1432,9 @@ function Settings() {
             {/* Social Presence Tab */}
             {activeTab === "social" && (
               <div className="space-y-8">
-                <h3 className="text-xl font-semibold text-gray-900">Social Presence</h3>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Social Presence
+                </h3>
 
                 <div className="space-y-6">
                   <div>
@@ -1424,7 +1527,9 @@ function Settings() {
                       </label>
                       <p className="pl-2">or drag and drop</p>
                     </div>
-                    <p className="text-sm text-gray-500">PDF, DOC, DOCX up to 10MB</p>
+                    <p className="text-sm text-gray-500">
+                      PDF, DOC, DOCX up to 10MB
+                    </p>
                   </div>
                 </div>
               </div>

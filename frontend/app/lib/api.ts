@@ -120,6 +120,16 @@ export async function getAllJobs(params?: {
   return getJson<{ jobs: any[]; pagination: any }>(`/api/jobs${queryString ? `?${queryString}` : ''}`);
 }
 
+// Public stats for homepage
+export type PublicStats = {
+  jobs: { total: number; today: number };
+  users: { employees: number; employers: number };
+};
+
+export async function getPublicStats() {
+  return getJson<PublicStats>("/api/public/stats");
+}
+
 // Function for file upload with multipart/form-data
 export async function postFormData<T>(
   path: string,

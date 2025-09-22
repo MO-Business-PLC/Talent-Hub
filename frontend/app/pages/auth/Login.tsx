@@ -132,7 +132,7 @@ export default function Login() {
                 type="email"
                 placeholder="Enter your Email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full text-sm text-black rounded-md border border-gray-300 px-4 py-3 outline-none bg-white focus:bg-light-gray focus:border-base focus:border-[2px] focus:ring-0"
               />
             </div>
@@ -157,12 +157,12 @@ export default function Login() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your Password"
                   value={password}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full text-sm text-black rounded-md border border-gray-300 px-4 py-3 pr-11 outline-none bg-white focus:bg-light-gray focus:border-base focus:border-[2px] focus:ring-0"
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(s => !s)}
+                  onClick={() => setShowPassword((s) => !s)}
                   className="absolute inset-y-0 right-0 px-3 grid place-items-center text-gray-500 hover:text-black"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
@@ -175,7 +175,7 @@ export default function Login() {
               <input
                 type="checkbox"
                 checked={remember}
-                onChange={e => setRemember(e.target.checked)}
+                onChange={(e) => setRemember(e.target.checked)}
                 className="h-4 w-4 rounded border border-gray-300 bg-light-gray accent-base [color-scheme:light] focus:ring-0"
               />
               <span>Remember Me</span>

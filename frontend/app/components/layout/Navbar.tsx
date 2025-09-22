@@ -142,7 +142,10 @@ function Navbar() {
     <nav className="bg-white mx-10 md:mx-15 lg:mx-25 mt-5 shadow-sm rounded-xl px-4 md:px-6 py-3 flex items-center justify-between relative">
       {/* Brand */}
       <div className="flex items-center flex-shrink-0">
+        <Link to={"/home"}>
         <img src="/images/auth/logo.png" alt="TalentHub" className="h-8 w-auto" />
+
+        </Link>
       </div>
 
       {/* Desktop Nav Links */}
